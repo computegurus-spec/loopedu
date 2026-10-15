@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Mail, HelpCircle, MessageSquare, ShieldCheck } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact & Support | BoardEdge AI by itappens',
+  title: 'Contact & Support | LoopEdu',
 };
 
 export default function ContactPage() {
@@ -35,7 +35,7 @@ export default function ContactPage() {
             </p>
           </div>
           <div className="pt-2 text-xs font-mono font-medium text-forest-950 bg-paper-100 p-3 rounded-lg border border-academic-border">
-            support@itappens.ai <span className="text-[10px] text-academic-subtle block font-sans">[OWNER_SETUP_REQUIRED: Connect official domain mailbox]</span>
+            support@blocks-and-loops.com
           </div>
         </div>
 
@@ -45,10 +45,10 @@ export default function ContactPage() {
           </div>
           <div>
             <h3 className="font-serif font-bold text-lg text-forest-950">
-              Request a New Subject
+              Request a New Subject or Class
             </h3>
             <p className="text-xs text-academic-subtle mt-1 leading-relaxed">
-              Looking for Class 12 question banks or additional Class 10 subjects? Use our dedicated subject request form.
+              Looking for Class 12, 11, 9, or 8 question banks or additional CBSE subjects? Use our dedicated request form.
             </p>
           </div>
           <div className="pt-2">
@@ -66,13 +66,13 @@ export default function ContactPage() {
       <div className="p-6 bg-paper-100 border border-academic-border rounded-2xl space-y-3 text-xs text-forest-900">
         <div className="font-bold text-forest-950 flex items-center gap-1.5">
           <ShieldCheck className="w-4 h-4 text-forest-700" />
-          <span>Platform Launch Information Checklist (For Business Owner Review)</span>
+          <span>Platform Launch Information Checklist (A product of blocks and loops)</span>
         </div>
         <ul className="list-disc pl-5 space-y-1 text-academic-subtle">
-          <li><strong>Domain:</strong> Configured for <code>itappens.ai</code>. Route <code>/CBSE</code> redirects to <code>/catalogue</code>.</li>
-          <li><strong>Razorpay:</strong> Set up INR business account with webhook secret configured in <code>.env.local</code>.</li>
-          <li><strong>Entity Details:</strong> Replace <code>[OWNER_SETUP_REQUIRED]</code> placeholders in Terms and Privacy policies with registered business entity.</li>
-          <li><strong>Support Email:</strong> Connect <code>support@itappens.ai</code> or preferred support alias.</li>
+          <li><strong>Domain:</strong> Connect your domain via Hostinger / DNS records.</li>
+          <li><strong>Razorpay:</strong> Set up INR business account with live webhook secret configured in <code>.env.local</code>.</li>
+          <li><strong>Entity Details:</strong> Published by <strong>blocks and loops</strong>.</li>
+          <li><strong>Support Email:</strong> Connect <code>support@blocks-and-loops.com</code> or preferred support alias.</li>
         </ul>
       </div>
     </div>

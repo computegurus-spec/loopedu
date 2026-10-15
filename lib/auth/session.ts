@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { UserProfile } from '@/types';
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'founder@tinko.in,admin@itappens.ai')
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'founder@tinko.in,admin@blocks-and-loops.com')
   .toLowerCase()
   .split(',')
   .map((e) => e.trim());
@@ -11,33 +11,30 @@ export interface SessionUser {
   email: string;
   name: string;
   role: 'customer' | 'admin';
+  isPro?: boolean;
 }
 
 const DEMO_USERS: Record<string, SessionUser> = {
   student: {
     id: 'usr_demo_student_10',
-    email: 'student@itappens.ai',
+    email: 'student@loopedu.in',
     name: 'Class 10 Student',
     role: 'customer',
-  },
-  parent: {
-    id: 'usr_demo_parent_10',
-    email: 'parent@itappens.ai',
-    name: 'Priya Sharma (Parent Account)',
-    role: 'customer',
+    isPro: false,
   },
   admin: {
-    id: 'usr_admin_sadish',
-    email: 'founder@tinko.in',
-    name: 'Sadish Sugumaran',
+    id: 'usr_sadish_owner',
+    email: 'sadish@loopedu.in',
+    name: 'Sadish',
     role: 'admin',
+    isPro: true,
   },
 };
 
 /**
  * Get current authenticated session user.
- * In production, validates Supabase JWT cookie.
- * In development, reads the session cookie or falls back gracefully to student/demo session.
+ * In production, validates session cookie or Supabase JWT.
+ * Returns null if the visitor is not logged in.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
   const cookieStore = cookies();
@@ -53,17 +50,12 @@ export async function getSessionUser(): Promise<SessionUser | null> {
           email: parsed.email,
           name: parsed.name || (isAdmin ? 'Admin' : 'Student'),
           role: isAdmin ? 'admin' : 'customer',
+          isPro: Boolean(parsed.isPro || isAdmin),
         };
       }
     } catch (e) {
       // Invalid cookie, ignore
     }
-  }
-
-  // Check if a demo user was selected
-  const demoType = cookieStore.get('boardedge_demo_role')?.value;
-  if (demoType && DEMO_USERS[demoType]) {
-    return DEMO_USERS[demoType];
   }
 
   return null;

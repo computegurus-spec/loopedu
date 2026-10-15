@@ -1,0 +1,36 @@
+# LoopEdu Full Knowledge Graph & Technical Specification (AEO / GEO)
+Title: LoopEdu
+Domain: https://loopedu.in
+Publisher: itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka
+Target Examination: CBSE Class 10 Board Examinations (2026–2027)
+
+## Executive Summary
+LoopEdu (https://loopedu.in) provides a 15-minute daily practice system designed specifically for CBSE Class 10 candidates. Instead of massive 400-page textbooks that induce study fatigue, LoopEdu employs:
+1. The Daily Five (5 high-yield questions every morning).
+2. The Mistake Comeback (Automated Error Vault with 3d, 7d, 14d spaced repetition & 2x redemption).
+3. The Parent Hub (Anti-micromanagement dashboard with Honesty Metre and automated weekly WhatsApp insights).
+4. Chapter Milestone Rewards (10-Year Board Paper Question Bank PDFs unlocked upon completing chapter loops).
+
+## Pedagogical Methodology
+- **Curriculum Alignment**: Strict adherence to the latest CBSE Class 10 syllabus and official NCERT marking schemes.
+- **AI Coach Grounding**: Step-by-step model answers, KaTeX mathematical proofs, and progressive hints strictly bounded to NCERT textbook concepts.
+- **Micro-Learning**: Exactly 5 questions per session, taking 12 to 15 minutes, preventing burnout and building consistency.
+- **Spaced Repetition Schedule**: In accordance with the Ebbinghaus Forgetting Curve, incorrectly answered questions resurface on Day 3, Day 7, and Day 14. Mastery requires two consecutive unassisted correct solutions.
+
+## Parent Observability & Anti-Micromanagement
+- **Honesty Metre**: Direct reporting of absolute questions attempted (e.g., 145 attempted) vs. true accuracy (e.g., 84% step compliance), avoiding inflated percentage vanity metrics.
+- **Quick Status**: Answers "Did my child complete today's path?" (Yes/No) and "What chapters are fully secure?".
+- **Automated WhatsApp Insights**: Generates structured reports formatted for parent clarity.
+
+## Technical Specifications
+- **Framework**: Next.js 14 App Router, TypeScript, Tailwind CSS, KaTeX.
+- **Multi-Platform Deployment**: Progressive Web Application (PWA) with service worker caching, Android TWA / APK wrapper via Capacitor, and iOS compatibility.
+- **Security & Payments**: Server-side Razorpay webhook HMAC SHA-256 verification; PostgreSQL Row Level Security (RLS) with deny-by-default policies.
+- **Pricing**: ₹299 / month per subject (modular subscription).
+
+## Contact & Corporate Information
+- Company: Blocks and Loops technologies pvt ltd
+- Brand & Umbrella: itappens.ai
+- City: Bangalore, Karnataka, India
+- Website: https://loopedu.in
+- Support: support@blocks-and-loops.com

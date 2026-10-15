@@ -14,7 +14,7 @@ export default function NotFound() {
           Page Not Found
         </h1>
         <p className="text-xs sm:text-sm text-academic-subtle leading-relaxed">
-          The requested page does not exist or was moved. Explore our Class 10 CBSE 2027 practice question catalogue below.
+          The requested page does not exist or was moved. Explore our daily practice tracks and curriculum library below.
         </p>
       </div>
 
@@ -31,7 +31,7 @@ export default function NotFound() {
           className="inline-flex items-center gap-2 bg-white text-forest-900 border border-academic-border font-semibold px-5 py-2.5 rounded-xl text-xs hover:bg-paper-50 transition"
         >
           <BookOpen className="w-3.5 h-3.5" />
-          <span>Explore Subjects (₹999)</span>
+          <span>Explore Subjects</span>
         </Link>
       </div>
     </div>

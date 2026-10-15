@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Refund Policy & Access Revocation | BoardEdge AI by itappens',
+  title: 'Refund Policy & Access Terms | LoopEdu',
 };
 
 export default function RefundPage() {
@@ -13,7 +13,7 @@ export default function RefundPage() {
           Refund Policy & Access Terms
         </h1>
         <p className="text-xs text-academic-subtle">
-          BoardEdge AI by itappens • Class 10 CBSE 2027 Practice Question Banks
+          LoopEdu • Educational Subscriptions & Practice Banks
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export default function RefundPage() {
           <h2 className="text-lg font-serif font-bold text-forest-950">4. How to Request Assistance</h2>
           <p>
             To submit a payment inquiry or refund request, please email our support team at:
-            <code> [OWNER_SETUP_REQUIRED: support@itappens.ai]</code>. Include your Razorpay Payment ID and the email address used at checkout.
+            <code>support@blocks-and-loops.com</code>. Include your Razorpay Payment ID and the email address used at checkout.
           </p>
         </section>
       </div>

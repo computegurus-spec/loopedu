@@ -3,26 +3,30 @@ import Link from 'next/link';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-academic-border bg-paper-200/50 text-forest-900 mt-20">
+    <footer className="border-t border-academic-border bg-paper-200/50 text-forest-900 mt-20 pb-16 sm:pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded bg-forest-900 text-limeaccent flex items-center justify-center font-bold text-sm">
-                B
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-forest-900 text-limeaccent flex items-center justify-center font-bold text-sm">
+                L
               </div>
-              <span className="font-serif font-bold text-lg text-forest-950">
-                BoardEdge AI <span className="text-xs font-sans text-forest-600 font-normal">by itappens</span>
-              </span>
+              <div className="flex flex-col">
+                <span className="font-serif font-bold text-lg text-forest-950 leading-none">
+                  LoopEdu <span className="text-xs font-sans text-forest-700 font-semibold">• loopedu.in</span>
+                </span>
+                <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-forest-600 mt-1">
+                  BETA
+                </span>
+              </div>
             </div>
             <p className="text-xs text-academic-subtle max-w-md leading-relaxed">
-              200 AI-curated practice questions per subject, with model answers and explanations.
-              Prioritized using historical board-paper topic analysis for Class 10 CBSE 2027 preparation.
+              The 15-minute daily habit platform. The Daily Five questions, active recall Mistake Comeback, and real-time Parent Observability.
             </p>
             <div className="pt-2">
               <div className="inline-block bg-white/80 border border-academic-border rounded-lg px-3 py-2 text-xs text-forest-800">
-                <strong>Pricing:</strong> ₹999 per subject • One-time purchase • Online reading access
+                <strong>Pricing:</strong> ₹299/month per subject • Earn 10-year question bank milestone PDFs
               </div>
             </div>
           </div>
@@ -56,6 +60,11 @@ export const Footer: React.FC = () => {
               <li>
                 <Link href="/subject/english-language-literature" className="hover:text-forest-950 hover:underline">
                   English (Language & Lit)
+                </Link>
+              </li>
+              <li>
+                <Link href="/subject/german" className="hover:text-forest-950 hover:underline">
+                  German (Code 017)
                 </Link>
               </li>
               <li>
@@ -121,20 +130,19 @@ export const Footer: React.FC = () => {
           <div className="bg-white/60 border border-academic-border rounded-xl p-4 text-xs text-forest-800 leading-relaxed">
             <p className="font-bold text-forest-950 mb-1">Important Independence Statement:</p>
             <p>
-              BoardEdge AI by itappens is an independent educational practice platform. It is{' '}
+              LoopEdu is an independent educational practice platform created by <strong>Blocks and Loops technologies pvt ltd</strong>. It is{' '}
               <strong>not affiliated with, authorized, or endorsed by the Central Board of Secondary Education (CBSE)</strong>{' '}
               or the National Council of Educational Research and Training (NCERT). Actual board exam questions, formats,
-              and marking schemes may differ. Practice rankings reflect internal heuristic topic-frequency analysis, not
-              guaranteed exam predictions.
+              and marking schemes may differ.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 text-xs text-academic-subtle">
             <div>
-              © 2026–2027 itappens.ai. All rights reserved. BoardEdge AI.
+              © 2026–2027 LoopEdu. All rights reserved. • loopedu.in
             </div>
-            <div>
-              Platform domain: <span className="font-mono text-forest-900">itappens.ai</span>
+            <div className="font-medium text-forest-800 text-center sm:text-right">
+              a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka
             </div>
           </div>
         </div>

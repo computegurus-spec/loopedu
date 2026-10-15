@@ -1,7 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sparkles, HelpCircle, Lightbulb, Compass, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Sparkles,
+  HelpCircle,
+  Lightbulb,
+  Compass,
+  Layers,
+  HelpCircle as QuestionIcon,
+  RotateCw,
+  AlertCircle,
+  Send,
+  Loader2,
+  Check,
+} from 'lucide-react';
 import { MathRenderer } from '../MathRenderer';
 
 interface AIHintCoachProps {
@@ -9,6 +21,7 @@ interface AIHintCoachProps {
   topic: string;
   explanation: string;
   source: string;
+  onReportIssue?: () => void;
 }
 
 export const AIHintCoach: React.FC<AIHintCoachProps> = ({
@@ -16,59 +29,100 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
   topic,
   explanation,
   source,
+  onReportIssue,
 }) => {
-  const [activeTab, setActiveTab] = useState<'hint' | 'analogy' | 'method' | null>(null);
+  const [activeTab, setActiveTab] = useState<
+    'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'custom' | null
+  >(null);
+  const [customQuery, setCustomQuery] = useState('');
+  const [customResponse, setCustomResponse] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [cache, setCache] = useState<Record<string, string>>({});
 
-  // Derive intelligent, grounded guidance safely from verified topic & explanation
-  const getHint = () => {
-    if (topic.includes('Quadratic')) {
-      return 'Check if the equation factors into $(x - p)(x - q) = 0$, where the product of $p$ and $q$ gives the constant term and their sum matches the middle coefficient.';
+  const fetchCoachAction = async (action: 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'ask', qText?: string) => {
+    const cacheKey = action === 'ask' ? `ask_${qText}` : action;
+    if (cache[cacheKey]) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch('/api/ai/coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          question,
+          topic,
+          source,
+          explanation,
+          action,
+          userQuery: qText,
+        }),
+      });
+      const data = await res.json();
+      if (data.text) {
+        setCache((prev) => ({ ...prev, [cacheKey]: data.text }));
+        if (action === 'ask') {
+          setCustomResponse(data.text);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
-    if (topic.includes('Chemical') || topic.includes('Respiration')) {
-      return 'Identify whether heat or biological ATP energy is released into the system. Exothermic reactions yield net energy release.';
-    }
-    if (topic.includes('TF-IDF') || topic.includes('NLP')) {
-      return 'Consider what happens to the inverse document frequency term $\\log(N/\\text{DF})$ when nearly every document contains the term (i.e. $\\text{DF} \\to N$).';
-    }
-    return `Focus on the core concept of ${topic}. Review the formula or rule applied in: ${source}.`;
   };
 
-  const getAnalogy = () => {
-    if (topic.includes('Quadratic')) {
-      return 'Think of roots as finding which specific values turn the whole expression into balance (zero). Just like a scale balancing at exactly two weights.';
+  const handleToggleTab = (tab: 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way') => {
+    if (activeTab === tab) {
+      setActiveTab(null);
+    } else {
+      setActiveTab(tab);
+      fetchCoachAction(tab);
     }
-    if (topic.includes('TF-IDF')) {
-      return 'Think of search like looking for unique clues in a library. Common words like "the" or "is" are everywhere, so they tell you nothing distinct about a document.';
-    }
-    return `In everyday terms, ${topic} describes how fundamental conditions predict the outcome in ${source.split(',')[0]}.`;
   };
 
-  const getMethod = () => {
-    return `1. Write down given variables.\n2. Recall the standard theorem/formula for ${topic}.\n3. Substitute values carefully step-by-step before concluding.`;
+  const handleAskCustom = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customQuery.trim() || loading) return;
+    setActiveTab('custom');
+    fetchCoachAction('ask', customQuery);
   };
 
   return (
-    <div className="rounded-xl border border-forest-200/80 bg-forest-50/40 p-4 space-y-3 text-xs">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 font-bold text-forest-950">
-          <Sparkles className="w-4 h-4 text-forest-700" />
-          <span>AI Study Coach</span>
-          <span className="text-[10px] bg-forest-100 text-forest-800 px-2 py-0.5 rounded font-normal">
-            Ground Truth: {topic}
+    <div className="rounded-2xl border border-forest-200/90 bg-forest-50/50 p-4 sm:p-5 space-y-3.5 text-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-forest-100 pb-3">
+        <div className="flex items-center gap-2 font-bold text-forest-950">
+          <div className="w-6 h-6 rounded-md bg-forest-900 text-limeaccent flex items-center justify-center">
+            <Sparkles className="w-3.5 h-3.5" />
+          </div>
+          <span className="text-sm font-serif">NCERT-Grounded AI Study Coach</span>
+          <span className="text-[10px] bg-forest-200 text-forest-900 px-2 py-0.5 rounded font-mono font-semibold">
+            Strict NCERT Class 10 Syllabus
           </span>
         </div>
-        <span className="text-[11px] text-academic-subtle">
-          Stuck? Ask for a hint without spoiling the answer
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-academic-subtle">
+            Answers constrained to NCERT marking scheme
+          </span>
+          {onReportIssue && (
+            <button
+              onClick={onReportIssue}
+              className="text-[11px] text-forest-700 hover:text-forest-950 underline flex items-center gap-1 font-medium"
+            >
+              <AlertCircle className="w-3 h-3 text-amber-600" />
+              <span>Report issue</span>
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 pt-1">
+      {/* 5 In-Flow Actions */}
+      <div className="flex flex-wrap items-center gap-2">
         <button
-          onClick={() => setActiveTab(activeTab === 'hint' ? null : 'hint')}
+          onClick={() => handleToggleTab('hint')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
             activeTab === 'hint'
-              ? 'bg-forest-900 text-limeaccent'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/50'
+              ? 'bg-forest-900 text-limeaccent shadow-sm'
+              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
           }`}
         >
           <Lightbulb className="w-3.5 h-3.5" />
@@ -76,65 +130,175 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
         </button>
 
         <button
-          onClick={() => setActiveTab(activeTab === 'analogy' ? null : 'analogy')}
+          onClick={() => handleToggleTab('simple')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
-            activeTab === 'analogy'
-              ? 'bg-forest-900 text-limeaccent'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/50'
+            activeTab === 'simple'
+              ? 'bg-forest-900 text-limeaccent shadow-sm'
+              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
           }`}
         >
           <Compass className="w-3.5 h-3.5" />
-          <span>Explain simpler</span>
+          <span>Explain this more simply</span>
         </button>
 
         <button
-          onClick={() => setActiveTab(activeTab === 'method' ? null : 'method')}
+          onClick={() => handleToggleTab('steps')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
-            activeTab === 'method'
-              ? 'bg-forest-900 text-limeaccent'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/50'
+            activeTab === 'steps'
+              ? 'bg-forest-900 text-limeaccent shadow-sm'
+              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
           }`}
         >
-          <HelpCircle className="w-3.5 h-3.5" />
-          <span>3-Step Breakdown</span>
+          <Layers className="w-3.5 h-3.5" />
+          <span>Show the steps</span>
+        </button>
+
+        <button
+          onClick={() => handleToggleTab('why_wrong')}
+          className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
+            activeTab === 'why_wrong'
+              ? 'bg-forest-900 text-limeaccent shadow-sm'
+              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+          }`}
+        >
+          <QuestionIcon className="w-3.5 h-3.5" />
+          <span>Why is my answer wrong?</span>
+        </button>
+
+        <button
+          onClick={() => handleToggleTab('another_way')}
+          className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
+            activeTab === 'another_way'
+              ? 'bg-forest-900 text-limeaccent shadow-sm'
+              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+          }`}
+        >
+          <RotateCw className="w-3.5 h-3.5" />
+          <span>Explain another way</span>
         </button>
       </div>
 
+      {/* Expanded Guidance Drawer */}
       {activeTab && (
-        <div className="p-3.5 bg-white rounded-lg border border-forest-200 text-forest-900 leading-relaxed animate-in fade-in">
-          {activeTab === 'hint' && (
-            <div>
-              <div className="font-bold text-forest-950 mb-1 flex items-center gap-1 text-[11px] uppercase tracking-wider text-forest-700">
-                <Lightbulb className="w-3 h-3 text-forest-600" />
-                <span>Concept Hint (Without Spoilers):</span>
-              </div>
-              <MathRenderer content={getHint()} />
+        <div className="mt-3 p-4 rounded-xl bg-white border border-academic-border space-y-2.5 animate-fadeIn text-forest-900">
+          {loading && !cache[activeTab === 'custom' ? `ask_${customQuery}` : activeTab] ? (
+            <div className="flex items-center gap-2 text-forest-700 py-3">
+              <Loader2 className="w-4 h-4 animate-spin text-forest-900" />
+              <span>Consulting NCERT Class 10 Marking Scheme...</span>
             </div>
-          )}
+          ) : (
+            <>
+              {activeTab === 'hint' && (
+                <div className="space-y-1.5">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
+                    <span>NCERT Conceptual Clue</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={cache['hint'] || 'Review the core formula in the chapter.'} />
+                  </div>
+                </div>
+              )}
 
-          {activeTab === 'analogy' && (
-            <div>
-              <div className="font-bold text-forest-950 mb-1 flex items-center gap-1 text-[11px] uppercase tracking-wider text-forest-700">
-                <Compass className="w-3 h-3 text-forest-600" />
-                <span>Everyday Analogy:</span>
-              </div>
-              <MathRenderer content={getAnalogy()} />
-            </div>
-          )}
+              {activeTab === 'simple' && (
+                <div className="space-y-1.5">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <Compass className="w-3.5 h-3.5 text-forest-700" />
+                    <span>Plain-English NCERT Analogy</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={cache['simple'] || 'Think of this in simple daily terms.'} />
+                  </div>
+                </div>
+              )}
 
-          {activeTab === 'method' && (
-            <div>
-              <div className="font-bold text-forest-950 mb-1 flex items-center gap-1 text-[11px] uppercase tracking-wider text-forest-700">
-                <HelpCircle className="w-3 h-3 text-forest-600" />
-                <span>Structured Solving Steps:</span>
+              {activeTab === 'steps' && (
+                <div className="space-y-2">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-forest-700" />
+                    <span>Step-by-Step Marking Scheme Procedure</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={cache['steps'] || '1. Identify given values.\n2. Apply formula.\n3. Verify units.'} />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'why_wrong' && (
+                <div className="space-y-1.5">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <QuestionIcon className="w-3.5 h-3.5 text-red-600" />
+                    <span>Common CBSE Mistakes & Traps</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={cache['why_wrong'] || 'Watch out for sign and unit errors.'} />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'another_way' && (
+                <div className="space-y-1.5">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <RotateCw className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Alternative Valid Method</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={cache['another_way'] || 'You can also solve by direct algebraic substitution.'} />
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'custom' && (
+                <div className="space-y-1.5">
+                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-forest-700" />
+                    <span>NCERT Answer to Your Question</span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-800">
+                    <MathRenderer text={customResponse || 'Analyzing your question against NCERT guidelines...'} />
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 border-t border-academic-border flex items-center justify-between text-[11px] text-academic-subtle">
+                <span className="flex items-center gap-1 text-forest-800 font-medium">
+                  <Check className="w-3 h-3 text-emerald-600" />
+                  <span>Strictly grounded in NCERT Class 10 ({source})</span>
+                </span>
+                <button
+                  onClick={() => setActiveTab(null)}
+                  className="text-forest-700 hover:text-forest-950 font-semibold"
+                >
+                  Close
+                </button>
               </div>
-              <div className="whitespace-pre-line text-forest-800">
-                {getMethod()}
-              </div>
-            </div>
+            </>
           )}
         </div>
       )}
+
+      {/* Ask NCERT AI Query Input */}
+      <form onSubmit={handleAskCustom} className="pt-1 flex items-center gap-2">
+        <input
+          type="text"
+          value={customQuery}
+          onChange={(e) => setCustomQuery(e.target.value)}
+          placeholder="Ask a specific NCERT question about this problem (e.g. 'Can I use quadratic formula here?')..."
+          className="flex-grow px-3 py-2 rounded-xl border border-academic-border bg-white text-forest-900 text-xs focus:outline-none focus:border-forest-700"
+        />
+        <button
+          type="submit"
+          disabled={loading || !customQuery.trim()}
+          className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-3.5 py-2 rounded-xl text-xs transition disabled:opacity-50 shrink-0"
+        >
+          {loading && activeTab === 'custom' ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Send className="w-3.5 h-3.5" />
+          )}
+          <span>Ask</span>
+        </button>
+      </form>
     </div>
   );
 };

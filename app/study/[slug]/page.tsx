@@ -216,7 +216,7 @@ export default function StudyReaderPage({ params }: ReaderProps) {
 
   const watermarkString = userSession
     ? generateWatermark(userSession.email, userSession.id, slug)
-    : 'BoardEdge AI • Guest Reader License';
+    : 'LoopEdu • Guest Reader License';
 
   return (
     <div className="relative min-h-screen bg-paper text-forest-900 pb-16">

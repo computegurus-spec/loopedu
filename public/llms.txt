@@ -1,0 +1,54 @@
+# LoopEdu (loopedu.in)
+
+> The 15-Minute Daily Habit Platform for CBSE Class 10 Board Examinations
+> A product of itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka
+> Website: https://loopedu.in
+
+## Overview
+LoopEdu (https://loopedu.in) is an AI-powered daily practice platform built for CBSE Class 10 candidates. Designed like Duolingo for board examinations, LoopEdu eliminates study fatigue with bite-sized daily practice, prevents forgetting through active recall spaced repetition, and gives parents transparent observability without micromanagement.
+
+## The 3 Core Pillars
+
+### 1. The Daily Five (Student Gamification)
+- **The Bite-Sized Routine**: Every morning, the student receives exactly five high-yield questions tailored to their selected subject tracks (e.g., Mathematics Standard, Science, Social Science, German) to prevent study fatigue.
+- **The Streak Multiplier**: Completing the daily set unlocks a small batch of XP and maintains a consecutive-day streak counter, using psychological momentum to build a consistent daily habit.
+- **The Unlockable Reward**: Finishing a full chapter's "Daily Five" loop grants the student direct access to download the curated, high-value 10-Year Board Paper Question Bank PDFs for that unit.
+
+### 2. The Mistake Comeback (Active Recall)
+- **The Automated Error Vault**: Every single question a student gets wrong is quietly tagged and routed into a personalized, hidden digital storage bank instead of disappearing.
+- **Spaced Revision Sessions**: The platform dynamically resurfaces these flagged problems 3 days, 7 days, and 14 days later, forcing active recall right when the concept is about to be forgotten.
+- **The Redemption Clearance**: A concept is only marked as "Mastered" and removed from the active loop once the student successfully solves the problem twice in a row without using AI hints.
+
+### 3. The Parent Hub (Observability Dashboard)
+- **The Anti-Micro-Management View**: Parents receive a clean, high-level summary that answers two critical questions at a glance: "Did my child complete today's path?" and "What chapters are fully secure?"
+- **The Honesty Metre**: Instead of vague percentages, the dashboard highlights the absolute number of curated questions attempted versus the actual accuracy rate, providing an uninflated view of exam readiness.
+- **Weekly Actionable Insights**: The system automatically generates a simple text notification for the parent (e.g., "Aryan completed 5/5 tracks this week but needs a quick revision on Quadratic Equations before pre-boards").
+
+## Pricing & Subscription Model
+- **Modular Pricing**: ₹299 / month per subject (cancel anytime).
+- **Milestone Rewards**: 10-Year Question Bank PDFs are earned and unlocked by completing chapter study loops.
+- **Multi-Platform**: Fully responsive Web App, Android (PWA & APK), and iOS.
+
+## Published CBSE Class 10 Subject Tracks
+1. **Mathematics Standard (Code 041)**: Real Numbers, Polynomials, Linear Equations, Quadratic Equations, Arithmetic Progressions, Triangles, Coordinate Geometry, Trigonometry, Circles, Surface Areas & Volumes, Statistics, Probability.
+2. **Mathematics Basic (Code 241)**: Foundational NCERT calculation & procedural mastery.
+3. **Science (Code 086)**: Chemical Reactions, Acids/Bases/Salts, Metals, Carbon, Life Processes, Control & Coordination, Reproduction, Heredity, Light, Electricity, Magnetic Effects.
+4. **Social Science (Code 087)**: History (India & Contemporary World), Geography (Contemporary India), Political Science (Democratic Politics), Economics (Understanding Economic Development).
+5. **English Language & Literature (Code 184)**: First Flight, Footprints Without Feet, Reading Comprehension, Analytical Writing, Integrated Grammar.
+6. **English Communicative (Code 101)**: CBSE Literature Reader, MCB Units, Integrated Editing.
+7. **German (Code 017)**: Grammar, Reading Comprehension, Written Expression.
+8. **Artificial Intelligence (Skill Code 417)**: AI Project Cycle, Computer Vision, NLP, Evaluation Metrics, Employability Skills.
+
+## Key Links & Endpoints
+- Canonical Homepage: https://loopedu.in/
+- Study Path: https://loopedu.in/learn
+- Today's Daily Five: https://loopedu.in/today
+- Parent Observability Hub: https://loopedu.in/parent
+- Subject Catalogue: https://loopedu.in/catalogue
+- Legal & Terms: https://loopedu.in/terms
+- Privacy Policy: https://loopedu.in/privacy
+
+## Legal Entity & Publishing Statement
+LoopEdu is an independent educational technology platform.
+A product of itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka.
+LoopEdu is independent and not affiliated with, authorized, or endorsed by the Central Board of Secondary Education (CBSE) or NCERT.

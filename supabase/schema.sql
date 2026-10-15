@@ -1,5 +1,5 @@
 -- ==============================================================================
--- BoardEdge AI by itappens - CBSE 2027 Question Banks Database Schema
+-- BoardEdge AI by blocks and loops - CBSE 2027 Question Banks Database Schema
 -- Production PostgreSQL with Row Level Security (RLS) & Deny-by-Default
 -- ==============================================================================
 

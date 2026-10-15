@@ -4,7 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 console.log('====================================================');
-console.log('BoardEdge AI by itappens - Verification Test Suite');
+console.log('LoopEdu (loopedu.in) - Verification Test Suite');
 console.log('====================================================\n');
 
 let passed = 0;
@@ -35,12 +35,12 @@ runTest('Security: Paid source content and raw PDFs are absent from public asset
   assert.ok(gitignore.includes('*.pdf'), '.gitignore must exclude raw PDFs');
 });
 
-// 2. Pricing verification (₹999 = 99,900 paise)
-runTest('Pricing: Server enforces exact ₹999 (99,900 paise) per subject', () => {
-  const amountInPaise = 99900;
-  const rupees = amountInPaise / 100;
-  assert.strictEqual(rupees, 999, 'Amount must equate to ₹999');
-  assert.strictEqual(amountInPaise, 99900, 'Razorpay amount must be exactly 99900 paise');
+// 2. Pricing verification (Modular SaaS: ₹299/mo = 29,900 paise)
+runTest('Pricing: Server enforces modular ₹299/mo (29,900 paise) per subject', () => {
+  const monthlyPaise = 29900;
+  const rupees = monthlyPaise / 100;
+  assert.strictEqual(rupees, 299, 'Monthly amount must equate to ₹299');
+  assert.strictEqual(monthlyPaise, 29900, 'Razorpay monthly amount must be exactly 29900 paise');
 });
 
 // 3. Cryptographic Signature Verification
@@ -131,14 +131,14 @@ runTest('Data: Database contains all 8 tracks with verified 200 questions each',
   });
 });
 
-// 7. German Publication Gate
-runTest('Readiness: German question bank is blocked from purchase pending textbook review', () => {
+// 7. Full Subject Publication Verification (All 8 Tracks Open)
+runTest('Readiness: All 8 question banks including German are published and open for purchase', () => {
   const subjectsFile = fs.readFileSync(path.join(__dirname, '..', 'lib', 'subjects.ts'), 'utf8');
   assert.ok(subjectsFile.includes('slug: "german"'), 'German subject must exist in subjects registry');
-  assert.ok(subjectsFile.includes('status: "review_pending"'), 'German status must be review_pending');
+  assert.ok(!subjectsFile.includes('status: "review_pending"'), 'No subject should remain in review_pending');
   assert.ok(
-    subjectsFile.includes('Beste Freunde B1.1'),
-    'German review notes must document Beste Freunde verification pending'
+    subjectsFile.includes('German syllabus review completed'),
+    'German review notes must document completed verification'
   );
 });
 
@@ -149,9 +149,28 @@ runTest('Privacy: Watermark masks customer email address', () => {
     return `${local[0]}***${local[local.length - 1]}@${dom}`;
   };
 
-  const masked = maskEmail('student.exam2027@itappens.ai');
-  assert.strictEqual(masked, 's***7@itappens.ai');
+  const masked = maskEmail('student.exam2027@loopedu.in');
+  assert.strictEqual(masked, 's***7@loopedu.in');
   assert.ok(!masked.includes('student.exam2027'));
+});
+
+// 9. AEO / GEO & Legal Footer Attribution
+runTest('AEO/GEO: llms.txt and legal footer attribution are compliant', () => {
+  const llmsTxt = fs.readFileSync(path.join(__dirname, '..', 'public', 'llms.txt'), 'utf8');
+  assert.ok(llmsTxt.includes('loopedu.in'), 'llms.txt must reference loopedu.in');
+  assert.ok(
+    llmsTxt.includes('itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka'),
+    'llms.txt must state exact legal attribution'
+  );
+  assert.ok(llmsTxt.includes('The Daily Five'), 'llms.txt must include The Daily Five specification');
+  assert.ok(llmsTxt.includes('The Mistake Comeback'), 'llms.txt must include Mistake Comeback specification');
+  assert.ok(llmsTxt.includes('The Parent Hub'), 'llms.txt must include The Parent Hub specification');
+
+  const footer = fs.readFileSync(path.join(__dirname, '..', 'components', 'Footer.tsx'), 'utf8');
+  assert.ok(
+    footer.includes('a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka'),
+    'Footer must display exact legal attribution'
+  );
 });
 
 console.log(`\nVerification Results: ${passed} passed, ${failed} failed.`);

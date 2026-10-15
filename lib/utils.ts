@@ -54,5 +54,5 @@ export function maskEmail(email: string): string {
 export function generateWatermark(email: string, userId: string, subjectSlug: string): string {
   const masked = maskEmail(email);
   const shortId = userId.slice(0, 8);
-  return `BoardEdge AI • ${masked} • [License ID: ${shortId}] • CBSE 2027 Independent Practice`;
+  return `LoopEdu • ${masked} • [License ID: ${shortId}] • Independent Practice`;
 }

@@ -1,0 +1,18 @@
+{
+  "appId": "in.loopedu.app",
+  "appName": "LoopEdu",
+  "bundledWebRuntime": false,
+  "webDir": "public",
+  "server": {
+    "url": "https://loopedu.in",
+    "cleartext": false
+  },
+  "android": {
+    "backgroundColor": "#090d16",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#090d16",
+    "contentInset": "automatic"
+  }
+}

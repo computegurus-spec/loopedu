@@ -183,7 +183,7 @@ export default function AdminDashboardPage() {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold text-forest-950 mt-1">
-            BoardEdge AI Platform Operations
+            LoopEdu Platform Operations
           </h1>
           <p className="text-xs text-academic-subtle mt-0.5">
             Publication gates, version control, manual access audit, and curriculum demand analysis.

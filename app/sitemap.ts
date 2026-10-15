@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { ALL_SUBJECTS } from '@/lib/subjects';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://itappens.ai';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://boardedge.ai';
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -13,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/catalogue`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/challenge`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,

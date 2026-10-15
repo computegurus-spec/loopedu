@@ -18,14 +18,21 @@ import {
   Layers,
 } from 'lucide-react';
 
+import { redirect } from 'next/navigation';
+
 export const metadata = {
-  title: 'My Study Library & Daily Practice | BoardEdge AI by itappens',
+  title: 'My Study Library & Daily Practice | LoopEdu',
 };
 
 export default async function LibraryPage() {
   const user = await getSessionUser();
+
+  if (!user) {
+    redirect('/login?redirect=/library');
+  }
+
   const allSubjects = await getSubjects();
-  const entitlements = user ? await getUserEntitlements(user.id) : [];
+  const entitlements = await getUserEntitlements(user.id);
 
   const ownedSlugs = new Set(entitlements.map((e) => e.subject_slug));
   const enrolledSubjects = allSubjects.filter((s) => ownedSlugs.has(s.slug));
@@ -41,11 +48,11 @@ export default async function LibraryPage() {
             </span>
             <span className="text-xs text-forest-400">•</span>
             <span className="text-xs bg-limeaccent/30 text-forest-950 px-2 py-0.5 rounded font-bold">
-              Class 10 CBSE 2027
+              LoopEdu Member
             </span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-serif font-bold text-forest-950 mt-1">
-            Welcome back, {user?.name || 'Class 10 Student'}
+            Welcome back, {user.name}
           </h1>
           <p className="text-xs sm:text-sm text-academic-subtle mt-0.5">
             Know what to practise next, understand your mistakes, and see your progress.
@@ -59,7 +66,7 @@ export default async function LibraryPage() {
           </div>
           <div className="text-xs">
             <div className="font-semibold text-forest-950 truncate max-w-[150px]">
-              {user?.email || 'student@itappens.ai'}
+              {user?.email || 'student@example.com'}
             </div>
             <div className="text-[10px] text-academic-subtle">
               {enrolledSubjects.length} of {allSubjects.length} Subjects Active
@@ -87,7 +94,7 @@ export default async function LibraryPage() {
             href="/catalogue"
             className="text-xs font-bold text-forest-900 hover:text-forest-700 underline"
           >
-            Add More Subjects (₹999) →
+            Explore Subject Tracks →
           </Link>
         </div>
 
@@ -164,7 +171,7 @@ export default async function LibraryPage() {
                 href="/catalogue"
                 className="inline-flex items-center gap-2 bg-forest-900 text-limeaccent font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl hover:bg-forest-800 transition"
               >
-                <span>Browse Subjects Catalogue (₹999)</span>
+                <span>Browse Subject Tracks</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

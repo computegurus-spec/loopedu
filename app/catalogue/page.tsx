@@ -5,9 +5,9 @@ import { CheckoutButton } from '@/components/CheckoutButton';
 import { CheckCircle2, AlertTriangle, ArrowRight, BookOpen, Layers } from 'lucide-react';
 
 export const metadata = {
-  title: 'All Subjects & Tracks | BoardEdge AI by itappens',
+  title: 'Curriculum & Subject Tracks | LoopEdu',
   description:
-    'Choose from 8 Class 10 CBSE 2027 practice banks. ₹999 per subject. 200 questions with model answers and explanations.',
+    'Choose your subject tracks on LoopEdu. Practice daily 15-minute bite-sized routines, recover mistakes with active recall, and unlock complete 10-year question banks.',
 };
 
 export default function CataloguePage() {
@@ -16,22 +16,110 @@ export default function CataloguePage() {
       {/* Header */}
       <div className="max-w-3xl space-y-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-100 text-forest-900 border border-forest-200 text-xs font-semibold uppercase tracking-wider">
-          Class 10 CBSE 2027 Catalogue
+          Curriculum Subject Tracks
         </div>
         <h1 className="text-3xl sm:text-5xl font-serif font-bold text-forest-950 tracking-tight">
           Select your subjects. Start your practice.
         </h1>
         <p className="text-base sm:text-lg text-forest-800 leading-relaxed">
-          Each subject question bank contains 200 AI-curated practice questions with model answers and
-          step-by-step explanations, ranked by historical board-paper topic frequency.
+          Built for students who want to prepare independently on their own. Each subject bank contains 200 questions prepared by AI with the help of <strong>past 10 years of CBSE board exam papers</strong>, complete with step-by-step model answers and marking-scheme explanations.
         </p>
-        <div className="pt-1 flex items-center gap-4 text-xs font-semibold text-forest-900">
-          <span className="bg-white border border-academic-border px-3 py-1.5 rounded-lg">
-            Fixed Price: ₹999 per subject
+        <div className="pt-1 flex flex-wrap items-center gap-3 text-xs font-semibold text-forest-900">
+          <span className="bg-limeaccent text-forest-950 border border-forest-900/20 px-3 py-1.5 rounded-lg shadow-sm font-bold">
+            Modular Subscription: ₹299 / month per subject
           </span>
-          <span className="bg-white border border-academic-border px-3 py-1.5 rounded-lg">
-            One-time purchase • No recurring fee
+          <span className="bg-white border border-academic-border px-3 py-1.5 rounded-lg shadow-sm">
+            Choose Subjects One-by-One
           </span>
+          <span className="bg-white border border-academic-border px-3 py-1.5 rounded-lg shadow-sm">
+            Earn 10-Yr Question Bank PDFs Per Unit
+          </span>
+        </div>
+      </div>
+
+      {/* Modular Subscription Pricing Tier Banner */}
+      <div className="rounded-3xl bg-forest-950 text-white p-6 sm:p-8 shadow-xl border border-forest-800 space-y-6">
+        <div className="max-w-2xl">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-limeaccent bg-forest-900 px-2 py-0.5 rounded">
+            Modular Pricing Options
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white mt-2">
+            Subscribe only to what your child needs.
+          </h2>
+          <p className="text-xs sm:text-sm text-forest-300 mt-1 leading-relaxed">
+            No forced packages. Choose 1 subject for a weak area, bundle 2, or unlock all subjects. Includes Duolingo-style 15-min daily path, NCERT AI Coach, and Parent Observability Hub.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+          {/* Plan 1 */}
+          <div className="rounded-2xl bg-forest-900 border border-forest-800 p-5 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-forest-300">
+                Single Subject Focus
+              </div>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-3xl font-serif font-bold text-white">₹299</span>
+                <span className="text-xs text-forest-400">/ month</span>
+              </div>
+              <p className="text-xs text-forest-300 mt-2">
+                Ideal to fix one specific weak subject (e.g. Maths Standard or Science).
+              </p>
+            </div>
+            <ul className="text-xs text-forest-200 space-y-1.5 pt-3 border-t border-forest-800">
+              <li>✓ Daily 15-min Duolingo path</li>
+              <li>✓ Earn Topic Question Bank PDFs</li>
+              <li>✓ Parent Observability Hub</li>
+              <li>✓ NCERT AI Coach included</li>
+            </ul>
+          </div>
+
+          {/* Plan 2 */}
+          <div className="rounded-2xl bg-forest-900 border-2 border-limeaccent p-5 space-y-3 flex flex-col justify-between relative shadow-md">
+            <span className="absolute -top-3 right-4 bg-limeaccent text-forest-950 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full">
+              Most Popular
+            </span>
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-limeaccent">
+                Core Duo Pack
+              </div>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-3xl font-serif font-bold text-white">₹499</span>
+                <span className="text-xs text-forest-400">/ month</span>
+              </div>
+              <p className="text-xs text-forest-300 mt-2">
+                Pick any 2 subjects (e.g. Maths + Science). Save ₹99 every month.
+              </p>
+            </div>
+            <ul className="text-xs text-forest-200 space-y-1.5 pt-3 border-t border-forest-800">
+              <li>✓ Any 2 CBSE subjects</li>
+              <li>✓ 2× Daily 15-min habit loops</li>
+              <li>✓ Weekly WhatsApp Parent Reports</li>
+              <li>✓ Priority NCERT AI doubt solving</li>
+            </ul>
+          </div>
+
+          {/* Plan 3 */}
+          <div className="rounded-2xl bg-forest-900 border border-forest-800 p-5 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
+                All-Subject Board Pass
+              </div>
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="text-3xl font-serif font-bold text-white">₹799</span>
+                <span className="text-xs text-forest-400">/ month</span>
+              </div>
+              <p className="text-xs text-forest-300 mt-2">
+                Full access to all 8 CBSE subjects. Complete board exam preparation.
+              </p>
+            </div>
+            <ul className="text-xs text-forest-200 space-y-1.5 pt-3 border-t border-forest-800">
+              <li>✓ All 8 CBSE Class 10 subjects</li>
+              <li>✓ Complete question bank PDF unlock series</li>
+              <li>✓ Comprehensive Board Readiness Index</li>
+              <li>✓ Unlimited NCERT AI Coach</li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -68,8 +156,8 @@ export default function CataloguePage() {
           <h2 className="text-xl font-serif font-bold text-forest-950">
             Available Practice Question Banks (8 Tracks)
           </h2>
-          <span className="text-xs text-academic-subtle font-mono">
-            {ALL_SUBJECTS.filter((s) => s.status === 'published').length} Published • {ALL_SUBJECTS.filter((s) => s.status !== 'published').length} In Review
+          <span className="text-xs text-forest-800 font-mono font-semibold bg-forest-100 px-2.5 py-1 rounded-md">
+            All 8 Question Banks Published & Available
           </span>
         </div>
 
@@ -157,10 +245,10 @@ export default function CataloguePage() {
                   <div className="flex items-baseline justify-between">
                     <div>
                       <span className="text-2xl font-serif font-bold text-forest-950">
-                        ₹{sub.priceInr}
+                        ₹299
                       </span>
                       <span className="text-xs text-academic-subtle ml-1.5 font-sans">
-                        / subject
+                        / month
                       </span>
                     </div>
 
@@ -176,14 +264,60 @@ export default function CataloguePage() {
                   <CheckoutButton
                     subjectSlug={sub.slug}
                     subjectName={sub.name}
-                    priceInr={sub.priceInr}
+                    priceInr={299}
                     isPublished={isPublished}
-                    buttonText={`Enrol in ${sub.shortName} (₹999)`}
+                    buttonText={`Subscribe to ${sub.shortName} (₹299/mo)`}
                   />
                 </div>
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* Coming Soon for Classes 12, 11, 9, and 8 */}
+      <div className="rounded-3xl bg-forest-950 text-white p-8 sm:p-12 relative overflow-hidden border border-forest-800">
+        <div className="max-w-2xl space-y-3 mb-8">
+          <span className="text-[11px] font-bold uppercase tracking-widest text-limeaccent">
+            Future Curriculum Roadmaps
+          </span>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+            Expanding Classes & Boards: Classes 12, 11, 9 & 8
+          </h2>
+          <p className="text-xs sm:text-sm text-forest-200 leading-relaxed">
+            Expanding our bite-sized daily habit routine and mistake-recall loop across CBSE higher secondary, foundation classes, ICSE, and State Boards on our modular ₹299/mo subscription.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-5 rounded-2xl bg-forest-900/80 border border-forest-800 space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase text-limeaccent bg-forest-800 px-2 py-0.5 rounded">
+              In Review
+            </span>
+            <h3 className="text-base font-serif font-bold text-white mt-1">Class 12 CBSE</h3>
+            <p className="text-xs text-forest-300">Physics, Chemistry, Maths, Biology, Accountancy, Economics.</p>
+          </div>
+          <div className="p-5 rounded-2xl bg-forest-900/80 border border-forest-800 space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase text-amber-300 bg-forest-800 px-2 py-0.5 rounded">
+              Mapping
+            </span>
+            <h3 className="text-base font-serif font-bold text-white mt-1">Class 11 CBSE</h3>
+            <p className="text-xs text-forest-300">Senior Secondary bridge question banks for Science & Commerce.</p>
+          </div>
+          <div className="p-5 rounded-2xl bg-forest-900/80 border border-forest-800 space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase text-blue-300 bg-forest-800 px-2 py-0.5 rounded">
+              Drafting
+            </span>
+            <h3 className="text-base font-serif font-bold text-white mt-1">Class 9 CBSE</h3>
+            <p className="text-xs text-forest-300">Pre-board foundational problem sets in Maths, Science & Social Science.</p>
+          </div>
+          <div className="p-5 rounded-2xl bg-forest-900/80 border border-forest-800 space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase text-purple-300 bg-forest-800 px-2 py-0.5 rounded">
+              Drafting
+            </span>
+            <h3 className="text-base font-serif font-bold text-white mt-1">Class 8 CBSE</h3>
+            <p className="text-xs text-forest-300">Junior high conceptual clarity and active recall practice modules.</p>
+          </div>
         </div>
       </div>
     </div>

@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { ShieldCheck, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
 
 export const metadata = {
-  title: 'Methodology & Independence | BoardEdge AI by itappens',
+  title: 'Methodology & Independence | LoopEdu',
   description:
-    'Understand how BoardEdge AI curates and prioritizes practice questions for Class 10 CBSE 2027 board exams.',
+    'Understand how LoopEdu transforms board preparation with 15-minute daily bite-sized loops, spaced active recall, and curated 10-year question banks.',
 };
 
 export default function AboutPage() {
@@ -13,14 +13,13 @@ export default function AboutPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-10">
       <div className="space-y-4">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-100 text-forest-900 border border-forest-200 text-xs font-semibold uppercase tracking-wider">
-          About the Platform
+          About LoopEdu
         </div>
         <h1 className="text-3xl sm:text-5xl font-serif font-bold text-forest-950 tracking-tight">
-          A little more focus.<br />A lot more practice.
+          A 15-Minute Daily Habit.<br />Peak Board Confidence.
         </h1>
         <p className="text-base sm:text-lg text-forest-800 leading-relaxed">
-          BoardEdge AI is an independent study companion built by <strong>itappens</strong> for students preparing
-          for the Class 10 CBSE 2027 board examinations.
+          LoopEdu is an independent study companion built by <strong>Blocks and Loops technologies pvt ltd</strong> to make exam preparation effortless through daily gamified consistency, automated error recovery, and parent observability.
         </p>
       </div>
 
@@ -86,7 +85,7 @@ export default function AboutPage() {
           Independent Practice Material
         </h3>
         <p className="text-xs sm:text-sm text-forest-200 leading-relaxed">
-          BoardEdge AI by itappens is completely independent. It is <strong>not affiliated with, endorsed by, or authorized by the Central Board of Secondary Education (CBSE)</strong> or the National Council of Educational Research and Training (NCERT). Actual board exam questions, structures, and marking criteria may differ.
+          BoardEdge AI is completely independent, created by <strong>blocks and loops</strong>. It is <strong>not affiliated with, endorsed by, or authorized by the Central Board of Secondary Education (CBSE)</strong> or the National Council of Educational Research and Training (NCERT). Actual board exam questions, structures, and marking criteria may differ.
         </p>
       </div>
 

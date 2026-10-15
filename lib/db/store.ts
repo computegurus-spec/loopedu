@@ -71,7 +71,7 @@ function loadDB(): DBState {
       },
       'demo-student': {
         id: 'demo-student',
-        email: 'student@itappens.ai',
+        email: 'student@blocks-and-loops.com',
         name: 'Class 10 Student',
         role: 'customer',
         created_at: new Date().toISOString(),

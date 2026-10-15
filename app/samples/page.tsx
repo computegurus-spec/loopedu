@@ -6,9 +6,9 @@ import { MathRenderer } from '@/components/MathRenderer';
 import { BookOpen, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export const metadata = {
-  title: 'Free CBSE 2027 Sample Questions & Model Answers | BoardEdge AI',
+  title: 'Free Sample Questions & Model Answers | LoopEdu',
   description:
-    'Explore free Class 10 sample practice questions with model answers and explanations across Maths, Science, Social Science, and AI. No sign-up required.',
+    'Explore free sample practice questions with step-by-step model answers and explanations across Maths, Science, Social Science, and AI. No sign-up required.',
 };
 
 export default async function SamplesPage() {

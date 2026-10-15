@@ -64,10 +64,17 @@ export const RevisionQueue: React.FC = () => {
         </span>
       </div>
 
-      <p className="text-xs text-academic-subtle leading-relaxed">
-        We do not call a topic mastered after one correct attempt. These questions revisit concepts you previously
-        struggled with or flagged for deeper revision before board exams.
-      </p>
+      <div className="bg-forest-50 border border-forest-200 rounded-xl p-3.5 text-xs text-forest-800 leading-relaxed space-y-1.5">
+        <div className="font-bold text-forest-950 flex items-center gap-1.5">
+          <RotateCcw className="w-3.5 h-3.5 text-forest-800" />
+          <span>The Mistake Comeback (Active Recall)</span>
+        </div>
+        <p className="text-[11px] text-forest-800">
+          <strong>1. Automated Error Vault:</strong> Every question missed is silently routed into your private vault. • 
+          <strong> 2. Spaced Revision:</strong> Resurfaces at 3-day, 7-day, and 14-day intervals right before concepts are forgotten. • 
+          <strong> 3. Redemption Clearance:</strong> Only removed and marked "Mastered" once you solve it correctly twice in a row without AI hints.
+        </p>
+      </div>
 
       <div className="space-y-3">
         {SAMPLE_REVISION_QUEUE.map((item) => (

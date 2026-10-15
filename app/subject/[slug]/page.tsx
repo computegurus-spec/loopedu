@@ -28,8 +28,8 @@ export async function generateMetadata({ params }: SubjectPageProps) {
   if (!subject) return {};
 
   return {
-    title: `${subject.name} - Class 10 CBSE 2027 Practice Bank | BoardEdge AI`,
-    description: `200 AI-curated practice questions with model answers for Class 10 ${subject.name}. Prioritized using historical board-paper topic analysis. ₹999.`,
+    title: `${subject.name} Track | LoopEdu`,
+    description: `Curated high-yield practice questions with model answers for ${subject.name}. Master the Daily Five routine and spaced active recall on LoopEdu.`,
   };
 }
 
@@ -151,16 +151,16 @@ export default async function SubjectDetailPage({ params }: SubjectPageProps) {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-forest-700 flex-shrink-0" />
-              <span>Valid through CBSE 2027 board exams</span>
+              <span>Modular monthly subscription (cancel anytime)</span>
             </div>
           </div>
 
           <CheckoutButton
             subjectSlug={subject.slug}
             subjectName={subject.name}
-            priceInr={subject.priceInr}
+            priceInr={299}
             isPublished={isPublished}
-            buttonText={`Unlock ${subject.shortName} (₹999)`}
+            buttonText={`Start ${subject.shortName} (₹299/mo)`}
           />
 
           <div className="text-[11px] text-academic-subtle text-center space-y-1">

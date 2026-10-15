@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const report = await recordContentErrorReport({
       userId: user?.id || 'anonymous_reader',
-      userEmail: user?.email || 'reader@itappens.ai',
+      userEmail: user?.email || 'reader@blocks-and-loops.com',
       questionId,
       subjectSlug: subjectSlug as SubjectSlug,
       reportType: reportType || 'other',

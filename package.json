@@ -1,8 +1,8 @@
 {
-  "name": "boardedge-ai",
+  "name": "loopedu",
   "version": "1.0.0",
   "private": true,
-  "description": "BoardEdge AI by itappens - CBSE 2027 Class 10 Practice Question Banks",
+  "description": "LoopEdu (loopedu.in) - The 15-minute daily habit platform for CBSE Class 10. A product of itappens.ai | Blocks and Loops technologies pvt ltd",
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",

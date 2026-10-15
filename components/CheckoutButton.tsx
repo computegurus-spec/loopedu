@@ -26,7 +26,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   priceInr,
   isPublished,
   className = '',
-  buttonText = 'Enrol for ₹999',
+  buttonText = 'Enrol for ₹299/mo',
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -69,7 +69,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: 'student@itappens.ai',
+            email: 'student@blocks-and-loops.com',
             name: 'Class 10 Student',
           }),
         });
@@ -105,8 +105,8 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
           key: orderData.razorpay.keyId,
           amount: orderData.razorpay.amount,
           currency: orderData.razorpay.currency,
-          name: 'BoardEdge AI by itappens',
-          description: `${subjectName} - Class 10 CBSE 2027 Practice Bank`,
+          name: 'LoopEdu by Blocks and Loops',
+          description: `${subjectName} - Modular Study Track`,
           order_id: orderData.razorpay.orderId,
           prefill: {
             email: currentUser.email,
@@ -234,27 +234,27 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
                 <span className="font-bold">{subjectName}</span>
               </div>
               <div className="flex justify-between text-forest-900">
-                <span>Curriculum / Exam:</span>
-                <span>Class 10 • CBSE 2027</span>
+                <span>Curriculum / Track:</span>
+                <span>Active Board Syllabus</span>
               </div>
               <div className="flex justify-between text-forest-900">
-                <span>License Terms:</span>
-                <span>Online reading access (365 days)</span>
+                <span>Plan Terms:</span>
+                <span>Modular monthly subscription (cancel anytime)</span>
               </div>
               <div className="pt-2 border-t border-academic-border flex justify-between text-forest-950 font-bold text-sm">
-                <span>Final Payable Amount:</span>
-                <span className="text-forest-900 text-base">₹999</span>
+                <span>Payable Amount:</span>
+                <span className="text-forest-900 text-base">₹{priceInr || 299}/mo</span>
               </div>
             </div>
 
             <div className="p-3 bg-forest-50 border border-forest-200 rounded-xl text-xs text-forest-800 leading-relaxed space-y-1">
               <div className="font-semibold flex items-center gap-1.5 text-forest-950">
                 <CheckCircle2 className="w-3.5 h-3.5 text-forest-700" />
-                <span>One-Time Purchase Guarantee</span>
+                <span>Modular Subscription Access</span>
               </div>
               <p className="text-[11px] text-forest-700">
                 Order ID: <code className="font-mono">{simulatedCheckoutData.razorpay.orderId}</code>.
-                No recurring subscriptions. Instant digital access granted upon capture.
+                Instant digital access granted to Daily Five, Mistake Comeback, and unlockable question bank.
               </p>
             </div>
 
@@ -272,7 +272,7 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
                 ) : (
                   <>
                     <CreditCard className="w-4 h-4" />
-                    <span>Complete Test Payment (₹999)</span>
+                    <span>Complete Test Payment (₹{priceInr || 299})</span>
                   </>
                 )}
               </button>

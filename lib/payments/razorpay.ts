@@ -30,6 +30,7 @@ export interface CreateOrderParams {
   subjectSlug: SubjectSlug;
   userId: string;
   userEmail: string;
+  plan?: 'monthly' | 'annual';
 }
 
 export interface CreateOrderResult {
@@ -58,8 +59,9 @@ export async function createRazorpayOrder(params: CreateOrderParams): Promise<Cr
     throw new Error(`Subject ${subject.name} is currently ${subject.status} and not open for purchase.`);
   }
 
-  // Price validation: ₹999 -> 99900 paise
-  const amountInPaise = 99900;
+  // Price validation: ₹299/mo (29,900 paise) or ₹999 full-course (99,900 paise)
+  const isAnnual = params.plan === 'annual';
+  const amountInPaise = isAnnual ? 99900 : 29900;
   const currency = 'INR';
 
   if (!isSimulatedPaymentMode) {

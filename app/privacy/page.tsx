@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const metadata = {
-  title: 'Privacy Policy | BoardEdge AI by itappens',
+  title: 'Privacy Policy | LoopEdu',
 };
 
 export default function PrivacyPage() {
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="text-xs text-academic-subtle">
-          Last updated: October 2026 • BoardEdge AI by itappens
+          Last updated: October 2026 • LoopEdu by Blocks and Loops technologies pvt ltd
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
           <h2 className="text-lg font-serif font-bold text-forest-950">5. Contact Data Officer</h2>
           <p>
             For data inquiries, access requests, or deletion:
-            <code> [OWNER_SETUP_REQUIRED: privacy@itappens.ai]</code>.
+            <code>privacy@blocks-and-loops.com</code>.
           </p>
         </section>
       </div>

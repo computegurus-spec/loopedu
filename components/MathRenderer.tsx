@@ -5,7 +5,8 @@ import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
 interface MathRendererProps {
-  content: string;
+  content?: string;
+  text?: string;
   className?: string;
 }
 
@@ -13,14 +14,15 @@ interface MathRendererProps {
  * Renders mathematical expressions using KaTeX.
  * Supports inline `$math$` and `$$block math$$`, as well as standard mathematical symbols.
  */
-export const MathRenderer: React.FC<MathRendererProps> = ({ content, className = '' }) => {
+export const MathRenderer: React.FC<MathRendererProps> = ({ content, text, className = '' }) => {
+  const raw = content ?? text ?? '';
   const renderedHtml = useMemo(() => {
-    if (!content) return '';
+    if (!raw) return '';
 
     try {
       // If content contains $...$ or $$...$$, parse and render those segments
-      if (content.includes('$')) {
-        const parts = content.split(/(\$\$[\s\S]*?\$\$|\$[^\$]+?\$)/g);
+      if (raw.includes('$')) {
+        const parts = raw.split(/(\$\$[\s\S]*?\$\$|\$[^\$]+?\$)/g);
         return parts
           .map((part) => {
             if (part.startsWith('$$') && part.endsWith('$$')) {
@@ -37,22 +39,22 @@ export const MathRenderer: React.FC<MathRendererProps> = ({ content, className =
 
       // Check if standard math formulas are present (e.g. x² - 8x + 15 = 0 or LaTeX tags \frac, \sqrt)
       if (
-        content.includes('\\frac') ||
-        content.includes('\\sqrt') ||
-        content.includes('\\pm') ||
-        content.includes('\\alpha') ||
-        content.includes('\\beta') ||
-        content.includes('\\theta')
+        raw.includes('\\frac') ||
+        raw.includes('\\sqrt') ||
+        raw.includes('\\pm') ||
+        raw.includes('\\alpha') ||
+        raw.includes('\\beta') ||
+        raw.includes('\\theta')
       ) {
-        return katex.renderToString(content, { displayMode: false, throwOnError: false });
+        return katex.renderToString(raw, { displayMode: false, throwOnError: false });
       }
 
       // Fallback: standard safe text with preserved superscripts and formatting
-      return escapeHtml(content);
+      return escapeHtml(raw);
     } catch (e) {
-      return escapeHtml(content);
+      return escapeHtml(raw);
     }
-  }, [content]);
+  }, [raw]);
 
   return (
     <span

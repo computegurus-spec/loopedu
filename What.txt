@@ -1,0 +1,17 @@
+Priority	Item	Provider / Source	What You Need to Get	Where It Plugs In
+🔴 1	Domain Name	GoDaddy / Hostinger	Purchase & lock loopedu.in	Point DNS (A/CNAME records) to your hosting provider
+🔴 2	Cloud Hosting	Vercel (Recommended for Next.js) or Railway	Free/Pro account connected to your GitHub repo	Set NEXT_PUBLIC_APP_URL=https://loopedu.in in environment variables
+🔴 3	Live Payments (Razorpay)	Razorpay Dashboard	1. Live Key ID (rzp_live_...)
+2. Live Key Secret
+3. Webhook Secret (Set webhook URL to https://loopedu.in/api/webhooks/razorpay)	.env.production (NEXT_PUBLIC_RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET, RAZORPAY_WEBHOOK_SECRET)
+🔴 4	Database (PostgreSQL)	Supabase	1. Project URL
+2. Service Role Secret Key
+(Run supabase/schema.sql migration in SQL Editor)	.env.production (NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+🔴 5	AI Doubt Coach Key	Google AI Studio (Gemini) or OpenAI	API Key for real-time problem hints and NCERT step explanations	.env.production (GEMINI_API_KEY or OPENAI_API_KEY)
+Phase 2: User Onboarding & Identity
+Priority	Item	Provider / Source	What You Need to Get	Purpose
+🟡 6	Auth0 / Google Sign-In	Auth0 or Supabase Auth	Auth0 Domain, Client ID, and Client Secret (or enable Google 1-Click OAuth in Supabase)	Eliminates password fatigue for students and parents; enables instant sign-in with Gmail
+Phase 3: Parent Retention & Notifications (First 2 Weeks)
+Priority	Item	Provider / Source	What You Need to Get	Purpose
+🟢 7	Automated WhatsApp Alerts	Interakt / Wati / Gupshup	WhatsApp Business API number & template approvals	Currently, parents can send the weekly report via 1-click manual WhatsApp (api.whatsapp.com). An API provider automates this every Sunday at 8 PM without parent intervention.
+🟢 8	Transactional Email	Resend.com or SendGrid	Free API Key + verify loopedu.in domain	For sending digital subscription receipts and chapter milestone PDF downloads
