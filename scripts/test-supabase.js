@@ -17,9 +17,7 @@ if (fs.existsSync(envLocalPath)) {
       if (idx !== -1) {
         const key = trimmed.slice(0, idx).trim();
         const value = trimmed.slice(idx + 1).trim().replace(/^['"](.*)['"]$/, '$1');
-        if (!process.env[key]) {
-          process.env[key] = value;
-        }
+        process.env[key] = value;
       }
     }
   });
@@ -35,12 +33,14 @@ async function checkSupabase() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
   const serviceKey =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.SUPABASE_ANON_KEY;
 
   console.log('1. Checking Environment Variables:');
-  console.log('   - SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL :', supabaseUrl ? `✅ Configured (${supabaseUrl})` : '❌ Missing');
-  console.log('   - SUPABASE_SERVICE_ROLE_KEY / ANON_KEY    :', serviceKey ? `✅ Configured (${serviceKey.slice(0, 12)}...)` : '❌ Missing');
+  console.log('   - SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL : ', supabaseUrl ? `✅ Configured (${supabaseUrl})` : '❌ Missing');
+  console.log('   - SUPABASE_PUBLISHABLE_KEY / SERVICE_ROLE : ', serviceKey ? `✅ Configured (${serviceKey.slice(0, 16)}...)` : '❌ Missing');
 
   if (!supabaseUrl || !serviceKey) {
     console.log('\n--------------------------------------------------------');
@@ -75,14 +75,18 @@ async function checkSupabase() {
   for (const table of tablesToCheck) {
     const start = Date.now();
     try {
-      const { count, error } = await supabase
+      const { data, count, error } = await supabase
         .from(table)
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact' })
+        .limit(1);
 
       const elapsed = Date.now() - start;
 
       if (error) {
-        console.log(`   ❌ [${table.padEnd(14)}] Error: ${error.message}`);
+        console.log(`   ❌ [${table.padEnd(14)}] Error: ${error.message} (${error.code || 'FAIL'})`);
+        if (error.code === 'PGRST205' || error.message?.includes('schema cache') || error.message?.includes('does not exist')) {
+          console.log(`      💡 Reason: Table "public.${table}" does not exist yet.`);
+        }
         if (error.message?.includes('fetch failed')) {
           console.log(`      💡 Reason: Could not reach "${supabaseUrl}".`);
           console.log(`         • The project may be paused (Supabase free tier pauses after 7 days) or deleted.`);
