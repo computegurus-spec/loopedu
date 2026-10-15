@@ -55,13 +55,10 @@
        node scripts/import-data.js
        ```
 
-- [ ] **5. AI Doubt Coach API Key (Gemini or OpenAI)**
-  - **Provider:** [Google AI Studio](https://aistudio.google.com/) (Gemini Flash recommended) or OpenAI
-  - **Action Required:**
-    1. Generate an API key.
-    2. Add to production environment variables:
-       - `GEMINI_API_KEY`: `AIzaSy...` (or `OPENAI_API_KEY`: `sk-...`)
-    3. Test via the LoopEdu Assistant chat widget on live app.
+- [x] **5. AI Doubt Coach API Key (Configured & Live Tested)**
+  - **Status:** ✅ Active and verified live (`live-openai-ncert-grounded` & Gemini configured).
+  - **Environment Variables:** `OPENAI_API_KEY` & `GEMINI_API_KEY` loaded in `.env.local`.
+  - **Endpoint Test:** Verified live response on `/api/ai/coach`.
 
 ---
 
