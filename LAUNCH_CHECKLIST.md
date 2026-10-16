@@ -41,19 +41,10 @@
        - **Secret:** Generate a strong random string and add as `RAZORPAY_WEBHOOK_SECRET`.
        - **Active Events:** Check `order.paid`, `payment.captured`, `payment.failed`.
 
-- [ ] **4. Production Database Setup (Supabase PostgreSQL)**
-  - **Dashboard:** [supabase.com](https://supabase.com/)
-  - **Action Required:**
-    1. Create a new Supabase project (select Mumbai / ap-south-1 region for fastest India latency).
-    2. Copy API credentials from Project Settings > API:
-       - `NEXT_PUBLIC_SUPABASE_URL`: `https://[project-id].supabase.co`
-       - `SUPABASE_SERVICE_ROLE_KEY`: `eyJ...` (keep secret)
-    3. Open SQL Editor in Supabase and execute the schema file:
-       - File location: `supabase/schema.sql`
-    4. Run data seeding script from terminal:
-       ```bash
-       node scripts/import-data.js
-       ```
+- [x] **4. Production Database Setup (Supabase PostgreSQL - Connected & Verified)**
+  - **Status:** ✅ Project active (`oyesvbamjtlqvryaybtd.supabase.co`).
+  - **Schema:** All 11 tables & RLS security policies created and verified live.
+  - **Diagnostic:** Tested and passing via `scripts/test-supabase.js` and `/api/health/supabase`.
 
 - [x] **5. AI Doubt Coach API Key (Configured & Live Tested)**
   - **Status:** ✅ Active and verified live (`live-openai-ncert-grounded` & Gemini configured).
