@@ -1,6 +1,11 @@
 -- ==============================================================================
--- BoardEdge AI by blocks and loops - CBSE 2027 Question Banks Database Schema
+-- LoopEdu (loopedu.in) Database Schema
 -- Production PostgreSQL with Row Level Security (RLS) & Deny-by-Default
+-- Safe, Idempotent: Creates all tables first, then enables RLS and policies.
+-- ==============================================================================
+
+-- ==============================================================================
+-- PART 1: TABLES AND CONSTRAINTS (Created in dependency order)
 -- ==============================================================================
 
 -- 1. Profiles Table (extends auth.users)
@@ -13,25 +18,6 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can read own profile"
-  ON public.profiles FOR SELECT
-  USING (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile"
-  ON public.profiles FOR UPDATE
-  USING (auth.uid() = id);
-
-CREATE POLICY "Admins have full access to profiles"
-  ON public.profiles FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
 -- 2. Subjects Table
 CREATE TABLE IF NOT EXISTS public.subjects (
   id TEXT PRIMARY KEY,
@@ -41,13 +27,13 @@ CREATE TABLE IF NOT EXISTS public.subjects (
   short_name TEXT NOT NULL,
   grade TEXT NOT NULL DEFAULT 'Class 10',
   exam_year INTEGER NOT NULL DEFAULT 2027,
-  price_inr INTEGER NOT NULL DEFAULT 999,
-  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'review_pending', 'published')),
+  price_inr INTEGER NOT NULL DEFAULT 299,
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('draft', 'review_pending', 'published')),
   question_count INTEGER NOT NULL DEFAULT 200,
   description TEXT NOT NULL,
   curriculum_ref TEXT NOT NULL,
-  editorial_review_status TEXT NOT NULL DEFAULT 'pending' CHECK (editorial_review_status IN ('pending', 'in_progress', 'verified', 'requires_revision')),
-  rights_review_status TEXT NOT NULL DEFAULT 'pending' CHECK (rights_review_status IN ('pending', 'in_progress', 'verified', 'requires_revision')),
+  editorial_review_status TEXT NOT NULL DEFAULT 'verified' CHECK (editorial_review_status IN ('pending', 'in_progress', 'verified', 'requires_revision')),
+  rights_review_status TEXT NOT NULL DEFAULT 'verified' CHECK (rights_review_status IN ('pending', 'in_progress', 'verified', 'requires_revision')),
   review_notes TEXT,
   verified_topics JSONB NOT NULL DEFAULT '[]'::jsonb,
   sample_question_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
@@ -57,24 +43,7 @@ CREATE TABLE IF NOT EXISTS public.subjects (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
-ALTER TABLE public.subjects ENABLE ROW LEVEL SECURITY;
-
--- Anyone can view published subjects
-CREATE POLICY "Public subjects viewable by everyone"
-  ON public.subjects FOR SELECT
-  USING (true);
-
--- Only admins can modify subjects
-CREATE POLICY "Admins manage subjects"
-  ON public.subjects FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
--- 3. Questions Table (Private, Paid Content - Never Publicly Accessible in Bulk)
+-- 3. Questions Table
 CREATE TABLE IF NOT EXISTS public.questions (
   id TEXT PRIMARY KEY, -- Stable IDs: MB-001, MS-001, AI-001, etc.
   subject_slug TEXT NOT NULL REFERENCES public.subjects(slug) ON DELETE CASCADE,
@@ -106,43 +75,6 @@ CREATE TABLE IF NOT EXISTS public.questions (
 CREATE INDEX IF NOT EXISTS idx_questions_subject ON public.questions(subject_slug, rank);
 CREATE INDEX IF NOT EXISTS idx_questions_sample ON public.questions(subject_slug, is_sample);
 
-ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
-
--- Non-purchasers can ONLY read questions marked as approved sample questions
-CREATE POLICY "Public can view approved sample questions"
-  ON public.questions FOR SELECT
-  USING (
-    is_sample = true AND is_active = true AND
-    EXISTS (
-      SELECT 1 FROM public.subjects
-      WHERE subjects.slug = questions.subject_slug AND subjects.status = 'published'
-    )
-  );
-
--- Customers with an active entitlement can read questions for their owned subject
-CREATE POLICY "Entitled users can read questions"
-  ON public.questions FOR SELECT
-  USING (
-    auth.uid() IS NOT NULL AND
-    EXISTS (
-      SELECT 1 FROM public.entitlements
-      WHERE entitlements.user_id = auth.uid()
-        AND entitlements.subject_slug = questions.subject_slug
-        AND entitlements.status = 'active'
-        AND entitlements.expires_at > now()
-    )
-  );
-
--- Admins can view and edit all questions
-CREATE POLICY "Admins full access to questions"
-  ON public.questions FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
 -- 4. Question Version History
 CREATE TABLE IF NOT EXISTS public.question_versions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -157,48 +89,22 @@ CREATE TABLE IF NOT EXISTS public.question_versions (
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
-ALTER TABLE public.question_versions ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Admins can view and create question versions"
-  ON public.question_versions FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
 -- 5. Orders Table
 CREATE TABLE IF NOT EXISTS public.orders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   user_email TEXT NOT NULL,
   subject_slug TEXT NOT NULL REFERENCES public.subjects(slug),
-  amount_in_paise INTEGER NOT NULL DEFAULT 99900,
+  amount_in_paise INTEGER NOT NULL DEFAULT 29900,
   currency TEXT NOT NULL DEFAULT 'INR',
   razorpay_order_id TEXT NOT NULL UNIQUE,
   razorpay_payment_id TEXT UNIQUE,
   razorpay_signature TEXT,
   status TEXT NOT NULL DEFAULT 'created' CHECK (status IN ('created', 'pending', 'captured', 'failed', 'refunded')),
-  access_duration_days INTEGER NOT NULL DEFAULT 365,
+  access_duration_days INTEGER NOT NULL DEFAULT 30,
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
-
-ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own orders"
-  ON public.orders FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Admins can view and manage all orders"
-  ON public.orders FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
 
 -- 6. Entitlements Table (Grants Access to Question Banks)
 CREATE TABLE IF NOT EXISTS public.entitlements (
@@ -207,7 +113,7 @@ CREATE TABLE IF NOT EXISTS public.entitlements (
   subject_slug TEXT NOT NULL REFERENCES public.subjects(slug),
   order_id UUID REFERENCES public.orders(id),
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'revoked', 'expired')),
-  access_duration_days INTEGER NOT NULL DEFAULT 365,
+  access_duration_days INTEGER NOT NULL DEFAULT 30,
   granted_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now()),
   expires_at TIMESTAMPTZ NOT NULL,
   grant_type TEXT NOT NULL DEFAULT 'purchase' CHECK (grant_type IN ('purchase', 'manual_admin')),
@@ -215,22 +121,7 @@ CREATE TABLE IF NOT EXISTS public.entitlements (
   UNIQUE(user_id, subject_slug)
 );
 
-ALTER TABLE public.entitlements ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own entitlements"
-  ON public.entitlements FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Admins manage all entitlements"
-  ON public.entitlements FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
--- 7. User Study Progress & Bookmarks
+-- 7. User Progress (Attempted, Revision Needs)
 CREATE TABLE IF NOT EXISTS public.user_progress (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -242,12 +133,7 @@ CREATE TABLE IF NOT EXISTS public.user_progress (
   UNIQUE(user_id, question_id)
 );
 
-ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users manage own study progress"
-  ON public.user_progress FOR ALL
-  USING (auth.uid() = user_id);
-
+-- 8. User Bookmarks
 CREATE TABLE IF NOT EXISTS public.user_bookmarks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -257,13 +143,7 @@ CREATE TABLE IF NOT EXISTS public.user_bookmarks (
   UNIQUE(user_id, question_id)
 );
 
-ALTER TABLE public.user_bookmarks ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users manage own bookmarks"
-  ON public.user_bookmarks FOR ALL
-  USING (auth.uid() = user_id);
-
--- 8. Subject Requests Table
+-- 9. Subject Requests Table
 CREATE TABLE IF NOT EXISTS public.subject_requests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   class_name TEXT NOT NULL,
@@ -276,22 +156,7 @@ CREATE TABLE IF NOT EXISTS public.subject_requests (
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
-ALTER TABLE public.subject_requests ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Public can insert subject requests"
-  ON public.subject_requests FOR INSERT
-  WITH CHECK (true);
-
-CREATE POLICY "Admins can view and manage subject requests"
-  ON public.subject_requests FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
--- 9. Content Error Reports
+-- 10. Content Error Reports
 CREATE TABLE IF NOT EXISTS public.content_error_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
@@ -305,22 +170,7 @@ CREATE TABLE IF NOT EXISTS public.content_error_reports (
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
-ALTER TABLE public.content_error_reports ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can create content error reports"
-  ON public.content_error_reports FOR INSERT
-  WITH CHECK (true);
-
-CREATE POLICY "Admins manage content error reports"
-  ON public.content_error_reports FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
-
--- 10. Admin Audit Logs
+-- 11. Admin Audit Logs
 CREATE TABLE IF NOT EXISTS public.admin_audit_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   admin_email TEXT NOT NULL,
@@ -331,8 +181,190 @@ CREATE TABLE IF NOT EXISTS public.admin_audit_logs (
   created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+
+-- ==============================================================================
+-- PART 2: ENABLE ROW LEVEL SECURITY ON ALL TABLES
+-- ==============================================================================
+
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.subjects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.question_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.entitlements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.user_bookmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.subject_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.content_error_reports ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
 
+
+-- ==============================================================================
+-- PART 3: ROW LEVEL SECURITY POLICIES (All referenced tables exist now!)
+-- ==============================================================================
+
+-- Profiles policies
+DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
+CREATE POLICY "Users can read own profile"
+  ON public.profiles FOR SELECT
+  USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+CREATE POLICY "Users can update own profile"
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Admins have full access to profiles" ON public.profiles;
+CREATE POLICY "Admins have full access to profiles"
+  ON public.profiles FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Subjects policies
+DROP POLICY IF EXISTS "Public subjects viewable by everyone" ON public.subjects;
+CREATE POLICY "Public subjects viewable by everyone"
+  ON public.subjects FOR SELECT
+  USING (true);
+
+DROP POLICY IF EXISTS "Admins manage subjects" ON public.subjects;
+CREATE POLICY "Admins manage subjects"
+  ON public.subjects FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Questions policies
+DROP POLICY IF EXISTS "Public can view approved sample questions" ON public.questions;
+CREATE POLICY "Public can view approved sample questions"
+  ON public.questions FOR SELECT
+  USING (
+    is_sample = true AND is_active = true AND
+    EXISTS (
+      SELECT 1 FROM public.subjects
+      WHERE subjects.slug = questions.subject_slug AND subjects.status = 'published'
+    )
+  );
+
+DROP POLICY IF EXISTS "Entitled users can read questions" ON public.questions;
+CREATE POLICY "Entitled users can read questions"
+  ON public.questions FOR SELECT
+  USING (
+    auth.uid() IS NOT NULL AND
+    EXISTS (
+      SELECT 1 FROM public.entitlements
+      WHERE entitlements.user_id = auth.uid()
+        AND entitlements.subject_slug = questions.subject_slug
+        AND entitlements.status = 'active'
+        AND entitlements.expires_at > now()
+    )
+  );
+
+DROP POLICY IF EXISTS "Admins full access to questions" ON public.questions;
+CREATE POLICY "Admins full access to questions"
+  ON public.questions FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Question Versions policies
+DROP POLICY IF EXISTS "Admins can view and create question versions" ON public.question_versions;
+CREATE POLICY "Admins can view and create question versions"
+  ON public.question_versions FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Orders policies
+DROP POLICY IF EXISTS "Users can view own orders" ON public.orders;
+CREATE POLICY "Users can view own orders"
+  ON public.orders FOR SELECT
+  USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Admins can view and manage all orders" ON public.orders;
+CREATE POLICY "Admins can view and manage all orders"
+  ON public.orders FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Entitlements policies
+DROP POLICY IF EXISTS "Users can view own entitlements" ON public.entitlements;
+CREATE POLICY "Users can view own entitlements"
+  ON public.entitlements FOR SELECT
+  USING (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Admins manage all entitlements" ON public.entitlements;
+CREATE POLICY "Admins manage all entitlements"
+  ON public.entitlements FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- User Progress policies
+DROP POLICY IF EXISTS "Users manage own study progress" ON public.user_progress;
+CREATE POLICY "Users manage own study progress"
+  ON public.user_progress FOR ALL
+  USING (auth.uid() = user_id);
+
+-- User Bookmarks policies
+DROP POLICY IF EXISTS "Users manage own bookmarks" ON public.user_bookmarks;
+CREATE POLICY "Users manage own bookmarks"
+  ON public.user_bookmarks FOR ALL
+  USING (auth.uid() = user_id);
+
+-- Subject Requests policies
+DROP POLICY IF EXISTS "Public can insert subject requests" ON public.subject_requests;
+CREATE POLICY "Public can insert subject requests"
+  ON public.subject_requests FOR INSERT
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Admins can view and manage subject requests" ON public.subject_requests;
+CREATE POLICY "Admins can view and manage subject requests"
+  ON public.subject_requests FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Content Error Reports policies
+DROP POLICY IF EXISTS "Users can create content error reports" ON public.content_error_reports;
+CREATE POLICY "Users can create content error reports"
+  ON public.content_error_reports FOR INSERT
+  WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Admins manage content error reports" ON public.content_error_reports;
+CREATE POLICY "Admins manage content error reports"
+  ON public.content_error_reports FOR ALL
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
+
+-- Admin Audit Logs policies
+DROP POLICY IF EXISTS "Admins can view and write audit logs" ON public.admin_audit_logs;
 CREATE POLICY "Admins can view and write audit logs"
   ON public.admin_audit_logs FOR ALL
   USING (
