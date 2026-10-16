@@ -200,8 +200,22 @@ ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
 
 
 -- ==============================================================================
--- PART 3: ROW LEVEL SECURITY POLICIES (All referenced tables exist now!)
+-- PART 3: HELPER FUNCTION & ROW LEVEL SECURITY POLICIES
 -- ==============================================================================
+
+-- Security Definer admin check prevents infinite recursion in RLS policies
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+STABLE
+AS $$
+  SELECT COALESCE(
+    (SELECT role = 'admin' FROM public.profiles WHERE id = auth.uid()),
+    false
+  );
+$$;
 
 -- Profiles policies
 DROP POLICY IF EXISTS "Users can read own profile" ON public.profiles;
@@ -217,12 +231,7 @@ CREATE POLICY "Users can update own profile"
 DROP POLICY IF EXISTS "Admins have full access to profiles" ON public.profiles;
 CREATE POLICY "Admins have full access to profiles"
   ON public.profiles FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Subjects policies
 DROP POLICY IF EXISTS "Public subjects viewable by everyone" ON public.subjects;
@@ -233,12 +242,7 @@ CREATE POLICY "Public subjects viewable by everyone"
 DROP POLICY IF EXISTS "Admins manage subjects" ON public.subjects;
 CREATE POLICY "Admins manage subjects"
   ON public.subjects FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Questions policies
 DROP POLICY IF EXISTS "Public can view approved sample questions" ON public.questions;
@@ -269,23 +273,13 @@ CREATE POLICY "Entitled users can read questions"
 DROP POLICY IF EXISTS "Admins full access to questions" ON public.questions;
 CREATE POLICY "Admins full access to questions"
   ON public.questions FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Question Versions policies
 DROP POLICY IF EXISTS "Admins can view and create question versions" ON public.question_versions;
 CREATE POLICY "Admins can view and create question versions"
   ON public.question_versions FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Orders policies
 DROP POLICY IF EXISTS "Users can view own orders" ON public.orders;
@@ -296,12 +290,7 @@ CREATE POLICY "Users can view own orders"
 DROP POLICY IF EXISTS "Admins can view and manage all orders" ON public.orders;
 CREATE POLICY "Admins can view and manage all orders"
   ON public.orders FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Entitlements policies
 DROP POLICY IF EXISTS "Users can view own entitlements" ON public.entitlements;
@@ -312,12 +301,7 @@ CREATE POLICY "Users can view own entitlements"
 DROP POLICY IF EXISTS "Admins manage all entitlements" ON public.entitlements;
 CREATE POLICY "Admins manage all entitlements"
   ON public.entitlements FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- User Progress policies
 DROP POLICY IF EXISTS "Users manage own study progress" ON public.user_progress;
@@ -340,12 +324,7 @@ CREATE POLICY "Public can insert subject requests"
 DROP POLICY IF EXISTS "Admins can view and manage subject requests" ON public.subject_requests;
 CREATE POLICY "Admins can view and manage subject requests"
   ON public.subject_requests FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Content Error Reports policies
 DROP POLICY IF EXISTS "Users can create content error reports" ON public.content_error_reports;
@@ -356,20 +335,10 @@ CREATE POLICY "Users can create content error reports"
 DROP POLICY IF EXISTS "Admins manage content error reports" ON public.content_error_reports;
 CREATE POLICY "Admins manage content error reports"
   ON public.content_error_reports FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
 
 -- Admin Audit Logs policies
 DROP POLICY IF EXISTS "Admins can view and write audit logs" ON public.admin_audit_logs;
 CREATE POLICY "Admins can view and write audit logs"
   ON public.admin_audit_logs FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
-    )
-  );
+  USING (public.is_admin());
