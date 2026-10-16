@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleLogin } from '@auth0/nextjs-auth0';
-import { ensureAuth0Config } from '@/lib/auth/auth0-config';
+import { getAuth0Instance, getRequestOrigin } from '@/lib/auth/auth0-config';
 
 export async function GET(req: NextRequest) {
   try {
-    const origin = ensureAuth0Config(req);
-    return await (handleLogin as any)(
+    const origin = getRequestOrigin(req);
+    const auth0 = getAuth0Instance(origin);
+    return await (auth0.handleLogin as any)(
       req,
       { params: { auth0: 'login' } },
       {

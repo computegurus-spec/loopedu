@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
-import { getSession } from '@auth0/nextjs-auth0';
-import { ensureAuth0Config } from '@/lib/auth/auth0-config';
+import { getAuth0Instance } from '@/lib/auth/auth0-config';
 import { UserProfile } from '@/types';
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'founder@tinko.in,admin@blocks-and-loops.com')
@@ -62,8 +61,8 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 
   // 2. Auth0 Social / Universal Login Session
   try {
-    ensureAuth0Config();
-    const auth0Session = await getSession();
+    const auth0 = getAuth0Instance();
+    const auth0Session = await auth0.getSession();
     if (auth0Session?.user) {
       const u = auth0Session.user;
       const email = (u.email || `${u.sub}@auth0.user`).toLowerCase();

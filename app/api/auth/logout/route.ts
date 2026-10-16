@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { handleLogout } from '@auth0/nextjs-auth0';
-import { ensureAuth0Config } from '@/lib/auth/auth0-config';
+import { getAuth0Instance, getRequestOrigin } from '@/lib/auth/auth0-config';
 
 export async function GET(req: NextRequest) {
+  const origin = getRequestOrigin(req);
   try {
-    ensureAuth0Config(req);
-    const res = await (handleLogout as any)(req, { params: { auth0: 'logout' } }, { returnTo: '/' });
+    const auth0 = getAuth0Instance(origin);
+    const res = await (auth0.handleLogout as any)(req, { params: { auth0: 'logout' } }, { returnTo: `${origin}/` });
     if (res && res.cookies) {
       res.cookies.delete('boardedge_session');
       res.cookies.delete('boardedge_demo_role');
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     }
     return res;
   } catch {
-    const res = NextResponse.redirect(new URL('/', req.url));
+    const res = NextResponse.redirect(new URL('/', origin));
     res.cookies.delete('boardedge_session');
     res.cookies.delete('boardedge_demo_role');
     res.cookies.delete('appSession');
