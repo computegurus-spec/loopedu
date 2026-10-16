@@ -1,4 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { handleLogin } from '@auth0/nextjs-auth0';
+import { ensureAuth0Config } from '@/lib/auth/auth0-config';
+
+export async function GET(req: NextRequest) {
+  try {
+    ensureAuth0Config(req);
+    return await (handleLogin as any)(req, { params: { auth0: 'login' } }, { returnTo: '/learn' });
+  } catch (err: any) {
+    console.error('Auth0 login error:', err);
+    return NextResponse.redirect(new URL('/login?error=auth0_failed', req.url));
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
