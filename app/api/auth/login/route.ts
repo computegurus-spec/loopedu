@@ -4,8 +4,17 @@ import { ensureAuth0Config } from '@/lib/auth/auth0-config';
 
 export async function GET(req: NextRequest) {
   try {
-    ensureAuth0Config(req);
-    return await (handleLogin as any)(req, { params: { auth0: 'login' } }, { returnTo: '/learn' });
+    const origin = ensureAuth0Config(req);
+    return await (handleLogin as any)(
+      req,
+      { params: { auth0: 'login' } },
+      {
+        returnTo: '/learn',
+        authorizationParams: {
+          redirect_uri: `${origin}/api/auth/callback`,
+        },
+      }
+    );
   } catch (err: any) {
     console.error('Auth0 login error:', err);
     return NextResponse.redirect(new URL('/login?error=auth0_failed', req.url));
