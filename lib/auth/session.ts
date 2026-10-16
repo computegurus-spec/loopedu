@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { getSession } from '@auth0/nextjs-auth0';
 import { UserProfile } from '@/types';
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'founder@tinko.in,admin@blocks-and-loops.com')
@@ -56,6 +57,25 @@ export async function getSessionUser(): Promise<SessionUser | null> {
     } catch (e) {
       // Invalid cookie, ignore
     }
+  }
+
+  // 2. Auth0 Social / Universal Login Session
+  try {
+    const auth0Session = await getSession();
+    if (auth0Session?.user) {
+      const u = auth0Session.user;
+      const email = (u.email || `${u.sub}@auth0.user`).toLowerCase();
+      const isAdmin = ADMIN_EMAILS.includes(email);
+      return {
+        id: u.sub,
+        email,
+        name: u.name || u.nickname || (isAdmin ? 'Admin' : 'Student'),
+        role: isAdmin ? 'admin' : 'customer',
+        isPro: isAdmin,
+      };
+    }
+  } catch (e) {
+    // Auth0 not configured or no active session
   }
 
   return null;

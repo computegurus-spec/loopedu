@@ -12,6 +12,7 @@
     "test": "node scripts/run-verification-tests.js"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^3.5.0",
     "@supabase/supabase-js": "^2.45.6",
     "clsx": "^2.1.1",
     "katex": "^0.16.11",
