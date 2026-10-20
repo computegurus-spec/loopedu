@@ -18,7 +18,13 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const urlErrorDesc = searchParams.get('error_description');
   const urlErrorParam = searchParams.get('error');
-  const urlError = urlErrorDesc || (urlErrorParam === 'auth_failed' ? 'Authentication could not be completed. Please check your Auth0 configuration or sign in directly below.' : null);
+  const urlError =
+    urlErrorDesc ||
+    (urlErrorParam === 'auth_failed'
+      ? 'Auth0 authentication could not be completed on this domain. Please sign in directly below (username: Sadish, password: Sadish).'
+      : urlErrorParam
+      ? `Authentication error: ${urlErrorParam}`
+      : null);
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -93,9 +99,25 @@ function LoginForm() {
         {/* Card */}
         <div className="rounded-3xl bg-white border border-academic-border p-6 sm:p-8 shadow-sm space-y-5">
           {displayError && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-950 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-              <span>{displayError}</span>
+            <div className="p-4 rounded-2xl bg-red-50/90 border border-red-200 text-red-950 text-xs space-y-2.5">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <span className="font-medium leading-relaxed">{displayError}</span>
+              </div>
+              <div className="pt-2 border-t border-red-200/60 flex items-center justify-between">
+                <span className="text-[11px] text-red-900 font-semibold">Sign in directly without Auth0:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIdentifier('Sadish');
+                    setPassword('Sadish');
+                    setError('');
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-forest-900 text-limeaccent text-[10px] font-mono font-bold tracking-wider uppercase hover:bg-forest-800 transition shadow-2xs"
+                >
+                  ⚡ Fill Sadish
+                </button>
+              </div>
             </div>
           )}
 
@@ -176,6 +198,30 @@ function LoginForm() {
                 </>
               )}
             </button>
+
+            {/* Direct Sign-in Helper Box */}
+            <div className="rounded-2xl bg-paper-50 border border-academic-border/80 p-3.5 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-forest-950 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-forest-700" />
+                  Direct Sign-In (No Auth0 Required)
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIdentifier('Sadish');
+                    setPassword('Sadish');
+                    setError('');
+                  }}
+                  className="text-[10px] font-mono font-bold uppercase tracking-wider text-forest-900 bg-limeaccent hover:bg-lime-400 px-2 py-1 rounded-md transition shadow-2xs"
+                >
+                  ⚡ Fill Sadish
+                </button>
+              </div>
+              <p className="text-[11px] text-academic-subtle leading-relaxed">
+                Enter username <span className="font-mono font-semibold text-forest-950">Sadish</span> &amp; password <span className="font-mono font-semibold text-forest-950">Sadish</span> for immediate Super Admin &amp; Pro access.
+              </p>
+            </div>
 
             {/* Social / Auth0 Login Option */}
             <div className="relative my-4">

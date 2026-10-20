@@ -3,9 +3,11 @@ import { initAuth0 } from '@auth0/nextjs-auth0';
 
 export function getRequestOrigin(req?: NextRequest | Request): string {
   if (req) {
-    const host = req.headers.get('x-forwarded-host') || req.headers.get('host');
-    if (host) {
-      const proto = req.headers.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+    const rawHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
+    if (rawHost) {
+      const host = rawHost.split(',')[0].trim();
+      const rawProto = req.headers.get('x-forwarded-proto');
+      const proto = rawProto ? rawProto.split(',')[0].trim() : (host.includes('localhost') ? 'http' : 'https');
       return `${proto}://${host}`;
     }
   }

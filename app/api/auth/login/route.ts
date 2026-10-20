@@ -17,7 +17,8 @@ export async function GET(req: NextRequest) {
     );
   } catch (err: any) {
     console.error('Auth0 login error:', err);
-    return NextResponse.redirect(new URL('/login?error=auth0_failed', req.url));
+    const errDesc = encodeURIComponent(err?.cause?.message || err?.message || 'Auth0 initialization error');
+    return NextResponse.redirect(new URL(`/login?error=auth0_failed&error_description=${errDesc}`, req.url));
   }
 }
 
