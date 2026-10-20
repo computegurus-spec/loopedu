@@ -7,6 +7,7 @@ import { MathRenderer } from '@/components/MathRenderer';
 import { AIHintCoach } from '@/components/study/AIHintCoach';
 import { generateWatermark, maskEmail } from '@/lib/utils';
 import { SubjectSlug, Question } from '@/types';
+import { TrialMilestoneModal } from '@/components/study/TrialMilestoneModal';
 import {
   BookOpen,
   Bookmark,
@@ -23,6 +24,7 @@ import {
   Lock,
   ArrowLeft,
   Filter,
+  Sparkles,
 } from 'lucide-react';
 
 interface ReaderProps {
@@ -58,6 +60,9 @@ export default function StudyReaderPage({ params }: ReaderProps) {
   const [reportType, setReportType] = useState('typo');
   const [reportDescription, setReportDescription] = useState('');
   const [reportStatus, setReportStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  // Trial Milestone Modal
+  const [trialModalOpen, setTrialModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -259,10 +264,14 @@ export default function StudyReaderPage({ params }: ReaderProps) {
             </span>
 
             {!isEntitled && (
-              <span className="bg-amber-100 text-amber-950 border border-amber-300 px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1">
-                <Lock className="w-3 h-3" />
-                <span>Sample Preview Mode</span>
-              </span>
+              <button
+                onClick={() => setTrialModalOpen(true)}
+                className="bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 transition shadow-2xs"
+                title="Click to view your weekly diagnostic progress"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Free Trial (Q {activeQuestionIndex + 1}/10)</span>
+              </button>
             )}
           </div>
         </div>
@@ -505,18 +514,28 @@ export default function StudyReaderPage({ params }: ReaderProps) {
                   {currentQ.priority_band} • Priority Score: {currentQ.priority_score}
                 </div>
 
-                <button
-                  onClick={() =>
-                    handleSelectQuestion(
-                      Math.min(questions.length - 1, activeQuestionIndex + 1)
-                    )
-                  }
-                  disabled={activeQuestionIndex === questions.length - 1}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest-900 text-limeaccent text-xs font-bold hover:bg-forest-800 disabled:opacity-30 disabled:pointer-events-none transition shadow-sm"
-                >
-                  <span>Next Question</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                {!isEntitled && activeQuestionIndex === questions.length - 1 ? (
+                  <button
+                    onClick={() => setTrialModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-forest-900 text-limeaccent text-xs font-bold hover:bg-forest-800 transition shadow-sm animate-pulse"
+                  >
+                    <span>Complete 10-Q Sprint</span>
+                    <Sparkles className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() =>
+                      handleSelectQuestion(
+                        Math.min(questions.length - 1, activeQuestionIndex + 1)
+                      )
+                    }
+                    disabled={activeQuestionIndex === questions.length - 1}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest-900 text-limeaccent text-xs font-bold hover:bg-forest-800 disabled:opacity-30 disabled:pointer-events-none transition shadow-sm"
+                  >
+                    <span>Next Question</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           ) : (
@@ -601,6 +620,17 @@ export default function StudyReaderPage({ params }: ReaderProps) {
           </div>
         </div>
       )}
+
+      {/* 10-Question Trial Milestone Modal */}
+      <TrialMilestoneModal
+        isOpen={trialModalOpen}
+        onClose={() => setTrialModalOpen(false)}
+        subjectSlug={slug}
+        subjectName={subjectInfo?.name || 'Subject Track'}
+        score={Math.max(1, Object.keys(attemptedMap).length)}
+        totalAttempted={Math.min(10, questions.length || 10)}
+        studentName={userSession?.name || 'Class 10 Learner'}
+      />
     </div>
   );
 }

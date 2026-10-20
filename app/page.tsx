@@ -36,9 +36,9 @@ export default async function HomePage() {
       {/* 1. Hero Section */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-100 text-forest-900 border border-forest-200 text-xs font-semibold uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-forest-700 animate-pulse"></span>
-            <span>LoopEdu (Beta) • 15-Minute Daily Habit for School & Competitive Exams</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 text-xs font-bold tracking-wide">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>🎁 Launch Special: 10 High-Yield Questions 100% Free Every Week • Resets Sunday</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-forest-950 leading-[1.08]">
@@ -47,7 +47,7 @@ export default async function HomePage() {
           </h1>
 
           <p className="text-lg sm:text-xl text-forest-800 leading-relaxed font-normal max-w-2xl">
-            <strong>LoopEdu</strong> is the 15-minute daily habit platform for academic excellence and competitive exams. Starting with CBSE Class 10 and expanding to JEE, NEET, Olympiads, and other boards. Build effortless consistency with <strong>The Daily Five</strong>, master weak spots with the active recall <strong>Mistake Comeback Vault</strong>, and unlock curated <strong>Question Bank Dossiers</strong> as milestone rewards.
+            <strong>LoopEdu</strong> is the 15-minute daily habit platform for academic excellence and competitive exams. Starting with CBSE Class 10. Claim your <strong>10 free high-yield questions every week</strong> with real-time AI step hints, active recall error revision, and instant NCERT diagnostic scorecards for parents.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-4">
@@ -62,12 +62,11 @@ export default async function HomePage() {
               </Link>
             ) : (
               <Link
-                href="/login"
-                className="inline-flex items-center justify-center gap-2 bg-limeaccent hover:bg-limeaccent-hover text-forest-950 font-bold px-7 py-3.5 rounded-xl text-sm transition shadow-sm"
+                href="/onboarding"
+                className="inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-7 py-3.5 rounded-xl text-sm transition shadow-sm"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Get Started Free (15 Mins/Day)</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Claim 10 Free Questions / Week →</span>
               </Link>
             )}
 
@@ -88,17 +87,17 @@ export default async function HomePage() {
           </div>
 
           <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-academic-subtle">
-            <span className="font-semibold text-forest-950 bg-forest-100/80 px-2.5 py-1 rounded-md border border-forest-200">
-              Modular ₹299/mo per subject
+            <span className="font-bold text-forest-950 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+              ✓ 10 Free Questions / Week
             </span>
             <span className="text-forest-400">•</span>
             <span className="font-semibold text-forest-950">
-              5 Questions / Day Habit
+              7-Day Rolling Reset
             </span>
             <span className="text-forest-400">•</span>
-            <span>Earn 10-Yr Question Bank PDFs</span>
+            <span>Optional ₹299/mo for Unlimited</span>
             <span className="text-forest-400">•</span>
-            <span>Anti-Micromanagement Parent Hub</span>
+            <span>Instant Parent WhatsApp Report</span>
           </div>
         </div>
       </section>

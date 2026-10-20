@@ -64,7 +64,7 @@ export const Navbar: React.FC = () => {
       <div className="bg-forest-900 text-paper-100 px-4 py-1.5 text-xs text-center font-medium border-b border-forest-800 flex items-center justify-center gap-2">
         <span className="inline-block w-2 h-2 rounded-full bg-limeaccent animate-pulse"></span>
         <span>
-          LoopEdu (Beta) • <strong>The 15-Minute Daily Habit for School & Competitive Exams</strong> • The Daily Five & Mistake Recall
+          🎁 <strong>Launch Special:</strong> 10 High-Yield Board Questions 100% Free Every Week • Resets Every 7 Days
         </span>
       </div>
 
@@ -245,11 +245,10 @@ export const Navbar: React.FC = () => {
                 Log In
               </Link>
               <Link
-                href="/login"
+                href="/onboarding"
                 className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm"
               >
-                <span>Get Started</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>10 Free Questions →</span>
               </Link>
             </div>
           )}

@@ -210,3 +210,39 @@ export interface AdminAuditLog {
   details: Record<string, unknown>;
   created_at: string;
 }
+
+export interface StudentLead {
+  id: string;
+  student_name: string;
+  student_email?: string;
+  whatsapp_number: string;
+  grade: string;
+  target_exam: string;
+  school_name?: string;
+  city?: string;
+  parent_name?: string;
+  parent_email?: string;
+  parent_whatsapp?: string;
+  selected_subjects: SubjectSlug[];
+  daily_minutes: number;
+  trial_questions_attempted: number;
+  trial_cycle_started_at: string;
+  trial_resets_at: string;
+  referral_code?: string;
+  referred_by?: string;
+  bonus_questions: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TrialStatus {
+  trialActive: boolean;
+  totalLimit: number;
+  attempted: number;
+  remaining: number;
+  cycleStartedAt: string;
+  resetsAt: string;
+  daysUntilReset: number;
+  hoursUntilReset: number;
+  isLocked: boolean;
+}

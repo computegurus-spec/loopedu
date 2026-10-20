@@ -27,6 +27,7 @@ import { RevisionQueue } from '@/components/study/RevisionQueue';
 export default function TodayDashboardPage() {
   const [activeTab, setActiveTab] = useState<'assignment' | 'daily5' | 'mistakes'>('assignment');
   const [studyPlan, setStudyPlan] = useState<any>(null);
+  const [isWelcomeTrial, setIsWelcomeTrial] = useState(false);
 
   const router = typeof window !== 'undefined' ? require('next/navigation').useRouter() : null;
 
@@ -41,9 +42,14 @@ export default function TodayDashboardPage() {
       .catch(() => {});
 
     try {
-      const stored = localStorage.getItem('boardedge_study_plan');
-      if (stored) {
-        setStudyPlan(JSON.parse(stored));
+      if (typeof window !== 'undefined') {
+        if (window.location.search.includes('welcome_trial=true')) {
+          setIsWelcomeTrial(true);
+        }
+        const stored = localStorage.getItem('boardedge_study_plan');
+        if (stored) {
+          setStudyPlan(JSON.parse(stored));
+        }
       }
     } catch (e) {
       // fallback
@@ -54,7 +60,42 @@ export default function TodayDashboardPage() {
   const dailyMins = studyPlan?.dailyMinutes || 15;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+      {/* Launch Special Welcome Banner */}
+      {isWelcomeTrial && (
+        <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50 border border-emerald-300 text-forest-950 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm animate-in fade-in">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 font-bold text-lg shadow-xs">
+              🎁
+            </div>
+            <div>
+              <div className="font-bold text-xs uppercase tracking-wider text-emerald-950 flex items-center gap-1.5">
+                <span>Free Launch Trial Active</span>
+                <span className="text-emerald-600">•</span>
+                <span className="text-[11px] text-emerald-800 font-semibold">10 Questions Unlocked</span>
+              </div>
+              <div className="text-xs text-forest-800 mt-0.5">
+                Welcome, <strong>{studentName}</strong>! Your 10 free high-yield CBSE board questions are ready below.
+                Your free trial resets every 7 days.
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsWelcomeTrial(false)}
+              className="text-xs text-forest-700 hover:text-forest-950 font-semibold px-3 py-1.5 rounded-lg border border-emerald-300 hover:bg-emerald-100 transition"
+            >
+              Dismiss
+            </button>
+            <Link
+              href="/study/maths-standard"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-forest-900 text-limeaccent text-xs font-bold hover:bg-forest-800 shrink-0 transition shadow-xs"
+            >
+              <span>Practice Now →</span>
+            </Link>
+          </div>
+        </div>
+      )}
       {/* 1. Header & Daily Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-academic-border pb-6">
         <div className="space-y-1">

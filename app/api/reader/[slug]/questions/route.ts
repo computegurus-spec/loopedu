@@ -24,7 +24,7 @@ export async function GET(
     const topic = url.searchParams.get('topic') || undefined;
     const search = url.searchParams.get('search') || undefined;
 
-    const { questions, total } = await getQuestionsForSubject(slug, {
+    const { questions, total, trialActive, trialLimit } = await getQuestionsForSubject(slug, {
       isEntitled,
       isAdmin,
       limit,
@@ -33,13 +33,22 @@ export async function GET(
       search,
     });
 
-    // Strip answers and explanations if the user is neither entitled nor admin and question is not a public sample
+    // Check user/lead trial status
+    const leadPhone = req.cookies.get('loopedu_lead_phone')?.value;
+    let trialStatus = null;
+    if (trialActive) {
+      const { getLead, calculateTrialStatus } = await import('@/lib/db/store');
+      const lead = leadPhone ? await getLead(leadPhone) : null;
+      trialStatus = calculateTrialStatus(lead);
+    }
+
+    // Strip answers and explanations if the user is neither entitled nor admin and question is not within free sample/trial
     const safeQuestions = questions.map((q) => {
       if (!isEntitled && !isAdmin && !q.is_sample) {
         return {
           ...q,
-          answer: '[Locked - Purchase access required to reveal model answer]',
-          explanation: '[Locked - Purchase access required to reveal detailed method]',
+          answer: '[Locked - Upgrade required to reveal model answer]',
+          explanation: '[Locked - Upgrade required to reveal detailed method]',
         };
       }
       return q;
@@ -55,6 +64,9 @@ export async function GET(
       },
       isEntitled,
       isAdmin,
+      trialActive: !!trialActive,
+      trialLimit: trialLimit || 10,
+      trialStatus,
       questions: safeQuestions,
       total,
       limit,

@@ -36,7 +36,13 @@ export default function OnboardingPage() {
   const [reminderTime, setReminderTime] = useState('18:00');
   const [studentName, setStudentName] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [schoolName, setSchoolName] = useState('');
+  const [city, setCity] = useState('');
+  const [parentName, setParentName] = useState('');
   const [parentEmail, setParentEmail] = useState('');
+  const [parentWhatsapp, setParentWhatsapp] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleSubject = (slug: string) => {
@@ -46,6 +52,12 @@ export default function OnboardingPage() {
   };
 
   const handleFinish = async () => {
+    setErrorMsg('');
+    if (!whatsappNumber.trim()) {
+      setErrorMsg('Please enter your WhatsApp mobile number to activate your 10 free weekly questions.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const plan = {
@@ -58,16 +70,46 @@ export default function OnboardingPage() {
         reminderTime,
         studentName,
         studentEmail,
+        whatsappNumber,
+        schoolName,
+        city,
+        parentName,
         parentEmail,
+        parentWhatsapp,
       };
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('boardedge_study_plan', JSON.stringify(plan));
+        localStorage.setItem('loopedu_student_phone', whatsappNumber);
+        if (studentName) localStorage.setItem('loopedu_student_name', studentName);
       }
+
+      // Sync lead record to Supabase & local store
+      await fetch('/api/leads/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentName: studentName || 'Student',
+          whatsappNumber,
+          studentEmail: studentEmail || undefined,
+          grade: 'Class 10',
+          targetExam: goal === 'cbse_board_2027' ? 'CBSE Class 10 (2027)' : 'CBSE Board',
+          schoolName: schoolName || undefined,
+          city: city || undefined,
+          parentName: parentName || undefined,
+          parentEmail: parentEmail || undefined,
+          parentWhatsapp: parentWhatsapp || undefined,
+          selectedSubjects,
+          dailyMinutes,
+        }),
+      });
     } catch (err) {
-      console.error(err);
+      console.error('Lead registration note:', err);
+    } finally {
+      setIsSubmitting(false);
+      // Navigate to Today dashboard with 10 free questions unlocked
+      router.push('/today?welcome_trial=true');
     }
-    // Navigate to Today dashboard
-    router.push('/today');
   };
 
   return (
@@ -399,34 +441,97 @@ export default function OnboardingPage() {
       {step === 4 && (
         <div className="rounded-2xl bg-white border border-academic-border p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-forest-700">
-              Account & Parent Permissions
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-forest-800 bg-forest-100 px-2 py-0.5 rounded">
+                🎁 100% Free Launch Access
+              </span>
+              <span className="text-xs text-forest-500">•</span>
+              <span className="text-xs text-forest-700 font-semibold">10 Free Questions / Week</span>
+            </div>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-forest-950">
-              Save your progress & routine
+              Claim Your Free 10-Question Trial
             </h2>
             <p className="text-xs sm:text-sm text-forest-800 leading-relaxed">
-              We design safe practice spaces for young learners. Parents can be kept in the loop with weekly progress summaries.
+              Start practicing immediately with full worked solutions, NCERT step hints, and a personalized diagnostic report.
+              Your free trial resets every 7 days!
             </p>
           </div>
 
+          {errorMsg && (
+            <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-900 font-medium">
+              {errorMsg}
+            </div>
+          )}
+
           <div className="space-y-4">
-            <div>
-              <label className="text-xs font-bold text-forest-900 block mb-1">
-                Student Name:
-              </label>
-              <input
-                type="text"
-                value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
-                placeholder="e.g. Aarav Sharma"
-                className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-forest-900 block mb-1">
+                  Student Full Name:
+                </label>
+                <input
+                  type="text"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  placeholder="e.g. Aarav Sharma"
+                  className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-forest-900 block mb-1">
+                  WhatsApp Mobile Number <span className="text-red-500">*</span>:
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-2.5 text-xs font-bold text-academic-subtle">
+                    +91
+                  </span>
+                  <input
+                    type="tel"
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    placeholder="98765 43210"
+                    required
+                    className="w-full bg-white border border-academic-border rounded-xl pl-12 pr-4 py-2.5 text-xs font-medium text-forest-900 focus:outline-none focus:border-forest-700"
+                  />
+                </div>
+                <span className="text-[10px] text-academic-subtle block mt-1">
+                  Used for your weekly diagnostic score card & 7-day reset alerts.
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-forest-900 block mb-1">
+                  School Name (Optional):
+                </label>
+                <input
+                  type="text"
+                  value={schoolName}
+                  onChange={(e) => setSchoolName(e.target.value)}
+                  placeholder="e.g. DPS Bangalore South"
+                  className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-forest-900 block mb-1">
+                  City (Optional):
+                </label>
+                <input
+                  type="text"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="e.g. Bangalore"
+                  className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
+                />
+              </div>
             </div>
 
             <div>
               <label className="text-xs font-bold text-forest-900 block mb-1">
-                Student Email (for login and reminders):
+                Student Email (Optional):
               </label>
               <input
                 type="email"
@@ -437,29 +542,48 @@ export default function OnboardingPage() {
               />
             </div>
 
-            <div className="pt-2 border-t border-academic-border">
-              <label className="text-xs font-bold text-forest-900 block mb-1">
-                Parent / Guardian Email (Optional):
-              </label>
-              <input
-                type="email"
-                value={parentEmail}
-                onChange={(e) => setParentEmail(e.target.value)}
-                placeholder="parent@example.com"
-                className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
-              />
-              <span className="text-[11px] text-academic-subtle block mt-1">
-                Receives weekly summary of practice completion and revision accuracy. Never spammed with unrelated marketing.
+            <div className="pt-3 border-t border-academic-border space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-forest-800 block">
+                Parent / Guardian Information (Optional)
               </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-bold text-forest-900 block mb-1">
+                    Parent Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={parentName}
+                    onChange={(e) => setParentName(e.target.value)}
+                    placeholder="e.g. Rajesh Sharma"
+                    className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-forest-900 block mb-1">
+                    Parent WhatsApp Number:
+                  </label>
+                  <input
+                    type="tel"
+                    value={parentWhatsapp}
+                    onChange={(e) => setParentWhatsapp(e.target.value)}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-white border border-academic-border rounded-xl px-4 py-2.5 text-xs text-forest-900 focus:outline-none focus:border-forest-700"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-forest-50/50 border border-forest-100 flex items-start gap-3 text-xs text-forest-800">
+          <div className="p-4 rounded-xl bg-forest-50/70 border border-forest-200/60 flex items-start gap-3 text-xs text-forest-800">
             <ShieldCheck className="w-4 h-4 text-forest-700 shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-forest-950 block">Clear & Honest Commitment:</span>
+              <span className="font-bold text-forest-950 block">100% Free Launch Policy:</span>
               <span>
-                Free challenges and basic practice are open to all. Paid access is ₹999 per subject with no hidden recurring billing.
+                Your first 10 questions every week are completely free with zero lock-in or payment details needed.
+                Full question bank dossiers and unlimited access are available for ₹299/mo per subject.
               </span>
             </div>
           </div>
@@ -475,9 +599,9 @@ export default function OnboardingPage() {
             <button
               onClick={handleFinish}
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 bg-limeaccent hover:bg-limeaccent-hover text-forest-950 font-bold px-7 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-sm"
+              className="inline-flex items-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-7 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-sm disabled:opacity-50"
             >
-              <span>Start Today's Practice</span>
+              <span>{isSubmitting ? 'Unlocking 10 Questions...' : 'Start 10 Free Questions →'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

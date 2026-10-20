@@ -7,18 +7,22 @@ import {
   Order,
   Question,
   QuestionVersion,
+  StudentLead,
   Subject,
   SubjectRequestRecord,
   SubjectSlug,
+  TrialStatus,
   UserProfile,
 } from '@/types';
 import { ALL_SUBJECTS } from '@/lib/subjects';
+import { createServerSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/server';
 
 interface DBState {
   subjects: Subject[];
   questions: Record<string, Question>; // keyed by ID
   question_versions: QuestionVersion[];
   profiles: Record<string, UserProfile>;
+  leads: Record<string, StudentLead>; // keyed by id or phone
   orders: Record<string, Order>;
   entitlements: Record<string, Entitlement>;
   user_progress: Record<string, { attempted: boolean; needs_revisit: boolean; last_studied_at: string }>; // key: userId_questionId
@@ -79,6 +83,7 @@ function loadDB(): DBState {
     },
     orders: {},
     entitlements: {},
+    leads: {},
     user_progress: {},
     user_bookmarks: {},
     user_last_studied: {},
@@ -144,12 +149,13 @@ function loadDB(): DBState {
 }
 
 function saveDB(data: DBState) {
-  ensureDirExists();
   memoryCache = data;
   try {
+    ensureDirExists();
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
-  } catch (err) {
-    console.error('[DB] Error persisting database.json:', err);
+  } catch (err: any) {
+    // Non-fatal: in serverless environments like Vercel, filesystem is read-only
+    console.warn('[DB] Operating in ephemeral memory mode (read-only filesystem):', err?.message || err);
   }
 }
 
@@ -202,7 +208,7 @@ export async function getQuestionsForSubject(
     topic?: string;
     search?: string;
   } = {}
-): Promise<{ questions: Question[]; total: number }> {
+): Promise<{ questions: Question[]; total: number; trialActive?: boolean; trialLimit?: number }> {
   const db = loadDB();
   const allForSubject = Object.values(db.questions)
     .filter((q) => q.subjectSlug === slug && q.is_active)
@@ -210,9 +216,14 @@ export async function getQuestionsForSubject(
 
   let filtered = allForSubject;
 
-  // Access control: if not entitled and not admin, ONLY sample questions can be returned
+  // Access control & 10-Question Free Weekly Trial Policy:
+  // If not entitled and not admin, deliver the first 10 questions as the 100% free weekly practice set!
+  // These 10 questions have model answers, formulas, and step hints unlocked.
   if (!options.isEntitled && !options.isAdmin) {
-    filtered = filtered.filter((q) => q.is_sample);
+    filtered = allForSubject.slice(0, 10).map((q) => ({
+      ...q,
+      is_sample: true, // ensure model answers & hints are accessible during trial
+    }));
   }
 
   if (options.topic) {
@@ -229,12 +240,17 @@ export async function getQuestionsForSubject(
     );
   }
 
-  const total = filtered.length;
+  const total = (!options.isEntitled && !options.isAdmin) ? Math.min(10, filtered.length) : filtered.length;
   const offset = options.offset || 0;
   const limit = options.limit || 50;
   const paginated = filtered.slice(offset, offset + limit);
 
-  return { questions: paginated, total };
+  return {
+    questions: paginated,
+    total,
+    trialActive: !options.isEntitled && !options.isAdmin,
+    trialLimit: 10,
+  };
 }
 
 export async function getQuestion(id: string): Promise<Question | undefined> {
@@ -696,4 +712,210 @@ export async function logAdminAction(
 export async function getAdminAuditLogs(): Promise<AdminAuditLog[]> {
   const db = loadDB();
   return db.admin_audit_logs;
+}
+
+// ==========================================
+// LEADS & 10-QUESTION FREE TRIAL TRACKING
+// ==========================================
+
+export async function registerOrUpdateLead(
+  leadInput: {
+    student_name: string;
+    whatsapp_number: string;
+    student_email?: string;
+    grade?: string;
+    target_exam?: string;
+    school_name?: string;
+    city?: string;
+    parent_name?: string;
+    parent_email?: string;
+    parent_whatsapp?: string;
+    selected_subjects?: SubjectSlug[];
+    daily_minutes?: number;
+    referred_by?: string;
+  }
+): Promise<StudentLead> {
+  const db = loadDB();
+  if (!db.leads) db.leads = {};
+
+  const cleanPhone = leadInput.whatsapp_number.replace(/\D/g, '');
+  const existingId = Object.keys(db.leads).find(
+    (k) => db.leads[k].whatsapp_number.replace(/\D/g, '') === cleanPhone
+  );
+
+  const now = new Date();
+  const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  const existingLead = existingId ? db.leads[existingId] : null;
+
+  const leadId = existingLead ? existingLead.id : `lead_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+  const referralCode = existingLead?.referral_code || `REF${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+
+  const updatedLead: StudentLead = {
+    id: leadId,
+    student_name: leadInput.student_name || existingLead?.student_name || 'Student',
+    student_email: leadInput.student_email || existingLead?.student_email,
+    whatsapp_number: leadInput.whatsapp_number,
+    grade: leadInput.grade || existingLead?.grade || 'Class 10',
+    target_exam: leadInput.target_exam || existingLead?.target_exam || 'CBSE 2027',
+    school_name: leadInput.school_name || existingLead?.school_name,
+    city: leadInput.city || existingLead?.city,
+    parent_name: leadInput.parent_name || existingLead?.parent_name,
+    parent_email: leadInput.parent_email || existingLead?.parent_email,
+    parent_whatsapp: leadInput.parent_whatsapp || existingLead?.parent_whatsapp,
+    selected_subjects: leadInput.selected_subjects || existingLead?.selected_subjects || ['maths-standard'],
+    daily_minutes: leadInput.daily_minutes || existingLead?.daily_minutes || 15,
+    trial_questions_attempted: existingLead?.trial_questions_attempted || 0,
+    trial_cycle_started_at: existingLead?.trial_cycle_started_at || now.toISOString(),
+    trial_resets_at: existingLead?.trial_resets_at || new Date(now.getTime() + ONE_WEEK_MS).toISOString(),
+    referral_code: referralCode,
+    referred_by: leadInput.referred_by || existingLead?.referred_by,
+    bonus_questions: existingLead?.bonus_questions || (leadInput.referred_by ? 5 : 0),
+    created_at: existingLead?.created_at || now.toISOString(),
+    updated_at: now.toISOString(),
+  };
+
+  db.leads[leadId] = updatedLead;
+  saveDB(db);
+
+  // Sync to Cloud Supabase PostgreSQL when configured
+  if (isSupabaseConfigured) {
+    try {
+      const supabase = createServerSupabaseClient();
+      await supabase.from('leads').upsert(
+        {
+          id: updatedLead.id,
+          student_name: updatedLead.student_name,
+          student_email: updatedLead.student_email || null,
+          whatsapp_number: updatedLead.whatsapp_number,
+          grade: updatedLead.grade,
+          target_exam: updatedLead.target_exam,
+          school_name: updatedLead.school_name || null,
+          city: updatedLead.city || null,
+          parent_name: updatedLead.parent_name || null,
+          parent_email: updatedLead.parent_email || null,
+          parent_whatsapp: updatedLead.parent_whatsapp || null,
+          selected_subjects: updatedLead.selected_subjects,
+          daily_minutes: updatedLead.daily_minutes,
+          trial_questions_attempted: updatedLead.trial_questions_attempted,
+          trial_cycle_started_at: updatedLead.trial_cycle_started_at,
+          trial_resets_at: updatedLead.trial_resets_at,
+          referral_code: updatedLead.referral_code || null,
+          referred_by: updatedLead.referred_by || null,
+          bonus_questions: updatedLead.bonus_questions,
+          updated_at: updatedLead.updated_at,
+        },
+        { onConflict: 'id' }
+      );
+    } catch (err) {
+      console.error('[DB] Supabase lead sync note:', (err as any)?.message || err);
+    }
+  }
+
+  return updatedLead;
+}
+
+export async function getLead(idOrPhone: string): Promise<StudentLead | null> {
+  const db = loadDB();
+  if (!db.leads) return null;
+
+  if (db.leads[idOrPhone]) return db.leads[idOrPhone];
+  const clean = idOrPhone.replace(/\D/g, '');
+  const found = Object.values(db.leads).find((l) => l.whatsapp_number.replace(/\D/g, '') === clean);
+  return found || null;
+}
+
+export async function getAllLeads(): Promise<StudentLead[]> {
+  const db = loadDB();
+  return Object.values(db.leads || {}).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+}
+
+export function calculateTrialStatus(lead?: StudentLead | null): TrialStatus {
+  const FREE_TRIAL_LIMIT = 10;
+  const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+
+  if (!lead) {
+    const defaultResetsAt = new Date(now + ONE_WEEK_MS).toISOString();
+    return {
+      trialActive: true,
+      totalLimit: FREE_TRIAL_LIMIT,
+      attempted: 0,
+      remaining: FREE_TRIAL_LIMIT,
+      cycleStartedAt: new Date(now).toISOString(),
+      resetsAt: defaultResetsAt,
+      daysUntilReset: 7,
+      hoursUntilReset: 168,
+      isLocked: false,
+    };
+  }
+
+  let cycleStarted = new Date(lead.trial_cycle_started_at || now).getTime();
+  let resetsAtTime = new Date(lead.trial_resets_at || (cycleStarted + ONE_WEEK_MS)).getTime();
+  let attempted = lead.trial_questions_attempted || 0;
+  const bonus = lead.bonus_questions || 0;
+  const totalLimit = FREE_TRIAL_LIMIT + bonus;
+
+  // Has 1 week passed? If so, auto-reset the trial!
+  if (now >= resetsAtTime) {
+    attempted = 0;
+    cycleStarted = now;
+    resetsAtTime = now + ONE_WEEK_MS;
+    lead.trial_questions_attempted = 0;
+    lead.trial_cycle_started_at = new Date(cycleStarted).toISOString();
+    lead.trial_resets_at = new Date(resetsAtTime).toISOString();
+    const db = loadDB();
+    if (db.leads && db.leads[lead.id]) {
+      db.leads[lead.id] = lead;
+      saveDB(db);
+    }
+  }
+
+  const msRemaining = Math.max(0, resetsAtTime - now);
+  const hoursUntilReset = Math.floor(msRemaining / (1000 * 60 * 60));
+  const daysUntilReset = Math.ceil(hoursUntilReset / 24);
+  const remaining = Math.max(0, totalLimit - attempted);
+
+  return {
+    trialActive: true,
+    totalLimit,
+    attempted,
+    remaining,
+    cycleStartedAt: new Date(cycleStarted).toISOString(),
+    resetsAt: new Date(resetsAtTime).toISOString(),
+    daysUntilReset,
+    hoursUntilReset,
+    isLocked: attempted >= totalLimit,
+  };
+}
+
+export async function incrementTrialAttempt(leadIdOrPhone: string): Promise<TrialStatus> {
+  const db = loadDB();
+  const lead = await getLead(leadIdOrPhone);
+  if (!lead) return calculateTrialStatus(null);
+
+  lead.trial_questions_attempted = (lead.trial_questions_attempted || 0) + 1;
+  lead.updated_at = new Date().toISOString();
+  if (db.leads) {
+    db.leads[lead.id] = lead;
+    saveDB(db);
+  }
+
+  if (isSupabaseConfigured) {
+    try {
+      const supabase = createServerSupabaseClient();
+      await supabase
+        .from('leads')
+        .update({
+          trial_questions_attempted: lead.trial_questions_attempted,
+          updated_at: lead.updated_at,
+        })
+        .eq('id', lead.id);
+    } catch (e) {
+      // non-fatal
+    }
+  }
+
+  return calculateTrialStatus(lead);
 }

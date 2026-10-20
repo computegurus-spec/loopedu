@@ -14,6 +14,7 @@ import {
   Trophy,
   Flame,
   BookOpen,
+  Share2,
 } from 'lucide-react';
 
 interface DailyQuestion {
@@ -308,7 +309,19 @@ export const DailyFiveChallenge: React.FC = () => {
             </p>
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                `🔥 I solved ${correctCount}/5 CBSE board questions cleanly on LoopEdu in ${formatTimer(seconds)}! Practice 10 free questions this week: https://loopedu.in`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-3 px-6 rounded-xl font-bold text-xs uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2 transition shadow-xs"
+            >
+              <Share2 className="w-4 h-4" />
+              <span>Share Score on WhatsApp</span>
+            </a>
+
             <button
               onClick={() => {
                 setIsCompleted(false);
@@ -320,7 +333,7 @@ export const DailyFiveChallenge: React.FC = () => {
               }}
               className="py-3 px-6 rounded-xl font-bold text-xs uppercase tracking-wider bg-forest-900 text-limeaccent hover:bg-forest-800 transition"
             >
-              Practice Another Set or Review Mistakes
+              Practice Another Set (Up to 10 Free)
             </button>
           </div>
         </div>
