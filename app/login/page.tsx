@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Lock,
   User,
@@ -13,13 +13,20 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlErrorDesc = searchParams.get('error_description');
+  const urlErrorParam = searchParams.get('error');
+  const urlError = urlErrorDesc || (urlErrorParam === 'auth_failed' ? 'Authentication could not be completed. Please check your Auth0 configuration or sign in directly below.' : null);
+
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  const displayError = error || urlError;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,10 +92,10 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="rounded-3xl bg-white border border-academic-border p-6 sm:p-8 shadow-sm space-y-5">
-          {error && (
+          {displayError && (
             <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-950 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-              <span>{error}</span>
+              <span>{displayError}</span>
             </div>
           )}
 
@@ -221,5 +228,19 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[78vh] flex items-center justify-center">
+          <Loader2 className="w-6 h-6 animate-spin text-forest-800" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }

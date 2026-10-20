@@ -21,10 +21,16 @@ export async function GET(req: NextRequest, ctx: any) {
 
     return await (auth0.handleAuth() as any)(req, ctx);
   } catch (err: any) {
-    console.error('Auth0 route error caught gracefully:', err?.message || err);
+    const errorParam = req.nextUrl.searchParams.get('error');
+    const errorDesc = req.nextUrl.searchParams.get('error_description');
+    console.error('Auth0 callback error details:', {
+      message: err?.message,
+      cause: err?.cause?.message || err?.cause,
+      errorParam,
+      errorDesc,
+    });
 
-    // If callback fails (e.g. code expired, state already consumed, or user refreshed callback URL),
-    // redirect smoothly to /learn if session is already active, or back to /login without 500 error
+    // If active session exists, proceed to /learn
     try {
       const session = await (auth0.getSession as any)();
       if (session?.user) {
@@ -34,6 +40,12 @@ export async function GET(req: NextRequest, ctx: any) {
       // ignore
     }
 
-    return NextResponse.redirect(new URL('/login?error=auth_failed', origin));
+    const loginUrl = new URL('/login', origin);
+    if (errorDesc) {
+      loginUrl.searchParams.set('error_description', errorDesc);
+    } else {
+      loginUrl.searchParams.set('error', 'auth_failed');
+    }
+    return NextResponse.redirect(loginUrl);
   }
 }
