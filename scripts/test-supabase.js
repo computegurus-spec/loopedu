@@ -67,7 +67,7 @@ async function checkSupabase() {
     auth: { persistSession: false },
   });
 
-  const tablesToCheck = ['subjects', 'questions', 'profiles', 'orders', 'entitlements', 'user_progress'];
+  const tablesToCheck = ['subjects', 'questions', 'profiles', 'orders', 'entitlements', 'user_progress', 'leads'];
   let allHealthy = true;
 
   let couldNotConnect = false;
