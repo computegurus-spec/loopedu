@@ -45,6 +45,9 @@
   - **Status:** ✅ Project active (`oyesvbamjtlqvryaybtd.supabase.co`).
   - **Schema:** All 11 tables & RLS security policies created and verified live.
   - **Diagnostic:** Tested and passing via `scripts/test-supabase.js` and `/api/health/supabase`.
+  - **Seeding:** Ready! 
+    - **Option 1 (Instant via SQL Editor):** Run [`supabase/seed.sql`](file:///c:/Users/sadis/OneDrive/Desktop/itappens%20cbse/supabase/seed.sql) (1.0 MB, all 8 subjects & 1600 questions) in Supabase SQL Editor.
+    - **Option 2 (Automated Script):** Add secret service role key to `SUPABASE_SERVICE_ROLE_KEY` and run `node scripts/seed-supabase.js`.
 
 - [x] **5. AI Doubt Coach API Key (Configured & Live Tested)**
   - **Status:** ✅ Active and verified live (`live-openai-ncert-grounded` & Gemini configured).
