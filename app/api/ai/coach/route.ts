@@ -8,7 +8,7 @@ interface CoachRequest {
   source?: string;
   explanation?: string;
   modelAnswer?: string;
-  action?: 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'ask';
+  action?: 'hint' | 'xray' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'ask';
   userQuery?: string;
 }
 
@@ -54,7 +54,8 @@ Keep formatting clean using standard Markdown and LaTeX math syntax (e.g. $x^2 +
     if (apiKey && process.env.OPENAI_API_KEY) {
       // Live OpenAI API call with gpt-4o-mini
       let userPrompt = '';
-      if (action === 'hint') userPrompt = `Give me a progressive hint to solve this problem without revealing the answer. Question: "${question}". Verified Topic: ${topic}.`;
+      if (action === 'xray') userPrompt = `Provide a progressive 3-step Socratic X-Ray hint for this CBSE Class 10 problem. DO NOT reveal the final numeric answer or option. Step 1: The Detective Clue (what to notice). Step 2: The Guiding Socratic Question. Step 3: What to verify. Problem: "${question}". Topic: ${topic}.`;
+      else if (action === 'hint') userPrompt = `Give me a progressive hint to solve this problem without revealing the answer. Question: "${question}". Verified Topic: ${topic}.`;
       else if (action === 'simple') userPrompt = `Explain this concept more simply using an intuitive analogy. Question: "${question}". Concept: ${topic}.`;
       else if (action === 'steps') userPrompt = `List the exact step-by-step CBSE marking-scheme steps needed to solve this. Question: "${question}". Solution: "${explanation}".`;
       else if (action === 'why_wrong') userPrompt = `Explain common misconceptions and why students lose marks on this topic. Question: "${question}".`;
@@ -93,7 +94,15 @@ Keep formatting clean using standard Markdown and LaTeX math syntax (e.g. $x^2 +
 
     // High-Fidelity Verified NCERT Fallback Generator (Ensures 100% uptime when API key is not yet set)
     let fallbackText = '';
-    if (action === 'hint') {
+    if (action === 'xray') {
+      if (topic.includes('Quadratic') || topic.includes('Polynomial')) {
+        fallbackText = `🔬 **Socratic X-Ray Clue (Step 1 of 3)**:\nLook at the given terms. If a value is a zero or root of a polynomial, what must happen when you substitute it for $x$?\n\n💡 *Guiding Question:* If $x = 2$ makes the polynomial equal zero, what linear equation do you get for $k$? Solve for $k$ before looking at the solution!`;
+      } else if (topic.includes('Carbon') || topic.includes('Chemical')) {
+        fallbackText = `🔬 **Socratic X-Ray Clue (Step 1 of 3)**:\nNotice the reaction with metal hydrogen carbonate ($\\text{NaHCO}_3$). What type of substance releases $\\text{CO}_2$ gas when reacted with baking soda?\n\n💡 *Guiding Question:* Which option is an organic acid containing the functional group $-\\text{COOH}$?`;
+      } else {
+        fallbackText = `🔬 **Socratic X-Ray Clue (Step 1 of 3)**:\nIdentify the known parameters and the single unknown required by NCERT. What core formula connects them without expanding unnecessary terms?\n\n💡 *Guiding Question:* What is your immediate next step on your scratchpad?`;
+      }
+    } else if (action === 'hint') {
       if (topic.includes('Quadratic')) {
         fallbackText = 'Recall standard form $ax^2 + bx + c = 0$. Can you split the middle term into two numbers whose product is $ac$ and sum is $b$?';
       } else if (topic.includes('Respiration') || topic.includes('Chemical')) {

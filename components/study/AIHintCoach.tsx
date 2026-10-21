@@ -32,14 +32,14 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
   onReportIssue,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'custom' | null
-  >(null);
+    'xray' | 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'custom' | null
+  >('xray');
   const [customQuery, setCustomQuery] = useState('');
   const [customResponse, setCustomResponse] = useState('');
   const [loading, setLoading] = useState(false);
   const [cache, setCache] = useState<Record<string, string>>({});
 
-  const fetchCoachAction = async (action: 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'ask', qText?: string) => {
+  const fetchCoachAction = async (action: 'xray' | 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way' | 'ask', qText?: string) => {
     const cacheKey = action === 'ask' ? `ask_${qText}` : action;
     if (cache[cacheKey]) return;
 
@@ -71,7 +71,7 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
     }
   };
 
-  const handleToggleTab = (tab: 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way') => {
+  const handleToggleTab = (tab: 'xray' | 'hint' | 'simple' | 'steps' | 'why_wrong' | 'another_way') => {
     if (activeTab === tab) {
       setActiveTab(null);
     } else {
@@ -115,8 +115,20 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
         </div>
       </div>
 
-      {/* 5 In-Flow Actions */}
+      {/* In-Flow Actions */}
       <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => handleToggleTab('xray')}
+          className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${
+            activeTab === 'xray'
+              ? 'bg-forest-900 text-limeaccent shadow-sm ring-2 ring-limeaccent/40'
+              : 'bg-limeaccent/25 border border-limeaccent text-forest-950 hover:bg-limeaccent/40'
+          }`}
+        >
+          <Sparkles className="w-3.5 h-3.5 text-forest-800" />
+          <span>🔬 Socratic X-Ray Hint</span>
+        </button>
+
         <button
           onClick={() => handleToggleTab('hint')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
@@ -188,6 +200,23 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
             </div>
           ) : (
             <>
+              {activeTab === 'xray' && (
+                <div className="space-y-2 p-3.5 rounded-xl bg-limeaccent/15 border border-limeaccent/40">
+                  <div className="font-bold text-forest-950 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-forest-900 font-mono">
+                      <Sparkles className="w-4 h-4 text-forest-800" />
+                      Socratic X-Ray Nudge (No Answers Given Away)
+                    </span>
+                    <span className="text-[10px] bg-forest-900 text-limeaccent px-2 py-0.5 rounded font-mono font-bold">
+                      Active Recall
+                    </span>
+                  </div>
+                  <div className="text-sm leading-relaxed text-forest-950 font-medium">
+                    <MathRenderer text={cache['xray'] || '🔬 Look at the given values: what standard NCERT identity or definition governs this exact relationship?'} />
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'hint' && (
                 <div className="space-y-1.5">
                   <div className="font-bold text-forest-950 flex items-center gap-1.5">

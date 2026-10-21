@@ -27,79 +27,88 @@ import { getSessionUser } from '@/lib/auth/session';
 import { ALL_SUBJECTS } from '@/lib/subjects';
 import { InteractiveSampleCard } from '@/components/InteractiveSampleCard';
 import { SubjectRequestForm } from '@/components/SubjectRequestForm';
+import { HeroInteractiveWidget } from '@/components/home/HeroInteractiveWidget';
+import { BoardExamTimeMachine } from '@/components/home/BoardExamTimeMachine';
+import { ParentWhispererVoiceNote } from '@/components/home/ParentWhispererVoiceNote';
 
 export default async function HomePage() {
   const user = await getSessionUser();
 
   return (
     <div className="space-y-16 sm:space-y-24 py-8 sm:py-16">
-      {/* 1. Hero Section */}
+      {/* 1. Hero Section: The Zero-Friction Hook */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 text-xs font-bold tracking-wide">
-            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-            <span>🎁 Launch Special: 10 High-Yield Questions 100% Free Every Week • Resets Sunday</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          {/* Left Column: Copy & Direct CTAs */}
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 text-xs font-bold tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+              <span>🎁 Launch Special: 10 High-Yield Questions 100% Free Every Week</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight text-forest-950 leading-[1.08]">
+              Try 1 Ton of Board Confidence in 3 Minutes.
+            </h1>
+
+            <p className="text-base sm:text-lg text-forest-800 leading-relaxed font-normal">
+              Pick your focus subject and answer today's 1st CBSE question right now. <strong>15 minutes a day</strong>, zero cramming burnout, and automated WhatsApp peace-of-mind for parents.
+            </p>
+
+            <div className="pt-1 flex flex-wrap items-center gap-3">
+              {user ? (
+                <Link
+                  href="/learn"
+                  className="inline-flex items-center justify-center gap-2 bg-limeaccent hover:bg-lime-400 text-forest-950 font-bold px-6 py-3.5 rounded-xl text-sm transition shadow-sm"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Continue Daily Habit Loop (15 Mins) →</span>
+                </Link>
+              ) : (
+                <Link
+                  href="/onboarding"
+                  className="inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-6 py-3.5 rounded-xl text-sm transition shadow-sm"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Start My Free Daily Five →</span>
+                </Link>
+              )}
+
+              <Link
+                href="#time-machine"
+                className="inline-flex items-center justify-center gap-2 bg-white hover:bg-paper-50 text-forest-900 font-semibold px-5 py-3.5 rounded-xl text-sm border border-academic-border transition shadow-sm"
+              >
+                <span>10-Yr Board Heatmap ↓</span>
+              </Link>
+            </div>
+
+            <div className="pt-1 flex flex-wrap items-center gap-3 text-xs text-academic-subtle">
+              <span className="font-bold text-forest-950 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                ✓ No Sign-up Needed for Q1
+              </span>
+              <span className="text-forest-400">•</span>
+              <span className="font-semibold text-forest-950">
+                10 Free Questions / Wk
+              </span>
+              <span className="text-forest-400">•</span>
+              <span>1-Click WhatsApp Parent Note</span>
+            </div>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-bold tracking-tight text-forest-950 leading-[1.08]">
-            A little more focus.<br />
-            A lot more practice.
-          </h1>
-
-          <p className="text-lg sm:text-xl text-forest-800 leading-relaxed font-normal max-w-2xl">
-            <strong>LoopEdu</strong> is the 15-minute daily habit platform for academic excellence and competitive exams. Starting with CBSE Class 10. Claim your <strong>10 free high-yield questions every week</strong> with real-time AI step hints, active recall error revision, and instant NCERT diagnostic scorecards for parents.
-          </p>
-
-          <div className="pt-2 flex flex-wrap items-center gap-4">
-            {user ? (
-              <Link
-                href="/learn"
-                className="inline-flex items-center justify-center gap-2 bg-limeaccent hover:bg-limeaccent-hover text-forest-950 font-bold px-7 py-3.5 rounded-xl text-sm transition shadow-sm"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Continue Study Path (15 Mins)</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            ) : (
-              <Link
-                href="/onboarding"
-                className="inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-7 py-3.5 rounded-xl text-sm transition shadow-sm"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Claim 10 Free Questions / Week →</span>
-              </Link>
-            )}
-
-            <Link
-              href="#pillars"
-              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-paper-50 text-forest-900 font-semibold px-6 py-3.5 rounded-xl text-sm border border-academic-border transition shadow-sm"
-            >
-              <span>Explore The 3 Pillars</span>
-            </Link>
-
-            <Link
-              href="/parent"
-              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-paper-50 text-forest-900 font-semibold px-5 py-3.5 rounded-xl text-sm border border-academic-border transition shadow-sm"
-            >
-              <ShieldCheck className="w-4 h-4 text-forest-700" />
-              <span>Parent Hub</span>
-            </Link>
-          </div>
-
-          <div className="pt-2 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-academic-subtle">
-            <span className="font-bold text-forest-950 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-              ✓ 10 Free Questions / Week
-            </span>
-            <span className="text-forest-400">•</span>
-            <span className="font-semibold text-forest-950">
-              7-Day Rolling Reset
-            </span>
-            <span className="text-forest-400">•</span>
-            <span>Optional ₹299/mo for Unlimited</span>
-            <span className="text-forest-400">•</span>
-            <span>Instant Parent WhatsApp Report</span>
+          {/* Right Column: Live Interactive Question Widget */}
+          <div className="lg:col-span-6">
+            <HeroInteractiveWidget />
           </div>
         </div>
+      </section>
+
+      {/* 2. The Board Exam Time-Machine (10-Year Heatmap) */}
+      <section id="time-machine" className="max-w-6xl mx-auto px-4 sm:px-6">
+        <BoardExamTimeMachine />
+      </section>
+
+      {/* 3. The Parent Whisperer Audio Voice Note */}
+      <section id="parent-whisperer" className="max-w-6xl mx-auto px-4 sm:px-6">
+        <ParentWhispererVoiceNote />
       </section>
 
       {/* 2. The 3 Core Pillars of LoopEdu */}
