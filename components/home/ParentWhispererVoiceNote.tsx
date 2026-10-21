@@ -200,7 +200,7 @@ export const ParentWhispererVoiceNote: React.FC = () => {
               Daily Tutor Audio Summary for {profile.studentName}
             </span>
           </div>
-          <span className="font-mono text-[11px] text-forest-400">
+          <span className="font-mono text-[11px] text-emerald-200 font-semibold">
             {profile.dateStr}
           </span>
         </div>
@@ -225,7 +225,7 @@ export const ParentWhispererVoiceNote: React.FC = () => {
               <span className="text-limeaccent font-bold">
                 {isPlaying ? 'Playing AI Voice Brief...' : 'Tap to Listen (30 Seconds)'}
               </span>
-              <span className="text-forest-400">
+              <span className="text-emerald-200 font-semibold">
                 {isPlaying ? `${Math.round((progress / 100) * 28)}s / 28s` : '0:28'}
               </span>
             </div>
@@ -255,31 +255,31 @@ export const ParentWhispererVoiceNote: React.FC = () => {
         </div>
 
         {/* Spoken Transcript Preview */}
-        <div className="p-4 rounded-xl bg-forest-900/50 border border-forest-800/80 text-xs sm:text-sm text-forest-200 leading-relaxed italic">
+        <div className="p-4 rounded-xl bg-forest-900/60 border border-forest-800/80 text-xs sm:text-sm text-slate-100 leading-relaxed font-medium">
           "{profile.script}"
         </div>
 
         {/* Quick Highlights Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
-          <div className="p-3 rounded-xl bg-forest-900/40 border border-forest-800">
-            <span className="text-[10px] uppercase font-mono text-forest-400 block mb-0.5">
+          <div className="p-3 rounded-xl bg-forest-900/60 border border-forest-800">
+            <span className="text-[10px] uppercase font-mono text-emerald-300 font-bold block mb-0.5">
               Accuracy
             </span>
             <span className="font-bold text-limeaccent">{profile.accuracy}</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-forest-900/40 border border-forest-800">
-            <span className="text-[10px] uppercase font-mono text-forest-400 block mb-0.5">
+          <div className="p-3 rounded-xl bg-forest-900/60 border border-forest-800">
+            <span className="text-[10px] uppercase font-mono text-emerald-300 font-bold block mb-0.5">
               Today's Win
             </span>
             <span className="font-semibold text-white truncate block">{profile.highlight}</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-forest-900/40 border border-forest-800">
-            <span className="text-[10px] uppercase font-mono text-forest-400 block mb-0.5">
+          <div className="p-3 rounded-xl bg-forest-900/60 border border-forest-800">
+            <span className="text-[10px] uppercase font-mono text-emerald-300 font-bold block mb-0.5">
               Next Queued Fix
             </span>
-            <span className="font-semibold text-emerald-300 truncate block">{profile.focusArea}</span>
+            <span className="font-semibold text-emerald-200 truncate block">{profile.focusArea}</span>
           </div>
         </div>
 

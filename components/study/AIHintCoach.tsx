@@ -88,25 +88,25 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
   };
 
   return (
-    <div className="rounded-2xl border border-forest-200/90 bg-forest-50/50 p-4 sm:p-5 space-y-3.5 text-xs">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-forest-100 pb-3">
-        <div className="flex items-center gap-2 font-bold text-forest-950">
-          <div className="w-6 h-6 rounded-md bg-forest-900 text-limeaccent flex items-center justify-center">
+    <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4 sm:p-5 space-y-3.5 text-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+        <div className="flex items-center gap-2 font-bold text-slate-950">
+          <div className="w-6 h-6 rounded-md bg-slate-900 text-emerald-400 flex items-center justify-center">
             <Sparkles className="w-3.5 h-3.5" />
           </div>
-          <span className="text-sm font-serif">NCERT-Grounded AI Study Coach</span>
-          <span className="text-[10px] bg-forest-200 text-forest-900 px-2 py-0.5 rounded font-mono font-semibold">
-            Strict NCERT Class 10 Syllabus
+          <span className="text-sm font-bold text-slate-950">NCERT-Grounded AI Study Coach</span>
+          <span className="text-[10px] bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded font-mono font-bold">
+            Strict NCERT Class 10
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-academic-subtle">
+          <span className="text-[11px] text-slate-500 font-medium">
             Answers constrained to NCERT marking scheme
           </span>
           {onReportIssue && (
             <button
               onClick={onReportIssue}
-              className="text-[11px] text-forest-700 hover:text-forest-950 underline flex items-center gap-1 font-medium"
+              className="text-[11px] text-slate-600 hover:text-slate-900 underline flex items-center gap-1 font-medium"
             >
               <AlertCircle className="w-3 h-3 text-amber-600" />
               <span>Report issue</span>
@@ -121,11 +121,11 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           onClick={() => handleToggleTab('xray')}
           className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition ${
             activeTab === 'xray'
-              ? 'bg-forest-900 text-limeaccent shadow-sm ring-2 ring-limeaccent/40'
-              : 'bg-limeaccent/25 border border-limeaccent text-forest-950 hover:bg-limeaccent/40'
+              ? 'bg-slate-900 text-emerald-300 shadow-sm ring-2 ring-emerald-500/40'
+              : 'bg-emerald-50 border border-emerald-300 text-emerald-950 hover:bg-emerald-100'
           }`}
         >
-          <Sparkles className="w-3.5 h-3.5 text-forest-800" />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
           <span>🔬 Socratic X-Ray Hint</span>
         </button>
 
@@ -133,11 +133,11 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           onClick={() => handleToggleTab('hint')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
             activeTab === 'hint'
-              ? 'bg-forest-900 text-limeaccent shadow-sm'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-50 border border-slate-300 text-slate-800 hover:bg-slate-100'
           }`}
         >
-          <Lightbulb className="w-3.5 h-3.5" />
+          <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
           <span>Give me a hint</span>
         </button>
 
@@ -145,11 +145,11 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           onClick={() => handleToggleTab('simple')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
             activeTab === 'simple'
-              ? 'bg-forest-900 text-limeaccent shadow-sm'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-50 border border-slate-300 text-slate-800 hover:bg-slate-100'
           }`}
         >
-          <Compass className="w-3.5 h-3.5" />
+          <Compass className="w-3.5 h-3.5 text-slate-700" />
           <span>Explain this more simply</span>
         </button>
 
@@ -157,11 +157,11 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           onClick={() => handleToggleTab('steps')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
             activeTab === 'steps'
-              ? 'bg-forest-900 text-limeaccent shadow-sm'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-50 border border-slate-300 text-slate-800 hover:bg-slate-100'
           }`}
         >
-          <Layers className="w-3.5 h-3.5" />
+          <Layers className="w-3.5 h-3.5 text-slate-700" />
           <span>Show the steps</span>
         </button>
 
@@ -169,11 +169,11 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           onClick={() => handleToggleTab('why_wrong')}
           className={`px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1.5 transition ${
             activeTab === 'why_wrong'
-              ? 'bg-forest-900 text-limeaccent shadow-sm'
-              : 'bg-white border border-academic-border text-forest-900 hover:bg-forest-100/60'
+              ? 'bg-slate-900 text-white shadow-sm'
+              : 'bg-slate-50 border border-slate-300 text-slate-800 hover:bg-slate-100'
           }`}
         >
-          <QuestionIcon className="w-3.5 h-3.5" />
+          <QuestionIcon className="w-3.5 h-3.5 text-red-600" />
           <span>Why is my answer wrong?</span>
         </button>
 
@@ -201,102 +201,102 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           ) : (
             <>
               {activeTab === 'xray' && (
-                <div className="space-y-2 p-3.5 rounded-xl bg-limeaccent/15 border border-limeaccent/40">
-                  <div className="font-bold text-forest-950 flex items-center justify-between">
-                    <span className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-forest-900 font-mono">
-                      <Sparkles className="w-4 h-4 text-forest-800" />
+                <div className="space-y-2 p-4 rounded-xl bg-emerald-50 border border-emerald-300">
+                  <div className="font-bold text-slate-950 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-emerald-950 font-mono font-bold">
+                      <Sparkles className="w-4 h-4 text-emerald-700" />
                       Socratic X-Ray Nudge (No Answers Given Away)
                     </span>
-                    <span className="text-[10px] bg-forest-900 text-limeaccent px-2 py-0.5 rounded font-mono font-bold">
+                    <span className="text-[10px] bg-slate-900 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">
                       Active Recall
                     </span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-950 font-medium">
+                  <div className="text-sm leading-relaxed text-slate-950 font-medium">
                     <MathRenderer text={cache['xray'] || '🔬 Look at the given values: what standard NCERT identity or definition governs this exact relationship?'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'hint' && (
-                <div className="space-y-1.5">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
                     <Lightbulb className="w-3.5 h-3.5 text-amber-600" />
                     <span>NCERT Conceptual Clue</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={cache['hint'] || 'Review the core formula in the chapter.'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'simple' && (
-                <div className="space-y-1.5">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
-                    <Compass className="w-3.5 h-3.5 text-forest-700" />
+                <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
+                    <Compass className="w-3.5 h-3.5 text-slate-700" />
                     <span>Plain-English NCERT Analogy</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={cache['simple'] || 'Think of this in simple daily terms.'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'steps' && (
-                <div className="space-y-2">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
-                    <Layers className="w-3.5 h-3.5 text-forest-700" />
+                <div className="space-y-2 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-slate-700" />
                     <span>Step-by-Step Marking Scheme Procedure</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={cache['steps'] || '1. Identify given values.\n2. Apply formula.\n3. Verify units.'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'why_wrong' && (
-                <div className="space-y-1.5">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
                     <QuestionIcon className="w-3.5 h-3.5 text-red-600" />
                     <span>Common CBSE Mistakes & Traps</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={cache['why_wrong'] || 'Watch out for sign and unit errors.'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'another_way' && (
-                <div className="space-y-1.5">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
+                <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
                     <RotateCw className="w-3.5 h-3.5 text-blue-600" />
                     <span>Alternative Valid Method</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={cache['another_way'] || 'You can also solve by direct algebraic substitution.'} />
                   </div>
                 </div>
               )}
 
               {activeTab === 'custom' && (
-                <div className="space-y-1.5">
-                  <div className="font-bold text-forest-950 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-forest-700" />
+                <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="font-bold text-slate-950 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
                     <span>NCERT Answer to Your Question</span>
                   </div>
-                  <div className="text-sm leading-relaxed text-forest-800">
+                  <div className="text-sm leading-relaxed text-slate-900 font-normal">
                     <MathRenderer text={customResponse || 'Analyzing your question against NCERT guidelines...'} />
                   </div>
                 </div>
               )}
 
-              <div className="pt-2 border-t border-academic-border flex items-center justify-between text-[11px] text-academic-subtle">
-                <span className="flex items-center gap-1 text-forest-800 font-medium">
-                  <Check className="w-3 h-3 text-emerald-600" />
+              <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+                <span className="flex items-center gap-1 text-slate-800 font-semibold">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
                   <span>Strictly grounded in NCERT Class 10 ({source})</span>
                 </span>
                 <button
                   onClick={() => setActiveTab(null)}
-                  className="text-forest-700 hover:text-forest-950 font-semibold"
+                  className="text-slate-600 hover:text-slate-950 font-bold"
                 >
                   Close
                 </button>
@@ -313,12 +313,12 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           value={customQuery}
           onChange={(e) => setCustomQuery(e.target.value)}
           placeholder="Ask a specific NCERT question about this problem (e.g. 'Can I use quadratic formula here?')..."
-          className="flex-grow px-3 py-2 rounded-xl border border-academic-border bg-white text-forest-900 text-xs focus:outline-none focus:border-forest-700"
+          className="flex-grow px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600 transition"
         />
         <button
           type="submit"
           disabled={loading || !customQuery.trim()}
-          className="inline-flex items-center gap-1.5 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold px-3.5 py-2 rounded-xl text-xs transition disabled:opacity-50 shrink-0"
+          className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition disabled:opacity-50 shrink-0 shadow-xs"
         >
           {loading && activeTab === 'custom' ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />

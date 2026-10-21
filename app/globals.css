@@ -20,10 +20,10 @@ h1, h2, h3, .font-academic-serif {
   font-family: "Charter", "Bitstream Charter", "Sitka Text", "Cambria", Georgia, serif;
 }
 
-/* KaTeX custom academic tweaks */
+/* KaTeX custom academic tweaks - inherit color for crystal clear readability on dark & light */
 .katex {
-  font-size: 1.08em;
-  color: #14342B;
+  font-size: 1.06em;
+  color: inherit;
 }
 
 .katex-display {

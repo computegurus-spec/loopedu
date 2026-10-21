@@ -219,7 +219,7 @@ export const BoardExamTimeMachine: React.FC = () => {
     : subjectData.chapters;
 
   return (
-    <div className="rounded-3xl bg-forest-900 border border-academic-border p-6 sm:p-10 shadow-sm text-forest-950 space-y-8">
+    <div className="rounded-3xl bg-forest-900 border border-forest-700/80 p-6 sm:p-10 shadow-lg text-white space-y-8">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-forest-800 pb-6">
         <div className="space-y-2 max-w-2xl">
@@ -230,7 +230,7 @@ export const BoardExamTimeMachine: React.FC = () => {
           <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
             10-Year CBSE Frequency Heatmap (2015–2024)
           </h3>
-          <p className="text-xs sm:text-sm text-forest-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-normal">
             Stop guessing which chapters carry the real marks. This matrix cross-references every chapter against real CBSE Board papers over the past decade.
           </p>
         </div>
@@ -315,7 +315,7 @@ export const BoardExamTimeMachine: React.FC = () => {
                       10/10 Yrs Hit
                     </span>
                   ) : (
-                    <span className="text-[10px] font-mono text-forest-400">
+                    <span className="text-[10px] font-mono text-emerald-300 font-bold bg-forest-900 px-2 py-0.5 rounded">
                       {ch.appearanceYears}/10 Yrs
                     </span>
                   )}
@@ -328,7 +328,7 @@ export const BoardExamTimeMachine: React.FC = () => {
 
                 {/* Frequency Heat Bar */}
                 <div className="space-y-1">
-                  <div className="flex items-center justify-between text-[11px] text-forest-300">
+                  <div className="flex items-center justify-between text-[11px] text-emerald-200 font-medium">
                     <span>CBSE Frequency</span>
                     <span className="font-mono font-bold text-limeaccent">
                       {ch.repeatRatePercent}%
@@ -346,14 +346,14 @@ export const BoardExamTimeMachine: React.FC = () => {
 
                 {/* Hotspot Question Types */}
                 <div className="pt-1">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-forest-400 block mb-1">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold block mb-1">
                     Hotspot Question Types:
                   </span>
                   <div className="flex flex-wrap gap-1">
                     {ch.hotspots.map((h, i) => (
                       <span
                         key={i}
-                        className="text-[11px] text-forest-200 bg-forest-900/90 px-2 py-0.5 rounded border border-forest-800/80"
+                        className="text-[11px] text-white bg-forest-900 px-2 py-0.5 rounded border border-forest-700 font-medium"
                       >
                         {h}
                       </span>
@@ -363,8 +363,8 @@ export const BoardExamTimeMachine: React.FC = () => {
               </div>
 
               {/* 1-Tap Practice CTA */}
-              <div className="pt-2 border-t border-forest-800/60 flex items-center justify-between">
-                <span className="text-[11px] text-forest-400 font-mono">15-Min Habit Loop</span>
+              <div className="pt-2 border-t border-forest-800/80 flex items-center justify-between">
+                <span className="text-[11px] text-emerald-200/90 font-mono font-medium">15-Min Habit Loop</span>
                 <Link
                   href={`/study/${ch.subjectSlug}`}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-limeaccent hover:text-white transition group"
@@ -380,7 +380,7 @@ export const BoardExamTimeMachine: React.FC = () => {
 
       {/* Bottom Summary Callout */}
       <div className="p-4 rounded-2xl bg-forest-950 border border-forest-800 flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-2 text-forest-300">
+        <div className="flex items-center gap-2 text-emerald-100 font-normal">
           <ShieldCheck className="w-4 h-4 text-limeaccent shrink-0" />
           <span>
             Every question in LoopEdu’s <strong>Daily Five</strong> and <strong>10 Free Weekly Questions</strong> is mapped directly to these 10-year board recurrence clusters.
