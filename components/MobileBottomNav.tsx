@@ -8,37 +8,42 @@ import { Compass, Sparkles, BarChart3, BookOpen, RotateCcw } from 'lucide-react'
 export const MobileBottomNav: React.FC = () => {
   const pathname = usePathname();
 
+  // Hide bottom navigation in study mode to avoid interface clutter and coach overlaps
+  if (pathname.startsWith('/study/')) {
+    return null;
+  }
+
   const navItems = [
     {
-      label: 'Study Path',
+      label: 'Home',
       href: '/learn',
-      icon: Compass,
-      match: (p: string) => p.startsWith('/learn'),
-    },
-    {
-      label: 'Today',
-      href: '/today',
       icon: Sparkles,
-      match: (p: string) => p === '/today' || p === '/challenge',
+      match: (p: string) => p === '/learn' || p === '/today',
     },
     {
-      label: 'Parent Hub',
-      href: '/parent',
-      icon: BarChart3,
-      match: (p: string) => p.startsWith('/parent'),
-    },
-    {
-      label: 'Subjects',
-      href: '/catalogue',
+      label: 'My Subjects',
+      href: '/my-subjects',
       icon: BookOpen,
-      match: (p: string) => p === '/catalogue' || p.startsWith('/subject'),
+      match: (p: string) => p.startsWith('/my-subjects') || p.startsWith('/library'),
+    },
+    {
+      label: 'Explore',
+      href: '/catalogue',
+      icon: Compass,
+      match: (p: string) => p === '/catalogue' || p.startsWith('/explore'),
+    },
+    {
+      label: 'Progress',
+      href: '/progress',
+      icon: BarChart3,
+      match: (p: string) => p.startsWith('/progress'),
     },
   ];
 
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-paper/95 backdrop-blur-lg border-t border-academic-border px-2 py-1.5 flex items-center justify-around shadow-lg"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-lg"
     >
       {navItems.map((item) => {
         const isActive = item.match(pathname);
@@ -49,13 +54,13 @@ export const MobileBottomNav: React.FC = () => {
             href={item.href}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-xl transition ${
               isActive
-                ? 'text-forest-950 font-bold'
-                : 'text-forest-600 hover:text-forest-900 font-medium'
+                ? 'text-blue-700 font-bold'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
             <div
               className={`p-1 rounded-lg transition ${
-                isActive ? 'bg-limeaccent text-forest-950 shadow-xs' : 'text-forest-600'
+                isActive ? 'bg-blue-50 text-blue-700 shadow-xs' : 'text-slate-500'
               }`}
             >
               <Icon className="w-5 h-5" />

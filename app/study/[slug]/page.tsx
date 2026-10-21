@@ -426,7 +426,7 @@ export default function StudyReaderPage({ params }: ReaderProps) {
               Sign In to Practice {subjectInfo?.name || 'CBSE Class 10'}
             </h2>
             <p className="text-xs sm:text-sm text-academic-subtle max-w-md mx-auto leading-relaxed">
-              Even for our <strong>100% Free Weekly Practice Sprint (10 Questions)</strong>, logging in is mandatory so all your attempts, mistakes, SmartScore™, and Loopie AI doubts are saved in Supabase.
+              Even for our <strong>100% Free Weekly Practice Sprint (10 Questions)</strong>, logging in ensures all your attempts, mistakes, SmartScore™, and Loopie AI doubts are saved to your account.
             </p>
           </div>
 
@@ -437,7 +437,7 @@ export default function StudyReaderPage({ params }: ReaderProps) {
             </div>
             <div className="flex items-center gap-2.5 font-bold text-forest-950">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Zero Data Loss — All Scores &amp; Mistake Queues Saved to Supabase</span>
+              <span>Zero Data Loss — All Scores &amp; Mistake Queues Saved to Your Account</span>
             </div>
             <div className="flex items-center gap-2.5 font-bold text-forest-950">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -530,7 +530,9 @@ export default function StudyReaderPage({ params }: ReaderProps) {
                 title="Click to view your free weekly sprint milestone"
               >
                 <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-                <span>Free Trial (Q {activeQuestionIndex + 1}/{questions.length})</span>
+                <span>
+                  Free Practice · {questions.length > 0 ? `Q ${activeQuestionIndex + 1} of ${Math.min(10, questions.length)}` : '10 Qs'}
+                </span>
               </button>
             )}
           </div>
@@ -970,8 +972,48 @@ export default function StudyReaderPage({ params }: ReaderProps) {
               </div>
             </div>
           ) : (
-            <div className="p-8 bg-white rounded-2xl border border-slate-200 text-center text-slate-600 text-sm">
-              No matching questions found for this topic filter.
+            <div className="p-8 bg-white rounded-3xl border border-slate-200 text-center space-y-4 shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 mx-auto flex items-center justify-center">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-base">No Questions Available</h3>
+                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+                  {selectedTopic !== 'All' || statusFilter !== 'all' || searchQuery
+                    ? 'No questions matched your current filters. Clear your filters to continue.'
+                    : 'We could not load the question bank for this subject right now. Please try again or return home.'}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                {(selectedTopic !== 'All' || statusFilter !== 'all' || searchQuery) ? (
+                  <button
+                    onClick={() => {
+                      setSelectedTopic('All');
+                      setStatusFilter('all');
+                      setSearchQuery('');
+                    }}
+                    className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Reset All Filters</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Retry Loading</span>
+                  </button>
+                )}
+                <Link
+                  href="/learn"
+                  className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-4 py-2.5 rounded-xl border border-slate-300 text-xs transition"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Student Home</span>
+                </Link>
+              </div>
             </div>
           )}
         </div>

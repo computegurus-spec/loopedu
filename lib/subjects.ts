@@ -267,3 +267,19 @@ export function getTrackSlug(track: SubjectTrack): SubjectSlug {
   const subject = getSubjectByTrack(track);
   return subject?.slug || "maths-basic";
 }
+
+/**
+ * Normalizes any subject slug or URL alias to the canonical SubjectSlug
+ */
+export function normalizeSubjectSlug(rawSlug: string): SubjectSlug {
+  const s = (rawSlug || '').toLowerCase().trim();
+  if (s === 'science' || s === 'cbse-10-science' || s === 'cbse-science') return 'science';
+  if (s === 'maths-standard' || s === 'cbse-10-maths-standard' || s === 'maths_standard') return 'maths-standard';
+  if (s === 'maths-basic' || s === 'cbse-10-maths-basic' || s === 'maths_basic') return 'maths-basic';
+  if (s === 'social-science' || s === 'cbse-10-social-science' || s === 'social_science' || s === 'sst') return 'social-science';
+  if (s === 'english-language-literature' || s === 'cbse-10-english-language-literature' || s === 'english-ll') return 'english-language-literature';
+  if (s === 'english-communicative' || s === 'cbse-10-english-communicative') return 'english-communicative';
+  if (s === 'german' || s === 'cbse-10-german') return 'german';
+  if (s === 'artificial-intelligence' || s === 'ai' || s === 'cbse-10-ai') return 'artificial-intelligence';
+  return (rawSlug as SubjectSlug) || 'science';
+}

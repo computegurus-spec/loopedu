@@ -63,13 +63,15 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-xs">
-      {/* Albert-style top announcement banner */}
-      <div className="bg-slate-900 text-white px-4 py-1.5 text-xs text-center font-medium border-b border-slate-800 flex items-center justify-center gap-2">
-        <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span>
-          🎁 <strong>Launch Special:</strong> 10 High-Yield Board Questions 100% Free Every Week • Resets Every 7 Days
-        </span>
-      </div>
+      {/* Top announcement banner (hidden in study mode for distraction-free focus) */}
+      {!pathname.startsWith('/study/') && (
+        <div className="bg-slate-900 text-white px-4 py-1.5 text-xs text-center font-medium border-b border-slate-800 flex items-center justify-center gap-2">
+          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>
+            🎁 <strong>Launch Special:</strong> 10 High-Yield Board Questions 100% Free Every Week • Resets Every 7 Days
+          </span>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
@@ -87,93 +89,110 @@ export const Navbar: React.FC = () => {
           </div>
         </Link>
 
-        {/* Navigation Links (Albert.io format: Explore with dropdown for Students & Teachers, Subjects, Pricing) */}
+        {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-700">
-          {/* Explore Dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setExploreOpen(!exploreOpen)}
-              onMouseEnter={() => setExploreOpen(true)}
-              className="flex items-center gap-1 hover:text-slate-950 py-2 transition"
-            >
-              <span>Explore</span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-            </button>
-
-            {exploreOpen && (
-              <div
-                onMouseLeave={() => setExploreOpen(false)}
-                className="absolute left-0 mt-1 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 text-xs animate-in fade-in"
-              >
-                <Link
-                  href="/explore/for-students"
-                  onClick={() => setExploreOpen(false)}
-                  className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-                    <GraduationCap className="w-4 h-4 text-blue-700" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-950 text-sm">For Students</div>
-                    <div className="text-slate-500 text-[11px] font-normal leading-snug">
-                      Self-paced Daily Five, Mistake Comeback, and AI Hints.
-                    </div>
-                  </div>
-                </Link>
-
-                <Link
-                  href="/explore/for-teachers"
-                  onClick={() => setExploreOpen(false)}
-                  className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                    <School className="w-4 h-4 text-emerald-700" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-slate-950 text-sm">For Teachers & Schools</div>
-                    <div className="text-slate-500 text-[11px] font-normal leading-snug">
-                      Classroom question banks, unit test tools, and marking rubrics.
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )}
-          </div>
-
-          <Link
-            href="/catalogue"
-            className={`transition hover:text-slate-950 ${
-              isCurrent('/catalogue') ? 'text-blue-700 font-bold' : ''
-            }`}
-          >
-            Subjects
-          </Link>
-
-          <Link
-            href="/catalogue#pricing"
-            className="transition hover:text-slate-950"
-          >
-            Pricing
-          </Link>
-
-          {user && (
+          {user ? (
             <>
               <Link
                 href="/learn"
-                className={`flex items-center gap-1.5 transition hover:text-slate-950 ${
+                className={`transition hover:text-slate-950 ${
                   isCurrent('/learn') ? 'text-blue-700 font-bold' : ''
                 }`}
               >
-                <span>Study Path</span>
+                Home
               </Link>
               <Link
-                href="/library"
-                className={`flex items-center gap-1.5 transition hover:text-slate-950 ${
-                  isCurrent('/library') ? 'text-blue-700 font-bold' : ''
+                href="/my-subjects"
+                className={`transition hover:text-slate-950 ${
+                  isCurrent('/my-subjects') || isCurrent('/library') ? 'text-blue-700 font-bold' : ''
                 }`}
               >
-                <BookOpen className="w-4 h-4 text-slate-500" />
-                <span>My Library</span>
+                My Subjects
+              </Link>
+              <Link
+                href="/catalogue"
+                className={`transition hover:text-slate-950 ${
+                  isCurrent('/catalogue') ? 'text-blue-700 font-bold' : ''
+                }`}
+              >
+                Explore
+              </Link>
+              <Link
+                href="/progress"
+                className={`transition hover:text-slate-950 ${
+                  isCurrent('/progress') ? 'text-blue-700 font-bold' : ''
+                }`}
+              >
+                Progress
+              </Link>
+            </>
+          ) : (
+            <>
+              {/* Explore Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setExploreOpen(!exploreOpen)}
+                  onMouseEnter={() => setExploreOpen(true)}
+                  className="flex items-center gap-1 hover:text-slate-950 py-2 transition"
+                >
+                  <span>Explore</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                </button>
+
+                {exploreOpen && (
+                  <div
+                    onMouseLeave={() => setExploreOpen(false)}
+                    className="absolute left-0 mt-1 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 text-xs animate-in fade-in"
+                  >
+                    <Link
+                      href="/explore/for-students"
+                      onClick={() => setExploreOpen(false)}
+                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                        <GraduationCap className="w-4 h-4 text-blue-700" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-950 text-sm">For Students</div>
+                        <div className="text-slate-500 text-[11px] font-normal leading-snug">
+                          Self-paced Daily Five, Mistake Comeback, and AI Hints.
+                        </div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/explore/for-teachers"
+                      onClick={() => setExploreOpen(false)}
+                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                        <School className="w-4 h-4 text-emerald-700" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-950 text-sm">For Teachers & Schools</div>
+                        <div className="text-slate-500 text-[11px] font-normal leading-snug">
+                          Classroom question banks, unit test tools, and marking rubrics.
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link
+                href="/catalogue"
+                className={`transition hover:text-slate-950 ${
+                  isCurrent('/catalogue') ? 'text-blue-700 font-bold' : ''
+                }`}
+              >
+                Subjects
+              </Link>
+
+              <Link
+                href="/catalogue#pricing"
+                className="transition hover:text-slate-950"
+              >
+                Pricing
               </Link>
             </>
           )}
@@ -221,16 +240,25 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
                     >
                       <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Study Path</span>
+                      <span>Home</span>
                     </Link>
 
                     <Link
-                      href="/library"
+                      href="/my-subjects"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
                     >
                       <BookOpen className="w-3.5 h-3.5 text-blue-600" />
-                      <span>My Question Banks</span>
+                      <span>My Subjects</span>
+                    </Link>
+
+                    <Link
+                      href="/progress"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
+                    >
+                      <span className="text-blue-600 font-bold text-xs">📈</span>
+                      <span>Progress</span>
                     </Link>
 
                     {user.role === 'admin' && (

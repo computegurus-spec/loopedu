@@ -189,7 +189,7 @@ function LoginForm() {
         throw new Error(data.error || 'Registration failed.');
       }
 
-      setSuccessMsg('Account created! Your data is saved in Supabase. Loading free practice sprint...');
+      setSuccessMsg('Account created! Loading your study dashboard...');
       setTimeout(() => {
         router.push(data.redirectUrl || redirectUrl);
         router.refresh();
@@ -605,7 +605,7 @@ function LoginForm() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Saving to Supabase &amp; Creating Account...</span>
+                    <span>Setting Up Your Account...</span>
                   </>
                 ) : (
                   <>

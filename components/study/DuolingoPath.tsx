@@ -647,7 +647,7 @@ export const DuolingoPath: React.FC = () => {
                   className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-forest-900 hover:bg-forest-800 text-limeaccent text-xs font-bold shadow-sm"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>Download PDF Dossier</span>
+                  <span>Download Practice PDF</span>
                 </button>
               </div>
             </div>

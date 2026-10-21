@@ -244,7 +244,7 @@ export const BoardExamTimeMachine: React.FC = () => {
               onChange={(e) => setFilterGuaranteed(e.target.checked)}
               className="w-4 h-4 rounded text-forest-900 border-forest-700 bg-forest-950 focus:ring-limeaccent"
             />
-            <span>Show Only 100% Guaranteed Hits</span>
+            <span>Frequently tested in past papers (CBSE 2017–2026)</span>
           </label>
         </div>
       </div>

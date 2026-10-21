@@ -16,8 +16,9 @@ import {
   StudentAction,
   StudentAchievement,
 } from '@/types';
-import { ALL_SUBJECTS } from '@/lib/subjects';
+import { ALL_SUBJECTS, normalizeSubjectSlug } from '@/lib/subjects';
 import { createServerSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/server';
+import questionsBankData from '@/lib/data/questions-bank.json';
 
 export interface DBUserAccount {
   id: string;
@@ -92,6 +93,12 @@ function loadDB(): DBState {
           if (!cached.user_progress) cached.user_progress = {};
           if (!cached.user_bookmarks) cached.user_bookmarks = {};
           if (!cached.user_last_studied) cached.user_last_studied = {};
+          if (!cached.questions || Object.keys(cached.questions).length === 0) {
+            cached.questions = (questionsBankData as any) || {};
+          }
+          if (!cached.subjects || cached.subjects.length === 0) {
+            cached.subjects = ALL_SUBJECTS;
+          }
           memoryCache = cached;
           return cached;
         }
@@ -104,7 +111,7 @@ function loadDB(): DBState {
   // Initialize fresh DB state
   const initial: DBState = {
     subjects: ALL_SUBJECTS,
-    questions: {},
+    questions: (questionsBankData as any) || {},
     question_versions: [],
     profiles: {
       'admin-default': {
@@ -212,18 +219,20 @@ export async function getSubjects(): Promise<Subject[]> {
   return db.subjects;
 }
 
-export async function getSubject(slug: SubjectSlug): Promise<Subject | undefined> {
+export async function getSubject(rawSlug: string): Promise<Subject | undefined> {
+  const slug = normalizeSubjectSlug(rawSlug);
   const db = loadDB();
-  return db.subjects.find((s) => s.slug === slug);
+  return db.subjects.find((s) => s.slug === slug || normalizeSubjectSlug(s.slug) === slug);
 }
 
 export async function updateSubject(
-  slug: SubjectSlug,
+  rawSlug: string,
   updates: Partial<Subject>,
   adminEmail: string
 ): Promise<Subject | null> {
+  const slug = normalizeSubjectSlug(rawSlug);
   const db = loadDB();
-  const idx = db.subjects.findIndex((s) => s.slug === slug);
+  const idx = db.subjects.findIndex((s) => s.slug === slug || normalizeSubjectSlug(s.slug) === slug);
   if (idx === -1) return null;
 
   const current = db.subjects[idx];
@@ -243,7 +252,7 @@ export async function updateSubject(
 }
 
 export async function getQuestionsForSubject(
-  slug: SubjectSlug,
+  rawSlug: string,
   options: {
     isEntitled?: boolean;
     isAdmin?: boolean;
@@ -253,9 +262,10 @@ export async function getQuestionsForSubject(
     search?: string;
   } = {}
 ): Promise<{ questions: Question[]; total: number; trialActive?: boolean; trialLimit?: number }> {
+  const slug = normalizeSubjectSlug(rawSlug);
   const db = loadDB();
   const allForSubject = Object.values(db.questions)
-    .filter((q) => q.subjectSlug === slug && q.is_active)
+    .filter((q) => (q.subjectSlug === slug || normalizeSubjectSlug(q.subjectSlug) === slug) && q.is_active)
     .sort((a, b) => a.rank - b.rank);
 
   let filtered = allForSubject;
@@ -302,10 +312,11 @@ export async function getQuestion(id: string): Promise<Question | undefined> {
   return db.questions[id];
 }
 
-export async function getSampleQuestions(slug: SubjectSlug): Promise<Question[]> {
+export async function getSampleQuestions(rawSlug: string): Promise<Question[]> {
+  const slug = normalizeSubjectSlug(rawSlug);
   const db = loadDB();
   return Object.values(db.questions)
-    .filter((q) => q.subjectSlug === slug && q.is_active && q.is_sample)
+    .filter((q) => (q.subjectSlug === slug || normalizeSubjectSlug(q.subjectSlug) === slug) && q.is_active && q.is_sample)
     .sort((a, b) => a.rank - b.rank)
     .slice(0, 10);
 }
@@ -550,7 +561,8 @@ export async function getAllEntitlements(): Promise<Entitlement[]> {
 // STUDY PROGRESS & BOOKMARKS
 // ==========================================
 
-export async function getUserStudyState(userId: string, subjectSlug: SubjectSlug) {
+export async function getUserStudyState(userId: string, rawSubjectSlug: string) {
+  const subjectSlug = normalizeSubjectSlug(rawSubjectSlug);
   const db = loadDB();
   const attemptedMap: Record<string, boolean> = {};
   const revisitMap: Record<string, boolean> = {};
@@ -582,7 +594,8 @@ export async function getUserStudyState(userId: string, subjectSlug: SubjectSlug
   };
 }
 
-export async function toggleAttempted(userId: string, questionId: string, subjectSlug: SubjectSlug): Promise<boolean> {
+export async function toggleAttempted(userId: string, questionId: string, rawSubjectSlug: string): Promise<boolean> {
+  const subjectSlug = normalizeSubjectSlug(rawSubjectSlug);
   const db = loadDB();
   const key = `${userId}_${questionId}`;
   const existing = db.user_progress[key] || {
@@ -600,7 +613,8 @@ export async function toggleAttempted(userId: string, questionId: string, subjec
   return existing.attempted;
 }
 
-export async function toggleNeedsRevisit(userId: string, questionId: string, subjectSlug: SubjectSlug): Promise<boolean> {
+export async function toggleNeedsRevisit(userId: string, questionId: string, rawSubjectSlug: string): Promise<boolean> {
+  const subjectSlug = normalizeSubjectSlug(rawSubjectSlug);
   const db = loadDB();
   const key = `${userId}_${questionId}`;
   const existing = db.user_progress[key] || {
@@ -627,7 +641,8 @@ export async function toggleBookmark(userId: string, questionId: string): Promis
   return !current;
 }
 
-export async function setLastStudied(userId: string, subjectSlug: SubjectSlug, questionId: string): Promise<void> {
+export async function setLastStudied(userId: string, rawSubjectSlug: string, questionId: string): Promise<void> {
+  const subjectSlug = normalizeSubjectSlug(rawSubjectSlug);
   const db = loadDB();
   db.user_last_studied[`${userId}_${subjectSlug}`] = questionId;
   saveDB(db);

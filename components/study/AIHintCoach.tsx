@@ -126,7 +126,7 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
           }`}
         >
           <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-          <span>🔬 Socratic X-Ray Hint</span>
+          <span>💡 Step-by-Step Hint</span>
         </button>
 
         <button
@@ -205,7 +205,7 @@ export const AIHintCoach: React.FC<AIHintCoachProps> = ({
                   <div className="font-bold text-slate-950 flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-xs uppercase tracking-wider text-emerald-950 font-mono font-bold">
                       <Sparkles className="w-4 h-4 text-emerald-700" />
-                      Socratic X-Ray Nudge (No Answers Given Away)
+                      Guided Hint (Find the answer yourself)
                     </span>
                     <span className="text-[10px] bg-slate-900 text-emerald-400 px-2 py-0.5 rounded font-mono font-bold">
                       Active Recall
