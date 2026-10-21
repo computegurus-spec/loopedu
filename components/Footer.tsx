@@ -3,148 +3,167 @@ import Link from 'next/link';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-academic-border bg-paper-200/50 text-forest-900 mt-20 pb-16 sm:pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+    <footer className="border-t border-slate-200 bg-slate-900 text-white mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Col */}
-          <div className="md:col-span-2 space-y-3">
+          <div className="md:col-span-1 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-forest-900 text-limeaccent flex items-center justify-center font-bold text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
                 L
               </div>
-              <div className="flex flex-col">
-                <span className="font-serif font-bold text-lg text-forest-950 leading-none">
-                  LoopEdu <span className="text-xs font-sans text-forest-700 font-semibold">• loopedu.in</span>
-                </span>
-                <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-forest-600 mt-1">
-                  BETA
-                </span>
-              </div>
+              <span className="font-bold text-xl text-white tracking-tight">
+                LoopEdu
+              </span>
             </div>
-            <p className="text-xs text-academic-subtle max-w-md leading-relaxed">
-              The 15-minute daily habit platform. The Daily Five questions, active recall Mistake Comeback, and real-time Parent Observability.
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Authentic, rigorous CBSE practice platform. Built by educators for students and teachers.
             </p>
-            <div className="pt-2">
-              <div className="inline-block bg-white/80 border border-academic-border rounded-lg px-3 py-2 text-xs text-forest-800">
-                <strong>Pricing:</strong> ₹299/month per subject • Earn 10-year question bank milestone PDFs
-              </div>
+            <div className="text-[11px] text-slate-400">
+              © {new Date().getFullYear()} LoopEdu / Blocks and Loops Technologies Pvt Ltd.
             </div>
           </div>
 
-          {/* Practice Tracks */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-forest-950 mb-3">
-              Practice Tracks
+          {/* Col 1: Get Started */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              Get Started
             </h4>
-            <ul className="space-y-2 text-xs text-forest-800">
+            <ul className="space-y-2 text-xs text-slate-400">
               <li>
-                <Link href="/subject/maths-basic" className="hover:text-forest-950 hover:underline">
-                  Mathematics (Basic)
+                <Link href="/study/cbse-10-science" className="hover:text-white transition">
+                  Free 10-Q Sprint
                 </Link>
               </li>
               <li>
-                <Link href="/subject/maths-standard" className="hover:text-forest-950 hover:underline">
-                  Mathematics (Standard)
+                <Link href="/catalogue" className="hover:text-white transition">
+                  Subject Library
                 </Link>
               </li>
               <li>
-                <Link href="/subject/science" className="hover:text-forest-950 hover:underline">
-                  Science (Physics, Chem, Bio)
+                <Link href="/login" className="hover:text-white transition">
+                  Student & Teacher Login
                 </Link>
               </li>
               <li>
-                <Link href="/subject/social-science" className="hover:text-forest-950 hover:underline">
-                  Social Science
-                </Link>
-              </li>
-              <li>
-                <Link href="/subject/english-language-literature" className="hover:text-forest-950 hover:underline">
-                  English (Language & Lit)
-                </Link>
-              </li>
-              <li>
-                <Link href="/subject/german" className="hover:text-forest-950 hover:underline">
-                  German (Code 017)
-                </Link>
-              </li>
-              <li>
-                <Link href="/subject/artificial-intelligence" className="hover:text-forest-950 hover:underline">
-                  Artificial Intelligence (417)
-                </Link>
-              </li>
-              <li>
-                <Link href="/catalogue" className="font-semibold text-forest-900 hover:underline">
-                  View All 8 Tracks →
+                <Link href="/onboarding" className="hover:text-white transition">
+                  Create Free Account
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal & Policies */}
-          <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider text-forest-950 mb-3">
-              Information & Terms
+          {/* Col 2: For Students */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+              For Students
             </h4>
-            <ul className="space-y-2 text-xs text-forest-800">
+            <ul className="space-y-2 text-xs text-slate-400">
               <li>
-                <Link href="/about" className="hover:text-forest-950 hover:underline">
-                  About Methodology
+                <Link href="/explore/for-students" className="hover:text-white transition">
+                  Self-Paced Mastery
                 </Link>
               </li>
               <li>
-                <Link href="/samples" className="hover:text-forest-950 hover:underline">
-                  Free Sample Questions
+                <Link href="/learn" className="hover:text-white transition">
+                  15-Min Daily Five
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-forest-950 hover:underline">
+                <Link href="/challenge" className="hover:text-white transition">
+                  Mistake Comeback Loop
+                </Link>
+              </li>
+              <li>
+                <Link href="/#time-machine" className="hover:text-white transition">
+                  10-Year Recurrence Heatmap
+                </Link>
+              </li>
+              <li>
+                <Link href="/parent" className="hover:text-white transition">
+                  Parent Observability Hub
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: For Teachers */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-blue-400">
+              For Teachers
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li>
+                <Link href="/explore/for-teachers" className="hover:text-white transition">
+                  Educator Overview
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore/for-teachers" className="hover:text-white transition">
+                  Classroom Question Banks
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore/for-teachers" className="hover:text-white transition">
+                  Unit Test Generator
+                </Link>
+              </li>
+              <li>
+                <Link href="/explore/for-teachers" className="hover:text-white transition">
+                  Step-by-Step Marking Rubrics
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition">
+                  Institutional Pilot Request
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 4: Legal & Policy */}
+          <div className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+              Company & Legal
+            </h4>
+            <ul className="space-y-2 text-xs text-slate-400">
+              <li>
+                <Link href="/about" className="hover:text-white transition">
+                  Editorial Methodology
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white transition">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-forest-950 hover:underline">
+                <Link href="/privacy" className="hover:text-white transition">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/refund" className="hover:text-forest-950 hover:underline">
-                  Refund & Access Terms
+                <Link href="/refund" className="hover:text-white transition">
+                  Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-forest-950 hover:underline">
-                  Contact & Support
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin" className="text-academic-subtle hover:text-forest-950">
-                  Staff / Admin Login
+                <Link href="/contact" className="hover:text-white transition">
+                  Contact Support
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Independence Disclaimer Banner */}
-        <div className="border-t border-academic-border/70 pt-6 mt-6">
-          <div className="bg-white/60 border border-academic-border rounded-xl p-4 text-xs text-forest-800 leading-relaxed">
-            <p className="font-bold text-forest-950 mb-1">Important Independence Statement:</p>
-            <p>
-              LoopEdu is an independent educational practice platform created by <strong>Blocks and Loops technologies pvt ltd</strong>. It is{' '}
-              <strong>not affiliated with, authorized, or endorsed by the Central Board of Secondary Education (CBSE)</strong>{' '}
-              or the National Council of Educational Research and Training (NCERT). Actual board exam questions, formats,
-              and marking schemes may differ.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 text-xs text-academic-subtle">
-            <div>
-              © 2026–2027 LoopEdu. All rights reserved. • loopedu.in
-            </div>
-            <div className="font-medium text-forest-800 text-center sm:text-right">
-              a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka
-            </div>
-          </div>
+        {/* Bottom Legal Disclaimer (Albert.io format) */}
+        <div className="pt-8 border-t border-slate-800 text-[11px] text-slate-500 space-y-2">
+          <p>
+            CBSE®, Central Board of Secondary Education, and NCERT® are registered trademarks and educational bodies in India. LoopEdu is an independent educational technology platform developed by Blocks and Loops Technologies Pvt Ltd and is not officially affiliated with or endorsed by the CBSE or NCERT.
+          </p>
+          <p>
+            All questions and worked step-by-step model explanations are prepared independently in accordance with the official Class 10 curriculum and competency-based assessment guidelines.
+          </p>
         </div>
       </div>
     </footer>
