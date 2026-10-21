@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { notFound, useSearchParams } from 'next/navigation';
 import { MathRenderer } from '@/components/MathRenderer';
 import { AIHintCoach } from '@/components/study/AIHintCoach';
+import { LoopieChatWidget } from '@/components/study/LoopieChatWidget';
 import { generateWatermark } from '@/lib/utils';
-import { SubjectSlug, Question } from '@/types';
+import { SubjectSlug, Question, StudentAchievement } from '@/types';
 import { TrialMilestoneModal } from '@/components/study/TrialMilestoneModal';
 import {
   BookOpen,
@@ -114,6 +115,18 @@ export default function StudyReaderPage({ params }: ReaderProps) {
 
   // Trial Milestone Modal
   const [trialModalOpen, setTrialModalOpen] = useState(false);
+
+  // IXL HUD Live States
+  const [timeElapsedSeconds, setTimeElapsedSeconds] = useState(0);
+  const [latestAchievement, setLatestAchievement] = useState<StudentAchievement | null>(null);
+
+  // Active session timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeElapsedSeconds((t) => t + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // 1. Initial immediate restoration from localStorage (instant 0-ms UI feedback)
   useEffect(() => {
@@ -242,6 +255,21 @@ export default function StudyReaderPage({ params }: ReaderProps) {
     };
   }, [questions, attemptedMap, revisitMap, bookmarkMap]);
 
+  // Dynamic IXL-style SmartScore (0 - 100)
+  const smartScore = useMemo(() => {
+    const attempted = questions.filter((q) => attemptedMap[q.id]).length;
+    const revisit = questions.filter((q) => revisitMap[q.id]).length;
+    if (attempted === 0) return 0;
+    const raw = attempted * 12 - revisit * 4;
+    return Math.max(0, Math.min(100, raw));
+  }, [questions, attemptedMap, revisitMap]);
+
+  const formatTimer = (secs: number) => {
+    const mins = Math.floor(secs / 60);
+    const rem = secs % 60;
+    return `${mins.toString().padStart(2, '0')}:${rem.toString().padStart(2, '0')}`;
+  };
+
   // Action: Toggle Attempted
   const handleToggleAttempt = async () => {
     if (!currentQ) return;
@@ -256,6 +284,30 @@ export default function StudyReaderPage({ params }: ReaderProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'toggle_attempt', questionId: currentQ.id }),
       });
+
+      // Record student action for achievements & persistent Supabase stats
+      if (nextVal) {
+        fetch('/api/student/action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action_type: 'QUESTION_ATTEMPT',
+            subject_slug: slug,
+            question_id: currentQ.id,
+            smart_score: smartScore,
+            time_spent_seconds: timeElapsedSeconds,
+            metadata: { is_revisit: !!revisitMap[currentQ.id] },
+          }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.newAchievements?.length > 0) {
+              setLatestAchievement(data.newAchievements[0]);
+              setTimeout(() => setLatestAchievement(null), 5000);
+            }
+          })
+          .catch(() => {});
+      }
     } catch (e) {
       console.warn('Background sync failed; saved locally');
     }
@@ -358,13 +410,82 @@ export default function StudyReaderPage({ params }: ReaderProps) {
     );
   }
 
+  // Mandatory Login Gate (Even for free practice, an account is required so data is stored in Supabase)
+  if (!userSession) {
+    return (
+      <div className="min-h-[82vh] flex items-center justify-center px-4 py-12 bg-paper-50/50">
+        <div className="w-full max-w-lg bg-white rounded-3xl border border-academic-border p-8 sm:p-10 shadow-sm text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-forest-900 text-limeaccent flex items-center justify-center font-serif font-bold text-3xl mx-auto shadow-sm">
+            L
+          </div>
+          <div className="space-y-2">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-forest-700 bg-limeaccent/30 px-3 py-1 rounded-full">
+              Student Login Required
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-forest-950">
+              Sign In to Practice {subjectInfo?.name || 'CBSE Class 10'}
+            </h2>
+            <p className="text-xs sm:text-sm text-academic-subtle max-w-md mx-auto leading-relaxed">
+              Even for our <strong>100% Free Weekly Practice Sprint (10 Questions)</strong>, logging in is mandatory so all your attempts, mistakes, SmartScore™, and Loopie AI doubts are saved in Supabase.
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-paper-50 border border-academic-border p-4 text-left space-y-2.5 text-xs">
+            <div className="flex items-center gap-2.5 font-bold text-forest-950">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>100% Free Practice Sprint Unlocked</span>
+            </div>
+            <div className="flex items-center gap-2.5 font-bold text-forest-950">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>Zero Data Loss — All Scores &amp; Mistake Queues Saved to Supabase</span>
+            </div>
+            <div className="flex items-center gap-2.5 font-bold text-forest-950">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>5 Free Loopie 🦉 AI Doubt Inquiries Included Daily</span>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <Link
+              href={`/login?redirect=/study/${slug}`}
+              className="w-full inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition shadow-sm"
+            >
+              <span>Sign In or Create Free Account →</span>
+            </Link>
+            <p className="text-[11px] text-academic-subtle">
+              Already registered? Enter your password. First time? Automatically converts to sign up!
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const watermarkString = userSession
     ? generateWatermark(userSession.email, userSession.id, slug)
     : 'LoopEdu • Official CBSE 2027 Practice License';
 
   return (
     <div className="relative min-h-screen bg-slate-50 text-slate-900 pb-20">
-      {/* Discreet Security Watermark (Ultra-low opacity so it never interferes with reading) */}
+      {/* Achievement Unlock Toast Notification */}
+      {latestAchievement && (
+        <div className="fixed top-20 right-6 z-50 animate-bounce">
+          <div className="bg-forest-900 text-white rounded-2xl p-4 shadow-xl border border-limeaccent flex items-center gap-3.5 max-w-sm">
+            <div className="text-3xl shrink-0">{latestAchievement.icon}</div>
+            <div>
+              <div className="text-[10px] font-mono uppercase font-bold text-limeaccent tracking-wider">
+                Achievement Unlocked!
+              </div>
+              <div className="text-xs font-bold text-white">{latestAchievement.title}</div>
+              <div className="text-[11px] text-academic-subtle mt-0.5 leading-snug">
+                {latestAchievement.description}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Discreet Security Watermark */}
       <div
         className="pointer-events-none fixed inset-0 z-0 overflow-hidden opacity-[0.012] select-none flex flex-wrap gap-28 p-12 text-xs font-mono font-bold text-slate-950 -rotate-12"
         aria-hidden="true"
@@ -412,6 +533,50 @@ export default function StudyReaderPage({ params }: ReaderProps) {
                 <span>Free Trial (Q {activeQuestionIndex + 1}/{questions.length})</span>
               </button>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* IXL-Inspired Real-Time Study HUD */}
+      <div className="sticky top-[7.5rem] z-20 bg-paper-100/95 backdrop-blur-sm border-b border-academic-border px-4 py-2 shadow-2xs">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Questions Answered */}
+            <div className="flex items-center gap-1.5 font-bold text-forest-950">
+              <span className="text-academic-subtle font-medium uppercase tracking-wider text-[10px]">Questions:</span>
+              <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded-md border border-academic-border shadow-2xs">
+                {stats.attemptedCount} / {isEntitled ? questions.length : Math.min(10, questions.length)}
+              </span>
+            </div>
+
+            {/* Time Elapsed */}
+            <div className="flex items-center gap-1.5 font-bold text-forest-950">
+              <Clock className="w-3.5 h-3.5 text-forest-700" />
+              <span className="text-academic-subtle font-medium uppercase tracking-wider text-[10px]">Time:</span>
+              <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded-md border border-academic-border shadow-2xs">
+                {formatTimer(timeElapsedSeconds)}
+              </span>
+            </div>
+          </div>
+
+          {/* SmartScore (0 to 100) */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 bg-forest-900 text-limeaccent px-3 py-1 rounded-xl shadow-xs font-mono font-bold text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-limeaccent" />
+              <span>SmartScore™</span>
+              <span className="text-xs bg-forest-800 px-1.5 py-0.2 rounded border border-forest-700">
+                {smartScore}
+              </span>
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border bg-white text-forest-900 border-academic-border hidden sm:inline">
+              {smartScore >= 90
+                ? '🏆 Board Mastery'
+                : smartScore >= 70
+                ? '🌟 Proficient'
+                : smartScore >= 50
+                ? '⚡ Progressing'
+                : '🎯 Exploring'}
+            </span>
           </div>
         </div>
       </div>
@@ -896,6 +1061,14 @@ export default function StudyReaderPage({ params }: ReaderProps) {
         score={Math.max(1, stats.attemptedCount)}
         totalAttempted={Math.min(10, questions.length || 10)}
         studentName={userSession?.name || 'Class 10 Learner'}
+      />
+
+      {/* Loopie AI Doubt Solver (CBSE Class 10 Grounded) */}
+      <LoopieChatWidget
+        topic={currentQ?.topic || 'General Practice'}
+        subjectName={subjectInfo?.name || 'CBSE Class 10'}
+        subjectSlug={slug}
+        questionContext={currentQ?.question || ''}
       />
     </div>
   );

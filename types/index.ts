@@ -246,3 +246,33 @@ export interface TrialStatus {
   hoursUntilReset: number;
   isLocked: boolean;
 }
+
+export interface StudentAction {
+  id: string;
+  user_id: string;
+  user_email: string;
+  action_type:
+    | 'QUESTION_ATTEMPT'
+    | 'QUESTION_CORRECT'
+    | 'QUESTION_INCORRECT'
+    | 'HINT_ACCESSED'
+    | 'MISTAKE_VAULT_REVIEW'
+    | 'BOOKMARK_TOGGLE'
+    | 'LOOPIE_DOUBT_ASKED'
+    | 'STUDY_SESSION_START';
+  subject_slug: SubjectSlug;
+  question_id?: string;
+  smart_score?: number;
+  time_spent_seconds?: number;
+  metadata?: Record<string, any>;
+  created_at: string;
+}
+
+export interface StudentAchievement {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  icon: string;
+  unlocked_at: string;
+}

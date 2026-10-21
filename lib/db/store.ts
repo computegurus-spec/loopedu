@@ -13,21 +13,39 @@ import {
   SubjectSlug,
   TrialStatus,
   UserProfile,
+  StudentAction,
+  StudentAchievement,
 } from '@/types';
 import { ALL_SUBJECTS } from '@/lib/subjects';
 import { createServerSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/server';
+
+export interface DBUserAccount {
+  id: string;
+  email: string;
+  name: string;
+  password_hash: string;
+  role: 'customer' | 'admin';
+  whatsapp_number?: string;
+  grade?: string;
+  isPro?: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 interface DBState {
   subjects: Subject[];
   questions: Record<string, Question>; // keyed by ID
   question_versions: QuestionVersion[];
   profiles: Record<string, UserProfile>;
+  users: Record<string, DBUserAccount>; // keyed by email.toLowerCase()
   leads: Record<string, StudentLead>; // keyed by id or phone
   orders: Record<string, Order>;
   entitlements: Record<string, Entitlement>;
   user_progress: Record<string, { attempted: boolean; needs_revisit: boolean; last_studied_at: string }>; // key: userId_questionId
   user_bookmarks: Record<string, boolean>; // key: userId_questionId
   user_last_studied: Record<string, string>; // key: userId_subjectSlug -> questionId
+  student_actions: StudentAction[];
+  student_achievements: Record<string, StudentAchievement[]>; // key: userId
   subject_requests: SubjectRequestRecord[];
   content_error_reports: ContentErrorReport[];
   admin_audit_logs: AdminAuditLog[];
@@ -54,7 +72,15 @@ function loadDB(): DBState {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf8');
       memoryCache = JSON.parse(raw);
-      return memoryCache!;
+      if (memoryCache) {
+        if (!memoryCache.users) memoryCache.users = {};
+        if (!memoryCache.student_actions) memoryCache.student_actions = [];
+        if (!memoryCache.student_achievements) memoryCache.student_achievements = {};
+        if (!memoryCache.user_progress) memoryCache.user_progress = {};
+        if (!memoryCache.user_bookmarks) memoryCache.user_bookmarks = {};
+        if (!memoryCache.user_last_studied) memoryCache.user_last_studied = {};
+        return memoryCache;
+      }
     } catch (err) {
       console.error('[DB] Failed to parse local database.json, initializing fresh store.', err);
     }
@@ -81,12 +107,15 @@ function loadDB(): DBState {
         created_at: new Date().toISOString(),
       },
     },
+    users: {},
+    leads: {},
     orders: {},
     entitlements: {},
-    leads: {},
     user_progress: {},
     user_bookmarks: {},
     user_last_studied: {},
+    student_actions: [],
+    student_achievements: {},
     subject_requests: [],
     content_error_reports: [],
     admin_audit_logs: [],
@@ -918,4 +947,114 @@ export async function incrementTrialAttempt(leadIdOrPhone: string): Promise<Tria
   }
 
   return calculateTrialStatus(lead);
+}
+
+// ==========================================
+// USER ACCOUNTS & CREDENTIALS
+// ==========================================
+
+export async function saveUserAccount(account: DBUserAccount): Promise<DBUserAccount> {
+  const db = loadDB();
+  if (!db.users) db.users = {};
+  const emailKey = account.email.toLowerCase().trim();
+  db.users[emailKey] = {
+    ...account,
+    email: emailKey,
+    updated_at: new Date().toISOString(),
+  };
+
+  // Also register or update in leads so it syncs with Supabase
+  if (account.name) {
+    await registerOrUpdateLead({
+      student_name: account.name,
+      student_email: account.email,
+      whatsapp_number: account.whatsapp_number || '9999999999',
+      grade: account.grade || 'Class 10',
+    });
+  }
+
+  saveDB(db);
+  return db.users[emailKey];
+}
+
+export async function getUserAccountByEmail(email: string): Promise<DBUserAccount | null> {
+  const db = loadDB();
+  if (!db.users) return null;
+  const emailKey = email.toLowerCase().trim();
+  return db.users[emailKey] || null;
+}
+
+// ==========================================
+// STUDENT ACTIONS & ACHIEVEMENTS TRACKING
+// ==========================================
+
+export async function recordStudentAction(action: Omit<StudentAction, 'id' | 'created_at'>): Promise<StudentAction> {
+  const db = loadDB();
+  if (!db.student_actions) db.student_actions = [];
+
+  const fullAction: StudentAction = {
+    ...action,
+    id: `act_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    created_at: new Date().toISOString(),
+  };
+
+  db.student_actions.push(fullAction);
+
+  // Sync with Supabase if configured (attempt lead trial increment or content report)
+  if (isSupabaseConfigured && action.user_email) {
+    try {
+      const supabase = createServerSupabaseClient();
+      // Record in leads or user_progress if available
+      if (action.action_type === 'QUESTION_ATTEMPT' && action.question_id) {
+        await supabase.from('leads').update({
+          trial_questions_attempted: (db.student_actions.filter(a => a.user_email === action.user_email && a.action_type === 'QUESTION_ATTEMPT').length),
+          updated_at: new Date().toISOString()
+        }).eq('student_email', action.user_email.toLowerCase());
+      }
+    } catch (e) {
+      // Non-fatal
+    }
+  }
+
+  saveDB(db);
+  return fullAction;
+}
+
+export async function getStudentActions(userIdOrEmail: string): Promise<StudentAction[]> {
+  const db = loadDB();
+  if (!db.student_actions) return [];
+  const query = userIdOrEmail.toLowerCase();
+  return db.student_actions
+    .filter((a) => a.user_id === userIdOrEmail || a.user_email.toLowerCase() === query)
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+}
+
+export async function getStudentAchievements(userId: string): Promise<StudentAchievement[]> {
+  const db = loadDB();
+  if (!db.student_achievements) return [];
+  return db.student_achievements[userId] || [];
+}
+
+export async function awardAchievement(
+  userId: string,
+  achievement: Omit<StudentAchievement, 'id' | 'unlocked_at'>
+): Promise<{ awarded: boolean; achievement: StudentAchievement }> {
+  const db = loadDB();
+  if (!db.student_achievements) db.student_achievements = {};
+  if (!db.student_achievements[userId]) db.student_achievements[userId] = [];
+
+  const existing = db.student_achievements[userId].find((a) => a.code === achievement.code);
+  if (existing) {
+    return { awarded: false, achievement: existing };
+  }
+
+  const newAchievement: StudentAchievement = {
+    ...achievement,
+    id: `ach_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    unlocked_at: new Date().toISOString(),
+  };
+
+  db.student_achievements[userId].push(newAchievement);
+  saveDB(db);
+  return { awarded: true, achievement: newAchievement };
 }

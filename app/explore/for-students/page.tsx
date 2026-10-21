@@ -185,7 +185,7 @@ export default function ForStudentsPage() {
           </p>
           <div className="pt-2">
             <Link
-              href="/study/cbse-10-science"
+              href="/login?redirect=/study/cbse-10-science"
               className="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-bold px-8 py-4 rounded-xl text-sm transition shadow-sm"
             >
               <Sparkles className="w-4 h-4 text-emerald-300" />

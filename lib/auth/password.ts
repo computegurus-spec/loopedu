@@ -1,0 +1,13 @@
+import crypto from 'crypto';
+
+const SALT = process.env.AUTH_SECRET || 'loopedu_pbkdf2_secret_salt_2026';
+
+export function hashPassword(password: string): string {
+  return crypto.pbkdf2Sync(password, SALT, 1000, 64, 'sha512').toString('hex');
+}
+
+export function verifyPassword(password: string, hash: string): boolean {
+  if (!password || !hash) return false;
+  const computed = hashPassword(password);
+  return computed === hash;
+}

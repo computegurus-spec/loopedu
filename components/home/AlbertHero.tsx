@@ -51,11 +51,11 @@ export const AlbertHero: React.FC<AlbertHeroProps> = ({ isLoggedIn = false }) =>
               </Link>
             ) : (
               <Link
-                href="/onboarding"
+                href="/login?redirect=/study/cbse-10-science"
                 className="inline-flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-900 text-white font-bold px-7 py-4 rounded-xl text-sm sm:text-base transition shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Sparkles className="w-5 h-5 text-emerald-400" />
-                <span>Start Free Practice (10 Free Questions)</span>
+                <span>Start Free Practice Now →</span>
               </Link>
             )}
 
@@ -71,7 +71,7 @@ export const AlbertHero: React.FC<AlbertHeroProps> = ({ isLoggedIn = false }) =>
           <div className="pt-3 flex flex-wrap items-center justify-center gap-6 text-xs text-sky-100 font-medium">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-              <span>Zero sign-up required for Q1</span>
+              <span>100% Free Practice (Supabase Saved)</span>
             </span>
             <span className="hidden sm:inline text-sky-300">•</span>
             <span className="flex items-center gap-1.5">
