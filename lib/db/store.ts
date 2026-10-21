@@ -51,13 +51,18 @@ interface DBState {
   admin_audit_logs: AdminAuditLog[];
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data', 'private');
-const DB_FILE = path.join(DATA_DIR, 'database.json');
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const DATA_DIR = isServerless ? '/tmp' : path.join(process.cwd(), 'data', 'private');
+const DB_FILE = isServerless ? path.join('/tmp', 'loopedu_database.json') : path.join(DATA_DIR, 'database.json');
 
-// Ensure data/private exists
+// Ensure storage directory exists safely without crashing on read-only environments
 function ensureDirExists() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch (err) {
+    // Non-fatal on read-only filesystems (e.g. Vercel Lambda /var/task)
   }
 }
 
@@ -68,21 +73,31 @@ function loadDB(): DBState {
   if (memoryCache) return memoryCache;
   ensureDirExists();
 
-  if (fs.existsSync(DB_FILE)) {
+  const possiblePaths = [
+    DB_FILE,
+    path.join(process.cwd(), 'data', 'private', 'database.json'),
+    path.join('/tmp', 'loopedu_database.json'),
+  ];
+
+  for (const filePath of possiblePaths) {
     try {
-      const raw = fs.readFileSync(DB_FILE, 'utf8');
-      memoryCache = JSON.parse(raw);
-      if (memoryCache) {
-        if (!memoryCache.users) memoryCache.users = {};
-        if (!memoryCache.student_actions) memoryCache.student_actions = [];
-        if (!memoryCache.student_achievements) memoryCache.student_achievements = {};
-        if (!memoryCache.user_progress) memoryCache.user_progress = {};
-        if (!memoryCache.user_bookmarks) memoryCache.user_bookmarks = {};
-        if (!memoryCache.user_last_studied) memoryCache.user_last_studied = {};
-        return memoryCache;
+      if (fs.existsSync(filePath)) {
+        const raw = fs.readFileSync(filePath, 'utf8');
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          const cached = parsed as DBState;
+          if (!cached.users) cached.users = {};
+          if (!cached.student_actions) cached.student_actions = [];
+          if (!cached.student_achievements) cached.student_achievements = {};
+          if (!cached.user_progress) cached.user_progress = {};
+          if (!cached.user_bookmarks) cached.user_bookmarks = {};
+          if (!cached.user_last_studied) cached.user_last_studied = {};
+          memoryCache = cached;
+          return cached;
+        }
       }
     } catch (err) {
-      console.error('[DB] Failed to parse local database.json, initializing fresh store.', err);
+      // Continue to next path
     }
   }
 
