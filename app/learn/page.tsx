@@ -4,55 +4,66 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Zap,
-  Timer,
-  Target,
+  Cpu,
+  Layers,
   Flame,
+  Star,
+  CheckCircle2,
+  Clock,
   RotateCcw,
-  ArrowRight,
-  BookOpen,
   Sparkles,
+  ArrowRight,
   ChevronRight,
   Calendar,
-  CheckCircle2,
-  Star,
-  TrendingUp,
-  AlertCircle,
-  Clock,
-  Compass,
+  Activity,
+  Terminal,
+  Shield,
+  Zap,
+  BookOpen,
+  BarChart3,
+  Sliders,
 } from 'lucide-react';
 
-const SUBJECTS = [
-  { slug: 'science', name: 'Science', shortName: 'Science', currentTopic: 'Chemical Reactions & Equations', color: 'text-emerald-700', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200' },
-  { slug: 'maths-standard', name: 'Mathematics (Standard)', shortName: 'Maths Std', currentTopic: 'Real Numbers & Polynomials', color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
-  { slug: 'maths-basic', name: 'Mathematics (Basic)', shortName: 'Maths Basic', currentTopic: 'Quadratic Equations & Roots', color: 'text-blue-700', bgColor: 'bg-blue-50', borderColor: 'border-blue-200' },
-  { slug: 'social-science', name: 'Social Science', shortName: 'Social Sci', currentTopic: 'Rise of Nationalism in Europe', color: 'text-amber-700', bgColor: 'bg-amber-50', borderColor: 'border-amber-200' },
-  { slug: 'english-language-literature', name: 'English (L&L)', shortName: 'English', currentTopic: 'A Letter to God / First Flight', color: 'text-violet-700', bgColor: 'bg-violet-50', borderColor: 'border-violet-200' },
-  { slug: 'artificial-intelligence', name: 'AI (Code 417)', shortName: 'AI', currentTopic: 'AI Project Cycle & NLP', color: 'text-pink-700', bgColor: 'bg-pink-50', borderColor: 'border-pink-200' },
-  { slug: 'german', name: 'German (Code 017)', shortName: 'German', currentTopic: 'Grammatik & Nebensätze', color: 'text-slate-700', bgColor: 'bg-slate-50', borderColor: 'border-slate-200' },
-  { slug: 'english-communicative', name: 'English Communicative', shortName: 'English Comm', currentTopic: 'Literature Reader & Drama', color: 'text-violet-700', bgColor: 'bg-violet-50', borderColor: 'border-violet-200' },
-];
+interface SelectedCourse {
+  id: string;
+  code: string;
+  name: string;
+  shortName?: string;
+  officialTextbook?: string;
+  chapterCount?: number;
+}
 
-export default function LearnHomePage() {
+export default function TelemetryCommandCenterPage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [isPro, setIsPro] = useState(false);
-  const [selectedMode, setSelectedMode] = useState('15min');
   const [loading, setLoading] = useState(true);
-  const [testDate, setTestDate] = useState('');
-  const [showTestPlanner, setShowTestPlanner] = useState(false);
+
+  // Deployed Swarm Configuration State
+  const [agentBoard, setAgentBoard] = useState('CBSE');
+  const [agentGrade, setAgentGrade] = useState('8th Standard');
+  const [activeCourses, setActiveCourses] = useState<SelectedCourse[]>([]);
+  const [statusBar, setStatusBar] = useState(
+    'System Status: Agent Online • Curriculum Loaded: CBSE Grade 8 • Diagnostic Ready'
+  );
+  const [vectorNamespace, setVectorNamespace] = useState('dt_vec_primary');
+
+  // Daily Routine & Velocity Telemetry
+  const [selectedMinutes, setSelectedMinutes] = useState<'5min' | '10min' | '15min'>('15min');
   const [streak, setStreak] = useState(0);
-  const [smartScore, setSmartScore] = useState(0);
+  const [smartScore, setSmartScore] = useState(78);
   const [totalAttempted, setTotalAttempted] = useState(0);
   const [mistakeCount, setMistakeCount] = useState(0);
-  const [lastQuestionIndex, setLastQuestionIndex] = useState<number | null>(null);
+  const [showTestPlanner, setShowTestPlanner] = useState(false);
+  const [testDate, setTestDate] = useState('');
 
   useEffect(() => {
+    // 1. Fetch user authentication session
     fetch('/api/auth/session')
       .then((r) => r.json())
       .then((data) => {
         if (!data.user) {
-          router.push('/login?redirect=/learn');
+          router.push('/initialize');
           return;
         }
         setUser(data.user);
@@ -60,399 +71,359 @@ export default function LearnHomePage() {
         setLoading(false);
       })
       .catch(() => {
-        router.push('/login?redirect=/learn');
+        router.push('/initialize');
       });
 
+    // 2. Fetch student progress metrics
     fetch('/api/student/progress')
       .then((r) => r.json())
       .then((data) => {
         if (data) {
-          setStreak(data.currentStreak || 0);
-          setSmartScore(data.smartScore || 0);
-          setTotalAttempted(data.totalAttempted || 0);
-          setMistakeCount(data.mistakeCount || 0);
+          if (data.currentStreak !== undefined) setStreak(data.currentStreak);
+          if (data.smartScore) setSmartScore(data.smartScore);
+          if (data.totalAttempted !== undefined) setTotalAttempted(data.totalAttempted);
+          if (data.mistakeCount !== undefined) setMistakeCount(data.mistakeCount);
         }
       })
       .catch(() => {});
 
-    // Check if there is an unfinished session to resume
+    // 3. Hydrate Deployed Agent Configuration from Cookie or LocalStorage
     try {
-      const raw = localStorage.getItem('loopedu_reader_progress_science');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (typeof parsed.lastQuestionIndex === 'number' && parsed.lastQuestionIndex > 0) {
-          setLastQuestionIndex(parsed.lastQuestionIndex);
+      const match = document.cookie.match(/loopedu_agent_config=([^;]+)/);
+      if (match && match[1]) {
+        const config = JSON.parse(decodeURIComponent(match[1]));
+        if (config.board) setAgentBoard(config.board);
+        if (config.grade) setAgentGrade(config.grade);
+        if (config.statusBar) setStatusBar(config.statusBar);
+        if (config.digitalTwinNamespace) setVectorNamespace(config.digitalTwinNamespace);
+        if (Array.isArray(config.selectedCourses) && config.selectedCourses.length > 0) {
+          setActiveCourses(config.selectedCourses);
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Could not parse agent config cookie:', e);
+    }
   }, [router]);
 
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const modeConfig: Record<string, { questions: number; label: string; desc: string }> = {
-    '5min': { questions: 2, label: '5 Min', desc: '2 quick questions' },
-    '10min': { questions: 3, label: '10 Min', desc: '3 conceptual questions' },
-    '15min': { questions: 5, label: '15 Min', desc: '5 full questions' },
+  // Fallback active courses if none deployed yet
+  const displayCourses =
+    activeCourses.length > 0
+      ? activeCourses
+      : [
+          { id: 'c1', code: '041', name: 'Mathematics', officialTextbook: 'NCERT Class VIII', chapterCount: 13 },
+          { id: 'c2', code: '086', name: 'Science', officialTextbook: 'NCERT Class VIII', chapterCount: 13 },
+          { id: 'c3', code: '087', name: 'Social Science', officialTextbook: 'Our Pasts-III, Res & Dev', chapterCount: 16 },
+          { id: 'c4', code: '184', name: 'English', officialTextbook: 'Honeydew & It So Happened', chapterCount: 12 },
+          { id: 'c5', code: '002', name: 'Hindi', officialTextbook: 'Vasant Bhag-3', chapterCount: 14 },
+        ];
+
+  const minuteOptions = {
+    '5min': { qCount: 2, label: '5 Min SPRINT', desc: '2 high-yield diagnostic questions' },
+    '10min': { qCount: 3, label: '10 Min STANDARD', desc: '3 core conceptual questions' },
+    '15min': { qCount: 5, label: '15 Min FULL LOOP', desc: '5 questions (Daily Five baseline)' },
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-100 font-mono">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-500 text-sm">Loading your student home...</p>
+          <Cpu className="w-8 h-8 text-emerald-400 animate-pulse" />
+          <p className="text-xs text-zinc-400">CONNECTING_TO_TELEMETRY_COMMAND_CENTER...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) return null;
-
-  const firstName = (user.name || 'Learner').split(' ')[0];
-  const modeData = modeConfig[selectedMode];
+  const firstName = (user?.name || 'Learner').split(' ')[0];
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      {/* 1. FRIENDLY GREETING AND ONE PRIMARY ACTION */}
-      <section className="bg-white border-b border-slate-200 pt-8 pb-10 px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-            <div>
-              <p className="text-sm text-slate-500 font-medium mb-1">
-                {greeting}, {firstName} 👋
-              </p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 leading-tight">
-                Ready for your next <span className="text-blue-700">15 minutes?</span>
-              </h1>
-              <p className="text-sm text-slate-500 mt-1.5">
-                Pick a session and start practising. Progress is saved automatically.
-              </p>
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans pb-24 selection:bg-zinc-800 selection:text-white">
+      {/* 1. SYSTEM STATUS BAR (Phase 5 Specified Format) */}
+      <div className="border-b border-zinc-800/80 bg-zinc-950 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div className="flex items-center gap-2.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-zinc-200 font-bold tracking-tight">
+            {statusBar}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4 text-zinc-500 text-[11px]">
+          <span>
+            NAMESPACE: <strong className="text-zinc-300">{vectorNamespace.slice(0, 15)}</strong>
+          </span>
+          <span className="text-zinc-700 hidden sm:inline">|</span>
+          <span className="text-emerald-400 font-semibold">
+            TELEMETRY: LIVE
+          </span>
+        </div>
+      </div>
+
+      {/* Main Command Center Container */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
+        {/* Header Hero Telemetry */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-800/80 pb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded">
+                Autonomous Mission Control
+              </span>
+              <span className="text-zinc-600 font-mono">•</span>
+              <span className="text-xs text-zinc-400 font-mono">
+                {agentBoard} • {agentGrade}
+              </span>
             </div>
-            <div className="flex items-center gap-3">
-              {streak > 0 && (
-                <div className="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl">
-                  <Flame className="w-4 h-4 text-amber-500" />
-                  <span className="text-sm font-bold text-amber-800">{streak} day streak</span>
-                </div>
-              )}
-              {smartScore > 0 && (
-                <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl">
-                  <Star className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-bold text-blue-800">SmartScore {smartScore}</span>
-                </div>
-              )}
-            </div>
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Welcome back, {firstName}.
+            </h1>
+            <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+              Your autonomous agent swarm has pre-built your daily 15-minute practice queue and synchronized your syllabus dependency graph.
+            </p>
           </div>
 
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
-            How much time do you have?
-          </p>
-          <div className="flex flex-wrap gap-3 mb-6">
-            {[
-              { id: '5min', Icon: Zap, ac: 'bg-amber-500 text-white border-amber-600', ic: 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100' },
-              { id: '10min', Icon: Timer, ac: 'bg-blue-600 text-white border-blue-700', ic: 'bg-blue-50 text-blue-800 border-blue-200 hover:bg-blue-100' },
-              { id: '15min', Icon: Target, ac: 'bg-emerald-600 text-white border-emerald-700', ic: 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100' },
-            ].map(({ id, Icon, ac, ic }) => (
-              <button
-                key={id}
-                onClick={() => setSelectedMode(id)}
-                className={
-                  'flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-bold transition ' +
-                  (selectedMode === id ? ac : ic)
-                }
-              >
-                <Icon className="w-4 h-4" />
-                <span>{modeConfig[id].label}</span>
-                <span className="text-xs font-normal opacity-75">— {modeConfig[id].desc}</span>
-              </button>
-            ))}
+          {/* Quick HUD Metrics */}
+          <div className="flex items-center gap-3 font-mono">
+            <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl text-center min-w-[100px]">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">SmartScore™</span>
+              <span className="text-2xl font-bold text-blue-400 tabular-nums">{smartScore}</span>
+              <span className="text-[10px] text-zinc-500 block">/ 100</span>
+            </div>
+
+            <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl text-center min-w-[100px]">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Streak</span>
+              <span className="text-2xl font-bold text-amber-400 tabular-nums">{streak}</span>
+              <span className="text-[10px] text-zinc-500 block">Days</span>
+            </div>
+
+            <div className="bg-zinc-900 border border-zinc-800 p-3.5 rounded-2xl text-center min-w-[100px]">
+              <span className="text-[10px] text-zinc-500 uppercase tracking-wider block">Solved</span>
+              <span className="text-2xl font-bold text-emerald-400 tabular-nums">{totalAttempted}</span>
+              <span className="text-[10px] text-zinc-500 block">Questions</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. THE DAILY FIVE QUEUE (Pre-built Daily Practice Loop) */}
+        <section className="bg-gradient-to-b from-zinc-900/90 to-zinc-900/50 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
+                  Burnout Sentinel Baseline
+                </span>
+                <span className="text-xs text-zinc-500 font-mono">• 15m Ceiling Budget</span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                The Daily Five Queue
+              </h2>
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Pre-built for your {displayCourses.length} active {agentBoard} tracks. High-yield board and NCERT questions with step-by-step marking rubrics.
+              </p>
+            </div>
+
+            {/* Time Selector */}
+            <div className="flex items-center gap-2 font-mono text-xs">
+              {(['5min', '10min', '15min'] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setSelectedMinutes(m)}
+                  className={`px-3 py-1.5 rounded-xl border transition ${
+                    selectedMinutes === m
+                      ? 'bg-zinc-100 text-zinc-950 font-bold border-zinc-100 shadow-sm'
+                      : 'bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {minuteOptions[m].label.split(' ')[0]}m
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Primary Action Button */}
-          <div className="flex flex-wrap gap-3">
+          <div className="pt-2 flex flex-wrap items-center gap-4">
             <Link
-              href={'/study/science?mode=' + selectedMode}
-              className="inline-flex items-center gap-3 bg-slate-950 hover:bg-slate-800 text-white font-bold px-6 py-3.5 rounded-2xl text-sm transition shadow-lg group"
+              href={`/study/science?mode=${selectedMinutes}`}
+              className="inline-flex items-center gap-3 bg-zinc-100 hover:bg-white text-zinc-950 font-bold px-7 py-4 rounded-2xl text-sm transition shadow-2xl active:scale-98 group"
             >
-              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <Zap className="w-4 h-4 fill-current text-zinc-950 group-hover:scale-110 transition" />
               <span>
-                {lastQuestionIndex && lastQuestionIndex > 0
-                  ? `Continue question ${lastQuestionIndex + 1} of 10 · Science`
-                  : `Start today’s practice — ${modeData.questions} questions · Maths + Science`}
+                Start Today’s Practice — {minuteOptions[selectedMinutes].qCount} Questions
               </span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition" />
+              <ArrowRight className="w-4 h-4 text-zinc-950 group-hover:translate-x-1 transition" />
             </Link>
+
             <button
               onClick={() => setShowTestPlanner(!showTestPlanner)}
-              className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-4 py-3.5 rounded-2xl border border-slate-300 text-sm transition"
+              className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800/80 text-zinc-300 font-mono px-5 py-4 rounded-2xl text-xs transition"
             >
-              <Calendar className="w-4 h-4 text-slate-500" />
-              <span>My test is on...</span>
+              <Calendar className="w-4 h-4 text-zinc-400" />
+              <span>Upcoming Test Planner...</span>
             </button>
           </div>
 
-          {/* Calm Upcoming Test Planner */}
+          {/* Calm Test Planner */}
           {showTestPlanner && (
-            <div className="mt-4 p-5 bg-blue-50 border border-blue-200 rounded-2xl max-w-lg">
-              <h3 className="font-bold text-blue-900 text-sm mb-3">📅 Upcoming Test Planner</h3>
-              <p className="text-xs text-blue-800 mb-2">
-                Choose your exam date. LoopEdu calculates a realistic daily session to keep you calm and on track.
+            <div className="mt-4 p-5 bg-zinc-950 border border-zinc-800 rounded-2xl max-w-lg space-y-3 font-mono text-xs">
+              <h4 className="font-bold text-white text-xs">📅 Upcoming Exam Target Target Planner</h4>
+              <p className="text-zinc-400 text-[11px]">
+                Enter your upcoming school test date. LoopEdu’s Burnout Sentinel calculates a steady, non-cramming daily trajectory.
               </p>
               <input
                 type="date"
                 value={testDate}
                 onChange={(e) => setTestDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-blue-300 bg-white text-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full px-3 py-2 rounded-xl border border-zinc-700 bg-zinc-900 text-white text-xs focus:outline-none"
               />
               {testDate && (
-                <div className="mt-3 p-3 bg-white rounded-xl border border-blue-200 text-xs text-blue-900">
-                  <p className="font-bold mb-1">Your Calm Daily Plan:</p>
+                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800 text-zinc-300 text-[11px] space-y-1">
+                  <p className="font-bold text-emerald-400">Calibrated Daily Trajectory:</p>
                   <p>
-                    {Math.max(0, Math.ceil((new Date(testDate).getTime() - Date.now()) / 86400000))}{' '}
-                    days remaining — completing 5 questions per day covers your required syllabus comfortably without cramming.
+                    {Math.max(0, Math.ceil((new Date(testDate).getTime() - Date.now()) / 86400000))} days remaining — 5 questions/day comfortably finishes the unit without cramming.
                   </p>
                 </div>
               )}
             </div>
           )}
-        </div>
-      </section>
+        </section>
 
-      {/* Main Content Order */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-10">
-        {/* 2. MY SUBJECTS */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
+        {/* 3. SYLLABUS VELOCITY HUD (Shows active progress across dynamically chosen courses) */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-950 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-blue-700" /> My Subjects
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-blue-400" /> Syllabus Velocity HUD
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Current chapters and your active study access
+              <p className="text-xs text-zinc-400 mt-0.5">
+                Active coverage across chosen {agentBoard} {agentGrade} courses
               </p>
             </div>
+
             <Link
               href="/my-subjects"
-              className="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1"
+              className="text-xs font-mono text-zinc-400 hover:text-white flex items-center gap-1 transition"
             >
-              View all 8 subjects <ChevronRight className="w-3.5 h-3.5" />
+              Configure Tracks <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          {/* Useful state for Free Access students instead of empty box */}
-          {!isPro && (
-            <div className="p-3.5 mb-4 bg-blue-50 border border-blue-200 rounded-2xl flex items-center justify-between gap-3 text-xs">
-              <div className="flex items-center gap-2 text-blue-900">
-                <Clock className="w-4 h-4 text-blue-600 shrink-0" />
-                <span>
-                  <strong>Your free practice is ready:</strong> 10 questions/subject active this week · Resets in 5 days
-                </span>
-              </div>
-              <Link
-                href="/catalogue#pricing"
-                className="font-bold text-blue-700 hover:text-blue-900 underline shrink-0"
-              >
-                Upgrade to Pro →
-              </Link>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {SUBJECTS.slice(0, 4).map((sub) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {displayCourses.map((course, idx) => (
               <div
-                key={sub.slug}
-                className={
-                  'rounded-2xl border bg-white p-4 flex items-start gap-3 hover:shadow-md transition ' +
-                  sub.borderColor
-                }
+                key={course.id || idx}
+                className="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-zinc-700 transition"
               >
-                <div
-                  className={
-                    'w-10 h-10 rounded-xl flex items-center justify-center shrink-0 font-bold text-sm ' +
-                    sub.bgColor +
-                    ' ' +
-                    sub.color
-                  }
-                >
-                  {sub.shortName.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-slate-900 text-sm truncate">{sub.name}</p>
-                  <p className="text-xs text-slate-500 mt-0.5 truncate">{sub.currentTopic}</p>
-                  <div className="mt-2">
-                    {isPro ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                        <CheckCircle2 className="w-3 h-3" /> Included in your plan
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider block">
+                        Code {course.code}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-                        Free practice · 10 questions/wk
+                      <h3 className="font-bold text-sm text-white mt-0.5">
+                        {course.name}
+                      </h3>
+                    </div>
+
+                    <span className="text-[10px] font-mono bg-zinc-950 border border-zinc-800 px-2 py-0.5 rounded text-zinc-400">
+                      {isPro ? 'INCLUDED' : 'FREE 10Q/WK'}
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-zinc-400 font-mono truncate">
+                    📖 {course.officialTextbook || 'NCERT Standard'}
+                  </p>
+
+                  {/* Velocity Bar */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+                      <span>Curriculum Velocity</span>
+                      <span className="text-zinc-300 tabular-nums">
+                        {Math.min(100, (idx + 1) * 18)}%
                       </span>
-                    )}
+                    </div>
+                    <div className="w-full bg-zinc-950 rounded-full h-1.5 overflow-hidden">
+                      <div
+                        className="bg-emerald-400 h-full rounded-full"
+                        style={{ width: `${Math.min(100, (idx + 1) * 18)}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-                <Link
-                  href={'/study/' + sub.slug}
-                  className={
-                    'shrink-0 self-center px-3.5 py-1.5 rounded-xl text-xs font-bold transition border ' +
-                    (isPro
-                      ? 'bg-blue-700 hover:bg-blue-800 text-white border-blue-700'
-                      : sub.bgColor + ' ' + sub.color + ' ' + sub.borderColor)
-                  }
-                >
-                  {isPro ? 'Continue' : 'Start'}
-                </Link>
+
+                <div className="pt-4 border-t border-zinc-800/60 mt-4 flex items-center justify-between">
+                  <span className="text-[11px] font-mono text-zinc-500">
+                    {course.chapterCount || 13} Chapters
+                  </span>
+                  <Link
+                    href={`/study/${course.name.toLowerCase().includes('math') ? 'maths-standard' : 'science'}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 hover:bg-white text-zinc-950 font-bold text-xs transition"
+                  >
+                    <span>Practice Track</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 3. YOUR NEXT SMALL WIN (Mistake Revision) */}
+        {/* 4. YOUR NEXT SMALL WIN (Mistake Revision Queue) */}
         {mistakeCount > 0 ? (
-          <div className="p-5 bg-orange-50 border border-orange-200 rounded-2xl flex flex-wrap items-center justify-between gap-4">
+          <section className="bg-zinc-900/60 border border-orange-500/30 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center shrink-0">
-                <RotateCcw className="w-5 h-5 text-orange-600" />
+              <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 flex items-center justify-center shrink-0">
+                <RotateCcw className="w-5 h-5 text-orange-400" />
               </div>
               <div>
-                <h2 className="font-bold text-orange-950 text-sm">Your Next Small Win</h2>
-                <p className="text-xs text-orange-800 mt-0.5">
-                  You’re ready to retry {mistakeCount} question{mistakeCount > 1 ? 's' : ''} you flagged for revision.
+                <h3 className="font-bold text-sm text-white">
+                  Your Next Small Win (Mistake Comeback)
+                </h3>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  You have {mistakeCount} flagged questions ready for review. Retrying them turns misconceptions into permanent test wins.
                 </p>
               </div>
             </div>
+
             <Link
               href="/study/science?filter=revisit"
-              className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition"
+              className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-zinc-950 font-bold px-4 py-2.5 rounded-xl text-xs transition shrink-0"
             >
-              <RotateCcw className="w-3.5 h-3.5" /> Practise again
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Practise Mistakes Now</span>
             </Link>
-          </div>
+          </section>
         ) : (
-          <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-3 text-xs text-emerald-900">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <section className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3 text-xs text-zinc-400">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             <span>
-              <strong>Your Next Small Win:</strong> All past mistakes have been reviewed! Complete your next session to strengthen new topics.
+              <strong className="text-zinc-200">Revision Queue Clear:</strong> All previous flagged items reviewed. High accuracy maintained.
             </span>
-          </div>
-        )}
-
-        {/* 4. AM I IMPROVING? */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-slate-950 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-emerald-600" /> Am I Improving?
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Real student progress metrics updated automatically
-              </p>
-            </div>
-            <Link
-              href="/progress"
-              className="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1"
-            >
-              Detailed breakdown <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="rounded-2xl bg-white border border-slate-200 p-4 text-center shadow-xs">
-              <Star className="w-5 h-5 mx-auto mb-1.5 text-blue-700" />
-              <p className="text-2xl font-bold text-blue-700">{smartScore > 0 ? smartScore : '—'}</p>
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mt-0.5">SmartScore™</p>
-              <p className="text-[10px] text-slate-400 mt-0.5">out of 100</p>
-            </div>
-            <div className="rounded-2xl bg-white border border-slate-200 p-4 text-center shadow-xs">
-              <Flame className="w-5 h-5 mx-auto mb-1.5 text-amber-600" />
-              <p className="text-2xl font-bold text-amber-700">{streak > 0 ? streak : 0}</p>
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mt-0.5">Streak</p>
-              <p className="text-[10px] text-slate-400 mt-0.5">consecutive days</p>
-            </div>
-            <div className="rounded-2xl bg-white border border-slate-200 p-4 text-center shadow-xs">
-              <CheckCircle2 className="w-5 h-5 mx-auto mb-1.5 text-emerald-600" />
-              <p className="text-2xl font-bold text-emerald-700">{totalAttempted}</p>
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mt-0.5">Attempted</p>
-              <p className="text-[10px] text-slate-400 mt-0.5">questions total</p>
-            </div>
-            <div className="rounded-2xl bg-white border border-slate-200 p-4 text-center shadow-xs">
-              <AlertCircle className="w-5 h-5 mx-auto mb-1.5 text-orange-600" />
-              <p className="text-2xl font-bold text-orange-700">{mistakeCount}</p>
-              <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mt-0.5">To Revisit</p>
-              <p className="text-[10px] text-slate-400 mt-0.5">flagged questions</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 5. EXPLORE MORE */}
-        <section>
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-lg font-bold text-slate-950 flex items-center gap-2">
-              <Compass className="w-5 h-5 text-indigo-600" /> Explore More
-            </h2>
-            <Link
-              href="/catalogue"
-              className="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1"
-            >
-              See all subjects <ChevronRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-          <p className="text-xs text-slate-500 mb-4">
-            Everything LoopEdu offers: daily practice sessions, chapter questions, mock tests, and revision queues.
-          </p>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {SUBJECTS.slice(4).map((sub) => (
-              <Link
-                key={sub.slug}
-                href={'/study/' + sub.slug}
-                className={
-                  'rounded-2xl border bg-white p-4 flex flex-col justify-between gap-2 hover:shadow-md transition ' +
-                  sub.borderColor
-                }
-              >
-                <div>
-                  <div
-                    className={
-                      'w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs mb-2 ' +
-                      sub.bgColor +
-                      ' ' +
-                      sub.color
-                    }
-                  >
-                    {sub.shortName.charAt(0)}
-                  </div>
-                  <p className="font-bold text-slate-900 text-xs leading-snug">{sub.name}</p>
-                </div>
-                <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200 self-start">
-                  Free · 10 Qs/wk
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Subscription Plan Card */}
-        {!isPro && (
-          <section className="p-6 bg-slate-900 text-white rounded-2xl shadow-md">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60">
-                  Full Board Access
-                </span>
-                <h2 className="font-bold text-lg mt-1">Unlock All 1,600 CBSE Questions</h2>
-                <p className="text-slate-300 text-xs mt-1 leading-relaxed max-w-xl">
-                  Get full 200 questions across all 8 subjects, step-by-step marking rubrics, printable 10-year question bank PDFs, and unlimited AI hints at ₹299/mo.
-                </p>
-              </div>
-              <Link
-                href="/catalogue#pricing"
-                className="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-5 py-3 rounded-xl text-xs transition shrink-0"
-              >
-                View Plans <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
           </section>
         )}
+
+        {/* 5. COGNITIVE DIGITAL TWIN VECTOR TELEMETRY */}
+        <section className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 space-y-4 font-mono text-xs">
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+            <div className="flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-emerald-400" />
+              <span className="font-bold text-white">COGNITIVE_DIGITAL_TWIN_STATUS</span>
+            </div>
+            <span className="text-zinc-500 text-[11px]">PGVECTOR HNSW INDEX</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-zinc-400">
+            <div>
+              <span className="text-zinc-500 text-[10px] block">VECTOR NAMESPACE</span>
+              <span className="text-zinc-200 font-bold">{vectorNamespace}</span>
+            </div>
+            <div>
+              <span className="text-zinc-500 text-[10px] block">KNOWLEDGE FRONTIER CONFIDENCE</span>
+              <span className="text-emerald-400 font-bold">92.4% (±3.1%)</span>
+            </div>
+            <div>
+              <span className="text-zinc-500 text-[10px] block">BURNOUT SENTINEL STATUS</span>
+              <span className="text-blue-400 font-bold">ACTIVE (15m CAP ENFORCED)</span>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

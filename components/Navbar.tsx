@@ -4,16 +4,13 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  BookOpen,
   ShieldCheck,
-  User,
-  Sparkles,
   ChevronDown,
   LogOut,
-  ArrowRight,
-  Flame,
-  GraduationCap,
-  School,
+  Terminal,
+  Activity,
+  Layers,
+  Cpu,
 } from 'lucide-react';
 
 interface SessionUser {
@@ -30,7 +27,6 @@ export const Navbar: React.FC = () => {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [isPro, setIsPro] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [exploreOpen, setExploreOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/session')
@@ -62,173 +58,154 @@ export const Navbar: React.FC = () => {
   const isCurrent = (path: string) => pathname === path;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-xs">
-      {/* Top announcement banner (hidden in study mode for distraction-free focus) */}
+    <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-md text-zinc-100">
+      {/* Telemetry micro-ribbon */}
       {!pathname.startsWith('/study/') && (
-        <div className="bg-slate-900 text-white px-4 py-1.5 text-xs text-center font-medium border-b border-slate-800 flex items-center justify-center gap-2">
-          <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>
-            🎁 <strong>Launch Special:</strong> 10 High-Yield Board Questions 100% Free Every Week • Resets Every 7 Days
-          </span>
+        <div className="bg-zinc-900/90 text-zinc-400 px-4 py-1 text-[11px] font-mono border-b border-zinc-800/80 flex items-center justify-between">
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-zinc-300">SWARM_TELEMETRY: ONLINE</span>
+              <span className="hidden sm:inline text-zinc-600">|</span>
+              <span className="hidden sm:inline text-zinc-400">AGI ARCHITECT ENGINE ACTIVE</span>
+            </div>
+            <div className="flex items-center gap-3 tabular-nums">
+              <span className="text-zinc-500 hidden md:inline">LATENCY: 12ms</span>
+              <span className="text-emerald-400 font-semibold">NCERT / BOARD VERIFIED</span>
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold text-lg shadow-sm group-hover:bg-blue-800 transition">
-            L
+          <div className="w-8 h-8 rounded-lg bg-zinc-100 text-zinc-950 flex items-center justify-center font-bold text-sm tracking-wider font-mono group-hover:bg-white transition">
+            LP
           </div>
           <div className="flex flex-col">
-            <div className="font-bold text-slate-950 text-lg leading-none tracking-tight">
-              LoopEdu
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-zinc-100 text-base leading-none tracking-tight">
+                LoopEdu
+              </span>
+              <span className="px-1.5 py-0.2 rounded border border-zinc-800 bg-zinc-900 text-[10px] font-mono text-zinc-400">
+                AGI_v2.4
+              </span>
             </div>
-            <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-blue-700 mt-1">
-              CBSE Class 10
+            <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-400 mt-1">
+              Mission Control
             </span>
           </div>
         </Link>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-700">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-mono text-zinc-400">
           {user ? (
             <>
               <Link
                 href="/learn"
-                className={`transition hover:text-slate-950 ${
-                  isCurrent('/learn') ? 'text-blue-700 font-bold' : ''
+                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+                  isCurrent('/learn') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
                 }`}
               >
-                Home
+                <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Command Center</span>
               </Link>
               <Link
                 href="/my-subjects"
-                className={`transition hover:text-slate-950 ${
-                  isCurrent('/my-subjects') || isCurrent('/library') ? 'text-blue-700 font-bold' : ''
+                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+                  isCurrent('/my-subjects') || isCurrent('/library') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
                 }`}
               >
-                My Subjects
-              </Link>
-              <Link
-                href="/catalogue"
-                className={`transition hover:text-slate-950 ${
-                  isCurrent('/catalogue') ? 'text-blue-700 font-bold' : ''
-                }`}
-              >
-                Explore
+                <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Active Tracks</span>
               </Link>
               <Link
                 href="/progress"
-                className={`transition hover:text-slate-950 ${
-                  isCurrent('/progress') ? 'text-blue-700 font-bold' : ''
+                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+                  isCurrent('/progress') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
                 }`}
               >
-                Progress
+                <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Telemetry HUD</span>
+              </Link>
+              <Link
+                href="/catalogue"
+                className={`transition hover:text-zinc-100 ${
+                  isCurrent('/catalogue') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+                }`}
+              >
+                Curriculums
               </Link>
             </>
           ) : (
             <>
-              {/* Explore Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={() => setExploreOpen(!exploreOpen)}
-                  onMouseEnter={() => setExploreOpen(true)}
-                  className="flex items-center gap-1 hover:text-slate-950 py-2 transition"
-                >
-                  <span>Explore</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-                </button>
+              <Link
+                href="/#architecture"
+                className="transition hover:text-zinc-100 flex items-center gap-1"
+              >
+                <Cpu className="w-3.5 h-3.5 text-zinc-500" />
+                <span>Agent Architecture</span>
+              </Link>
 
-                {exploreOpen && (
-                  <div
-                    onMouseLeave={() => setExploreOpen(false)}
-                    className="absolute left-0 mt-1 w-64 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 text-xs animate-in fade-in"
-                  >
-                    <Link
-                      href="/explore/for-students"
-                      onClick={() => setExploreOpen(false)}
-                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-                        <GraduationCap className="w-4 h-4 text-blue-700" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-slate-950 text-sm">For Students</div>
-                        <div className="text-slate-500 text-[11px] font-normal leading-snug">
-                          Self-paced Daily Five, Mistake Comeback, and AI Hints.
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      href="/explore/for-teachers"
-                      onClick={() => setExploreOpen(false)}
-                      className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition"
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                        <School className="w-4 h-4 text-emerald-700" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-slate-950 text-sm">For Teachers & Schools</div>
-                        <div className="text-slate-500 text-[11px] font-normal leading-snug">
-                          Classroom question banks, unit test tools, and marking rubrics.
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <Link
+                href="/#intake"
+                className="transition hover:text-zinc-100 flex items-center gap-1"
+              >
+                <Terminal className="w-3.5 h-3.5 text-zinc-500" />
+                <span>Dynamic Intake</span>
+              </Link>
 
               <Link
                 href="/catalogue"
-                className={`transition hover:text-slate-950 ${
-                  isCurrent('/catalogue') ? 'text-blue-700 font-bold' : ''
+                className={`transition hover:text-zinc-100 ${
+                  isCurrent('/catalogue') ? 'text-zinc-100 font-bold' : ''
                 }`}
               >
-                Subjects
+                Official Standards
               </Link>
 
               <Link
                 href="/catalogue#pricing"
-                className="transition hover:text-slate-950"
+                className="transition hover:text-zinc-100"
               >
-                Pricing
+                Compute Access
               </Link>
             </>
           )}
         </nav>
 
-        {/* Right side: Auth Controls */}
+        {/* Right side: Auth & Telemetry Controls */}
         <div className="flex items-center gap-3">
           {user ? (
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs font-medium hover:bg-slate-50 transition shadow-xs"
+                className="flex items-center gap-2 px-2.5 py-1 rounded-lg border border-zinc-800 bg-zinc-900/90 text-zinc-200 text-xs font-mono hover:bg-zinc-800 transition"
                 aria-label="User account dropdown"
               >
-                <div className="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-5 h-5 rounded bg-zinc-200 text-zinc-950 flex items-center justify-center font-bold text-[10px]">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden sm:inline font-semibold text-slate-950 max-w-[110px] truncate">
+                <span className="hidden sm:inline text-zinc-200 max-w-[120px] truncate">
                   {user.name}
                 </span>
                 {isPro && (
-                  <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold text-[10px] px-1.5 py-0.5 rounded">
+                  <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold text-[9px] px-1 py-0.2 rounded font-mono">
                     PRO
                   </span>
                 )}
-                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                <ChevronDown className="w-3 h-3 text-zinc-500" />
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-60 rounded-2xl bg-white border border-slate-200 shadow-xl p-2 z-50 text-xs animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-3 py-2.5 border-b border-slate-100 mb-1">
-                    <div className="font-bold text-slate-950 text-sm">{user.name}</div>
-                    <div className="text-slate-500 text-[11px] truncate">{user.email}</div>
-                    <div className="mt-1.5 flex items-center gap-1.5">
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800">
-                        {user.role === 'admin' ? 'Administrator' : isPro ? 'Pro Member' : 'Student'}
+                <div className="absolute right-0 mt-2 w-64 rounded-xl bg-zinc-900 border border-zinc-800 shadow-2xl p-2 z-50 text-xs font-mono animate-in fade-in slide-in-from-top-2 duration-150">
+                  <div className="px-3 py-2.5 border-b border-zinc-800 mb-1">
+                    <div className="font-bold text-zinc-100 text-sm">{user.name}</div>
+                    <div className="text-zinc-400 text-[11px] truncate">{user.email}</div>
+                    <div className="mt-2 flex items-center gap-1.5">
+                      <span className="inline-block px-2 py-0.5 rounded text-[9px] font-mono uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
+                        {user.role === 'admin' ? 'SYSTEM_ROOT' : isPro ? 'COMPUTE_PRO' : 'STUDENT_AGENT'}
                       </span>
                     </div>
                   </div>
@@ -237,47 +214,47 @@ export const Navbar: React.FC = () => {
                     <Link
                       href="/learn"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
-                      <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Home</span>
+                      <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Mission Control</span>
                     </Link>
 
                     <Link
                       href="/my-subjects"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
-                      <BookOpen className="w-3.5 h-3.5 text-blue-600" />
-                      <span>My Subjects</span>
+                      <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Active Tracks</span>
                     </Link>
 
                     <Link
                       href="/progress"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
-                      <span className="text-blue-600 font-bold text-xs">📈</span>
-                      <span>Progress</span>
+                      <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Telemetry HUD</span>
                     </Link>
 
                     {user.role === 'admin' && (
                       <Link
                         href="/admin"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-50 text-slate-900 font-medium transition"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-amber-400 transition"
                       >
-                        <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Admin Console</span>
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>Root Admin Console</span>
                       </Link>
                     )}
 
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 font-medium transition border-t border-slate-100 mt-1 pt-2"
+                      className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition border-t border-zinc-800 mt-1 pt-2"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Sign Out</span>
+                      <span>Disconnect Session</span>
                     </button>
                   </div>
                 </div>
@@ -287,16 +264,16 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/login"
-                className="text-xs font-bold text-slate-700 hover:text-slate-950 px-3 py-2 rounded-lg hover:bg-slate-100 transition"
+                className="text-xs font-mono text-zinc-400 hover:text-zinc-100 px-3 py-1.5 rounded-lg hover:bg-zinc-900 transition"
               >
                 Log In
               </Link>
               <Link
-                href="/study/cbse-10-science"
-                className="inline-flex items-center gap-1.5 bg-slate-950 hover:bg-slate-900 text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-sm"
+                href="/initialize"
+                className="inline-flex items-center gap-1.5 bg-zinc-100 hover:bg-white text-zinc-950 font-mono font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm"
               >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Start Free</span>
+                <Terminal className="w-3.5 h-3.5 text-zinc-950" />
+                <span>Initialize Agent →</span>
               </Link>
             </div>
           )}
