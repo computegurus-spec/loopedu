@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Legal Disclaimer (Albert.io format) */}
         <div className="pt-8 border-t border-slate-200 text-[11px] text-slate-500 space-y-2">
           <p>
-            CBSE®, Central Board of Secondary Education, and NCERT® are registered trademarks and educational bodies in India. LoopEdu is an independent educational technology platform developed by Blocks and Loops Technologies Pvt Ltd and is not officially affiliated with or endorsed by the CBSE or NCERT.
+            LoopEdu is an independent educational technology platform developed by Blocks and Loops Technologies Pvt Ltd and is not officially affiliated to any educational board .
           </p>
           <p>
             LoopEdu is a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka.
