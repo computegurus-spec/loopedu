@@ -6,7 +6,6 @@ import {
   Flame,
   Award,
   Clock,
-  Sparkles,
   ArrowRight,
   TrendingUp,
   ShieldCheck,
@@ -57,38 +56,28 @@ const HEATMAP_DATA: Record<string, { subjectName: string; code: string; totalMar
         weightageMarks: '7–8 Marks',
         appearanceYears: 10,
         repeatRatePercent: 100,
-        hotspots: ['Trigonometric Identities ($\\sin^2\\theta+\\cos^2\\theta=1$ proofs)', 'Specific angle values'],
+        hotspots: ['Trigonometric Identities (sin²θ+cos²θ=1 proofs)', 'Specific angle values'],
         priority: 'guaranteed',
-        subjectSlug: 'maths-standard',
-      },
-      {
-        chapterNumber: 9,
-        chapterName: 'Applications of Trigonometry',
-        weightageMarks: '4–6 Marks (Case Study)',
-        appearanceYears: 9,
-        repeatRatePercent: 90,
-        hotspots: ['Double angle of elevation', 'Tower/lighthouse shadow problems'],
-        priority: 'high',
         subjectSlug: 'maths-standard',
       },
       {
         chapterNumber: 13,
         chapterName: 'Statistics',
-        weightageMarks: '6–8 Marks',
+        weightageMarks: '7–8 Marks',
         appearanceYears: 10,
         repeatRatePercent: 100,
-        hotspots: ['Step-deviation Mean', 'Mode formula with missing frequency', 'Median formula'],
+        hotspots: ['Median of grouped data with missing frequencies x and y', 'Mode and Mean calculations'],
         priority: 'guaranteed',
         subjectSlug: 'maths-standard',
       },
       {
-        chapterNumber: 3,
-        chapterName: 'Linear Equations in Two Variables',
+        chapterNumber: 9,
+        chapterName: 'Some Applications of Trigonometry',
         weightageMarks: '5–6 Marks',
-        appearanceYears: 8,
-        repeatRatePercent: 80,
-        hotspots: ['Elimination method', 'Consistent/inconsistent conditions ($a_1/a_2$)'],
-        priority: 'high',
+        appearanceYears: 9,
+        repeatRatePercent: 90,
+        hotspots: ['Double angle observation (30° to 60° ship moving towards lighthouse)'],
+        priority: 'guaranteed',
         subjectSlug: 'maths-standard',
       },
       {
@@ -97,24 +86,24 @@ const HEATMAP_DATA: Record<string, { subjectName: string; code: string; totalMar
         weightageMarks: '4–6 Marks',
         appearanceYears: 10,
         repeatRatePercent: 100,
-        hotspots: ['Proof of $\\sqrt{2}, \\sqrt{3}, \\sqrt{5}$ is irrational', 'Fundamental Theorem of Arithmetic'],
+        hotspots: ['Proof of irrationality for √3, √5, 2+3√5', 'Fundamental Theorem of Arithmetic HCF/LCM'],
         priority: 'guaranteed',
         subjectSlug: 'maths-standard',
       },
     ],
   },
   science: {
-    subjectName: 'Science (Theory)',
+    subjectName: 'Science (Physics, Chem, Bio)',
     code: '086',
     totalMarks: 80,
     chapters: [
       {
         chapterNumber: 1,
         chapterName: 'Chemical Reactions and Equations',
-        weightageMarks: '6–7 Marks',
+        weightageMarks: '5–6 Marks',
         appearanceYears: 10,
         repeatRatePercent: 100,
-        hotspots: ['Balancing equations', 'Thermal decomposition of $\\text{FeSO}_4$', 'Redox reactions'],
+        hotspots: ['Precipitation & Redox identification', 'Balancing equation rubrics', 'Corrosion & Rancidity'],
         priority: 'guaranteed',
         subjectSlug: 'science',
       },
@@ -144,7 +133,7 @@ const HEATMAP_DATA: Record<string, { subjectName: string; code: string; totalMar
         weightageMarks: '7–9 Marks',
         appearanceYears: 10,
         repeatRatePercent: 100,
-        hotspots: ['Ohm’s law $V=IR$', 'Series and Parallel combination circuits', 'Joule’s heating effect'],
+        hotspots: ['Ohm’s law V=IR', 'Series and Parallel combination circuits', 'Joule’s heating effect'],
         priority: 'guaranteed',
         subjectSlug: 'science',
       },
@@ -219,32 +208,31 @@ export const BoardExamTimeMachine: React.FC = () => {
     : subjectData.chapters;
 
   return (
-    <div className="rounded-3xl bg-forest-900 border border-forest-700/80 p-6 sm:p-10 shadow-lg text-white space-y-8">
+    <div className="rounded-3xl bg-slate-900 border border-slate-800 p-6 sm:p-10 shadow-xl text-white space-y-8">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-forest-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-6">
         <div className="space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-950 text-limeaccent text-[11px] font-mono font-bold uppercase tracking-wider border border-forest-800">
-            <Sparkles className="w-3.5 h-3.5 text-limeaccent" />
-            <span>The Board Exam Time-Machine</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20">
+            <span>Historical Examination Radar</span>
           </div>
-          <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white">
-            10-Year CBSE Frequency Heatmap (2015–2024)
+          <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            10-Year CBSE & State Paper Frequency Analysis
           </h3>
-          <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-normal">
-            Stop guessing which chapters carry the real marks. This matrix cross-references every chapter against real CBSE Board papers over the past decade.
+          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Stop guessing which chapters carry the real weight. This matrix cross-references every chapter against official Board papers over the past decade.
           </p>
         </div>
 
         {/* Filter Switch */}
         <div className="flex items-center gap-3 shrink-0">
-          <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-semibold text-forest-200">
+          <label className="inline-flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-300">
             <input
               type="checkbox"
               checked={filterGuaranteed}
               onChange={(e) => setFilterGuaranteed(e.target.checked)}
-              className="w-4 h-4 rounded text-forest-900 border-forest-700 bg-forest-950 focus:ring-limeaccent"
+              className="w-4 h-4 rounded text-blue-600 border-slate-700 bg-slate-950 focus:ring-blue-500"
             />
-            <span>Frequently tested in past papers (CBSE 2017–2026)</span>
+            <span>Show 10/10 years tested chapters only</span>
           </label>
         </div>
       </div>
@@ -253,38 +241,38 @@ export const BoardExamTimeMachine: React.FC = () => {
       <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setActiveSubject('maths')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 ${
             activeSubject === 'maths'
-              ? 'bg-limeaccent text-forest-950 shadow-sm'
-              : 'bg-forest-950 text-forest-300 hover:text-white border border-forest-800'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-slate-950 text-slate-300 hover:text-white border border-slate-800'
           }`}
         >
           <span>Maths Standard (041)</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-forest-900/40">10 Yrs Verified</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">10 Yrs Verified</span>
         </button>
 
         <button
           onClick={() => setActiveSubject('science')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 ${
             activeSubject === 'science'
-              ? 'bg-limeaccent text-forest-950 shadow-sm'
-              : 'bg-forest-950 text-forest-300 hover:text-white border border-forest-800'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-slate-950 text-slate-300 hover:text-white border border-slate-800'
           }`}
         >
           <span>Science (086)</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-forest-900/40">Physics • Chem • Bio</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">Physics • Chem • Bio</span>
         </button>
 
         <button
           onClick={() => setActiveSubject('english')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+          className={`px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center gap-2 ${
             activeSubject === 'english'
-              ? 'bg-limeaccent text-forest-950 shadow-sm'
-              : 'bg-forest-950 text-forest-300 hover:text-white border border-forest-800'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-slate-950 text-slate-300 hover:text-white border border-slate-800'
           }`}
         >
           <span>English (184)</span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-forest-900/40">First Flight + Writing</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">First Flight + Writing</span>
         </button>
       </div>
 
@@ -298,24 +286,24 @@ export const BoardExamTimeMachine: React.FC = () => {
               key={ch.chapterNumber + ch.chapterName}
               className={`rounded-2xl p-5 border transition flex flex-col justify-between space-y-4 ${
                 isGuaranteed
-                  ? 'bg-forest-950/90 border-limeaccent/30 hover:border-limeaccent/70'
-                  : 'bg-forest-950/60 border-forest-800 hover:border-forest-700'
+                  ? 'bg-slate-950 border-blue-500/40 hover:border-blue-500'
+                  : 'bg-slate-950 border-slate-800 hover:border-slate-700'
               }`}
             >
               <div className="space-y-3">
                 {/* Top Badges */}
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-limeaccent font-bold text-[11px] bg-forest-900 px-2 py-0.5 rounded">
+                  <span className="text-blue-400 font-semibold text-[11px] bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
                     Ch {ch.chapterNumber} • {ch.weightageMarks}
                   </span>
 
                   {isGuaranteed ? (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
                       <Flame className="w-3 h-3 text-emerald-400" />
                       10/10 Yrs Hit
                     </span>
                   ) : (
-                    <span className="text-[10px] font-mono text-emerald-300 font-bold bg-forest-900 px-2 py-0.5 rounded">
+                    <span className="text-[10px] text-slate-400 font-medium bg-slate-900 px-2 py-0.5 rounded">
                       {ch.appearanceYears}/10 Yrs
                     </span>
                   )}
@@ -328,71 +316,48 @@ export const BoardExamTimeMachine: React.FC = () => {
 
                 {/* Frequency Heat Bar */}
                 <div className="space-y-1">
-                  <div className="flex items-center justify-between text-[11px] text-emerald-200 font-medium">
-                    <span>CBSE Frequency</span>
-                    <span className="font-mono font-bold text-limeaccent">
-                      {ch.repeatRatePercent}%
-                    </span>
+                  <div className="flex justify-between text-[10px] text-slate-400">
+                    <span>10-Year Appearance Rate</span>
+                    <span className="text-slate-200 font-semibold">{ch.repeatRatePercent}%</span>
                   </div>
-                  <div className="h-1.5 w-full bg-forest-900 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        isGuaranteed ? 'bg-limeaccent' : 'bg-emerald-400'
-                      }`}
+                      className={`h-full rounded-full ${isGuaranteed ? 'bg-blue-500' : 'bg-slate-600'}`}
                       style={{ width: `${ch.repeatRatePercent}%` }}
                     />
                   </div>
                 </div>
 
                 {/* Hotspot Question Types */}
-                <div className="pt-1">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 font-bold block mb-1">
-                    Hotspot Question Types:
+                <div className="space-y-1.5 pt-2 border-t border-slate-800">
+                  <span className="text-[10px] uppercase font-semibold tracking-wider text-slate-400 block">
+                    High-Yield Board Question Patterns:
                   </span>
-                  <div className="flex flex-wrap gap-1">
-                    {ch.hotspots.map((h, i) => (
-                      <span
-                        key={i}
-                        className="text-[11px] text-white bg-forest-900 px-2 py-0.5 rounded border border-forest-700 font-medium"
-                      >
-                        {h}
-                      </span>
+                  <ul className="space-y-1 text-xs text-slate-300">
+                    {ch.hotspots.map((spot, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">{spot}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
 
-              {/* 1-Tap Practice CTA */}
-              <div className="pt-2 border-t border-forest-800/80 flex items-center justify-between">
-                <span className="text-[11px] text-emerald-200/90 font-mono font-medium">15-Min Habit Loop</span>
+              {/* Card Footer Link */}
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">Verified marking scheme</span>
                 <Link
-                  href={`/study/${ch.subjectSlug}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-limeaccent hover:text-white transition group"
+                  href="/initialize"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-blue-400 hover:text-blue-300 transition"
                 >
-                  <span>Practice Ch {ch.chapterNumber}</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  <span>Practise Topic</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Bottom Summary Callout */}
-      <div className="p-4 rounded-2xl bg-forest-950 border border-forest-800 flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-2 text-emerald-100 font-normal">
-          <ShieldCheck className="w-4 h-4 text-limeaccent shrink-0" />
-          <span>
-            Every question in LoopEdu’s <strong>Daily Five</strong> and <strong>10 Free Weekly Questions</strong> is mapped directly to these 10-year board recurrence clusters.
-          </span>
-        </div>
-
-        <Link
-          href={`/study/${subjectData.chapters[0].subjectSlug}`}
-          className="inline-flex items-center gap-2 bg-limeaccent hover:bg-lime-400 text-forest-950 font-bold px-4 py-2 rounded-xl transition shadow-sm text-xs uppercase tracking-wider"
-        >
-          <span>Launch Today's Focus Set →</span>
-        </Link>
       </div>
     </div>
   );

@@ -6,8 +6,10 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const board = url.searchParams.get('board') || 'CBSE';
     const grade = url.searchParams.get('grade') || '8th Standard';
+    const state = url.searchParams.get('state') || '';
+    const customQuery = url.searchParams.get('q') || url.searchParams.get('query') || '';
 
-    const curriculum = await queryOfficialCurriculum(board, grade);
+    const curriculum = await queryOfficialCurriculum(board, grade, state, customQuery);
 
     if (!curriculum) {
       return NextResponse.json(
@@ -18,7 +20,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      agent: 'Curriculum & Compliance Architect Agent v4.2',
       queryTimeMs: 12,
       curriculum,
       telemetry: {
@@ -40,8 +41,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const board = body.board || 'CBSE';
     const grade = body.grade || '8th Standard';
+    const state = body.state || '';
+    const customQuery = body.q || body.query || body.customQuery || '';
 
-    const curriculum = await queryOfficialCurriculum(board, grade);
+    const curriculum = await queryOfficialCurriculum(board, grade, state, customQuery);
 
     if (!curriculum) {
       return NextResponse.json(
@@ -52,7 +55,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      agent: 'Curriculum & Compliance Architect Agent v4.2',
       queryTimeMs: 14,
       curriculum,
       telemetry: {

@@ -10,8 +10,6 @@ import {
   Compass,
   ArrowRight,
   CheckCircle2,
-  Layers,
-  Sparkles,
 } from 'lucide-react';
 
 export const FivePillarsSection: React.FC = () => {
@@ -24,8 +22,8 @@ export const FivePillarsSection: React.FC = () => {
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/10',
       borderColor: 'border-emerald-500/20',
-      link: '/learn',
-      cta: 'Explore Workspace',
+      link: '/initialize',
+      cta: 'Explore Study Coach',
       highlights: [
         'Socratic hints that guide without revealing full answers',
         'Automatic 24-hour retry scheduling for missed questions',
@@ -35,13 +33,13 @@ export const FivePillarsSection: React.FC = () => {
     {
       id: 'questions',
       title: 'Adaptive Question Bank',
-      tagline: '1,600+ official board-calibrated questions across CBSE and ICSE.',
+      tagline: '1,600+ official board-calibrated questions across CBSE, ICSE & State Boards.',
       icon: BookOpen,
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/20',
-      link: '/study/cbse-10-science',
-      cta: 'Practice Questions',
+      link: '/initialize',
+      cta: 'Explore Question Bank',
       highlights: [
         'Tagged with Bloom’s Taxonomy and NCERT page citations',
         '10-year board recurrence heatmaps (2017–2026)',
@@ -56,8 +54,8 @@ export const FivePillarsSection: React.FC = () => {
       color: 'text-cyan-400',
       bgColor: 'bg-cyan-500/10',
       borderColor: 'border-cyan-500/20',
-      link: '/mind-maps',
-      cta: 'Open Mind Maps',
+      link: '/initialize',
+      cta: 'Explore Mind Maps',
       highlights: [
         'Expandable subtopic nodes color-coded by mastery level',
         'Embedded mathematical formulas and theorem definitions',
@@ -72,8 +70,8 @@ export const FivePillarsSection: React.FC = () => {
       color: 'text-amber-400',
       bgColor: 'bg-amber-500/10',
       borderColor: 'border-amber-500/20',
-      link: '/flashcards',
-      cta: 'Launch Flashcards',
+      link: '/initialize',
+      cta: 'Explore Flashcards',
       highlights: [
         'Interactive card flip with keyboard shortcuts (Space / 1-4)',
         'Automated review intervals (10m, 1d, 3d, 7d)',
@@ -88,8 +86,8 @@ export const FivePillarsSection: React.FC = () => {
       color: 'text-indigo-400',
       bgColor: 'bg-indigo-500/10',
       borderColor: 'border-indigo-500/20',
-      link: '/consultant',
-      cta: 'Access Advisory',
+      link: '/initialize',
+      cta: 'Explore Advisory',
       highlights: [
         'Objective stream evaluations: Science PCM/PCB, Commerce, Humanities',
         'Reverse career roadmaps (Engineering, Medicine, Law, Finance)',
@@ -99,16 +97,16 @@ export const FivePillarsSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-zinc-950 border-b border-zinc-800">
+    <section className="py-20 bg-slate-950 border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="max-w-3xl mb-14 space-y-3">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1 rounded">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">
             THE INTEGRATED SYSTEM
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Five core capabilities. One seamless workspace.
           </h2>
-          <p className="text-base text-zinc-400 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
             Every tool is designed to work together. A mistake in the question bank automatically schedules a flashcard, highlights the concept on your mind map, and alerts your study coach.
           </p>
         </div>
@@ -120,7 +118,7 @@ export const FivePillarsSection: React.FC = () => {
             return (
               <div
                 key={pillar.id}
-                className="p-6 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition flex flex-col justify-between group shadow-lg"
+                className="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between group shadow-md"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -129,30 +127,30 @@ export const FivePillarsSection: React.FC = () => {
                     >
                       <Icon className={`w-5 h-5 ${pillar.color}`} />
                     </div>
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase">Core Module</span>
+                    <span className="text-[11px] text-slate-500 font-medium">Core Module</span>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-zinc-100 transition">
+                    <h3 className="text-base font-bold text-white group-hover:text-slate-100 transition">
                       {pillar.title}
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">{pillar.tagline}</p>
+                    <p className="text-xs text-slate-400 mt-1 leading-relaxed">{pillar.tagline}</p>
                   </div>
 
-                  <ul className="space-y-2 pt-2 border-t border-zinc-800/80 text-xs text-zinc-300 font-mono">
+                  <ul className="space-y-2 pt-2 border-t border-slate-800/80 text-xs text-slate-300">
                     {pillar.highlights.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
                         <span className="leading-snug">{item}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-zinc-800/80">
+                <div className="pt-6 mt-6 border-t border-slate-800">
                   <Link
                     href={pillar.link}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-white hover:text-zinc-300 transition"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition"
                   >
                     <span>{pillar.cta}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
