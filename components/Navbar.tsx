@@ -66,19 +66,9 @@ export const Navbar: React.FC = () => {
             <span>L</span>
             <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-white" />
           </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-slate-900 text-lg leading-none tracking-tight">
-                LoopEdu
-              </span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 border border-amber-300 text-[10px] font-bold text-amber-900 tracking-wide">
-                STUDENT AGI
-              </span>
-            </div>
-            <span className="text-[11px] text-slate-500 mt-0.5 font-medium tracking-normal">
-              Autonomous Academic Mission Control
-            </span>
-          </div>
+          <span className="font-extrabold text-slate-900 text-xl leading-none tracking-tight">
+            LoopEdu
+          </span>
         </Link>
 
         {/* Navigation Links:
@@ -148,13 +138,7 @@ export const Navbar: React.FC = () => {
                 Curriculum Catalog
               </Link>
             </>
-          ) : (
-            /* Logged-Out Public Visitors */
-            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>Verified CBSE, ICSE & State Board Standards</span>
-            </div>
-          )}
+          ) : null}
         </nav>
 
         {/* Right side: Auth Controls */}

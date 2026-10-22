@@ -125,22 +125,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
       {/* 1. HERO SECTION: Light Luminous & High-Contrast (EduVetra Inspired) */}
       <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-24 border-b border-slate-200/80 bg-gradient-to-b from-white via-blue-50/20 to-slate-50">
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
-          {/* Top Status Capsule */}
-          <div className="flex items-center justify-center">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-[#0066FF]" />
-              <span className="text-slate-900 font-bold">Autonomous Student Agent</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                15-Min Calibrated Loop
-              </span>
-            </div>
-          </div>
-
           {/* Headline & Subhead */}
-          <div className="text-center mt-8 max-w-3xl mx-auto space-y-5">
+          <div className="text-center max-w-3xl mx-auto space-y-5">
             <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.15]">
-              Deterministic Academic Mastery{' '}
+              Academic Mastery{' '}
               <span className="text-[#0066FF]">for Every Student.</span>
             </h1>
 
