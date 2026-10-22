@@ -7,8 +7,8 @@ import {
   Activity,
   Cpu,
   Layers,
-  Search,
   ArrowRight,
+  CheckCircle2,
   Brain,
   Mic,
   Clock,
@@ -27,17 +27,7 @@ interface MissionControlProps {
 
 export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) => {
   const router = useRouter();
-  const [typedQuery, setTypedQuery] = useState('');
   const [activeAgentTab, setActiveAgentTab] = useState<'diagnostic' | 'socratic' | 'feynman' | 'curriculum' | 'sentinel'>('diagnostic');
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (typedQuery.trim()) {
-      router.push(`/initialize?q=${encodeURIComponent(typedQuery.trim())}`);
-    } else {
-      router.push('/initialize');
-    }
-  };
 
   const agents = {
     diagnostic: {
@@ -135,37 +125,37 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
               An active pedagogical operating system that builds a persistent cognitive digital twin of your brain, eliminates guess-work, and turns academic weaknesses into permanent board examination wins.
             </p>
 
-            {/* Smart Search & Autonomous Intake Launcher */}
-            <div className="max-w-xl mx-auto pt-4">
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center shadow-lg rounded-2xl bg-white border border-slate-200 focus-within:border-[#0066FF] focus-within:ring-2 focus-within:ring-blue-100 transition p-1.5">
-                <Search className="w-5 h-5 text-slate-400 ml-3 shrink-0 pointer-events-none" />
-                <input
-                  type="text"
-                  value={typedQuery}
-                  onChange={(e) => setTypedQuery(e.target.value)}
-                  placeholder="Enter your board, grade, or goal (e.g. CBSE Class 10, JEE, NEET)..."
-                  className="w-full bg-transparent border-0 pl-3 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="px-5 py-3 rounded-xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-xs transition shadow-sm shrink-0 flex items-center gap-1.5"
+            {/* Direct High-Impact CTAs */}
+            <div className="pt-4 max-w-xl mx-auto space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/initialize"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-sm transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform"
                 >
-                  <span>Initialize</span>
+                  <span>Configure Your Study Plan</span>
                   <ArrowRight className="w-4 h-4" />
-                </button>
-              </form>
+                </Link>
 
-              <div className="flex items-center justify-center gap-6 pt-4 text-xs text-slate-500 font-medium">
+                <Link
+                  href="/catalogue"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-sm transition shadow-2xs"
+                >
+                  <BookOpen className="w-4 h-4 text-[#0066FF]" />
+                  <span>Explore Curriculum Catalog</span>
+                </Link>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-2 text-xs text-slate-500 font-medium">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span>CBSE & State SCERT Portals</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>CBSE &amp; State SCERT Portals</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                  <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0" />
                   <span>10-Year Recurrence Rubrics</span>
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#0066FF]" />
+                  <CheckCircle2 className="w-4 h-4 text-[#0066FF] shrink-0" />
                   <span>Zero Rote Guesswork</span>
                 </span>
               </div>
