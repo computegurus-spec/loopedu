@@ -25,13 +25,13 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const redirectUrl = searchParams.get('redirect') || searchParams.get('returnTo') || '/study/cbse-10-science';
+  const redirectUrl = searchParams.get('redirect') || searchParams.get('returnTo') || '/learn';
   const urlErrorDesc = searchParams.get('error_description');
   const urlErrorParam = searchParams.get('error');
   const urlError =
     urlErrorDesc ||
     (urlErrorParam === 'auth_failed'
-      ? 'Auth0 authentication could not be completed on this domain. Please sign in directly below.'
+      ? 'Authentication could not be completed. Please sign in directly below.'
       : urlErrorParam
       ? `Authentication error: ${urlErrorParam}`
       : null);
@@ -53,8 +53,18 @@ function LoginForm() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Auto-fill from query parameters if provided
+  // Hydrate remembered student credentials for seamless repeated signups/visits
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem('loopedu_saved_student');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.email && !email) setEmail(parsed.email);
+        if (parsed.name && !fullName) setFullName(parsed.name);
+        if (parsed.grade) setGrade(parsed.grade);
+      }
+    } catch (e) {}
+
     const qEmail = searchParams.get('email');
     if (qEmail) {
       setEmail(qEmail);
@@ -73,7 +83,6 @@ function LoginForm() {
       return;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      // If user typed username 'Sadish', allow direct jump to login
       if (cleanEmail.toLowerCase() === 'sadish') {
         setFullName('Sadish');
         setStep('login');
@@ -99,12 +108,9 @@ function LoginForm() {
       } else {
         // User is first time -> Automatically convert to signup!
         setStep('signup');
-        // Extract default name from email
-        const guessedName = cleanEmail.split('@')[0].replace(/[._-]/g, ' ');
-        setFullName(guessedName.charAt(0).toUpperCase() + guessedName.slice(1));
       }
-    } catch (err: any) {
-      // Fallback to login
+    } catch (err) {
+      // Network/offline fallback: allow password attempt
       setStep('login');
     } finally {
       setLoading(false);
@@ -139,7 +145,20 @@ function LoginForm() {
         throw new Error(data.error || 'Invalid credentials. Please verify your password.');
       }
 
-      setSuccessMsg('Signed in successfully! Restoring your study progress...');
+      // Persist to localStorage for repeated signups and recognition
+      try {
+        localStorage.setItem(
+          'loopedu_saved_student',
+          JSON.stringify({
+            email: email.trim(),
+            name: data.user?.name || fullName,
+            grade,
+            savedAt: Date.now(),
+          })
+        );
+      } catch (e) {}
+
+      setSuccessMsg('Signed in successfully! Launching mission control...');
       setTimeout(() => {
         router.push(data.redirectUrl || redirectUrl);
         router.refresh();
@@ -189,7 +208,20 @@ function LoginForm() {
         throw new Error(data.error || 'Registration failed.');
       }
 
-      setSuccessMsg('Account created! Loading your study dashboard...');
+      // Persist to localStorage for repeated signups
+      try {
+        localStorage.setItem(
+          'loopedu_saved_student',
+          JSON.stringify({
+            email: email.trim(),
+            name: fullName.trim(),
+            grade,
+            savedAt: Date.now(),
+          })
+        );
+      } catch (e) {}
+
+      setSuccessMsg('Account created! Loading your study workspace...');
       setTimeout(() => {
         router.push(data.redirectUrl || redirectUrl);
         router.refresh();
@@ -235,53 +267,54 @@ function LoginForm() {
   const displayError = error || urlError;
 
   return (
-    <div className="min-h-[82vh] flex items-center justify-center px-4 py-12 bg-paper-50/40">
+    <div className="min-h-[82vh] flex items-center justify-center px-4 py-12 bg-slate-50 text-slate-900 font-sans">
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <Link href="/" className="inline-flex flex-col items-center gap-1 group mb-1">
-            <div className="w-12 h-12 rounded-2xl bg-forest-900 text-limeaccent flex items-center justify-center font-serif font-bold text-2xl shadow-sm group-hover:bg-forest-800 transition">
-              L
+            <div className="w-12 h-12 rounded-2xl bg-[#0066FF] text-white flex items-center justify-center font-bold text-2xl shadow-sm group-hover:bg-blue-600 transition relative">
+              <span>L</span>
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-amber-400 rounded-full border-2 border-white" />
             </div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-forest-700 bg-limeaccent/30 px-2 py-0.5 rounded-full mt-1">
-              CBSE Class 10 Practice
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#0066FF] bg-blue-50 border border-blue-200 px-3 py-0.5 rounded-full mt-1.5">
+              Autonomous Student Agent
             </span>
           </Link>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-forest-950">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight">
             {step === 'signup'
-              ? 'Create Your Free Account'
+              ? 'Create Your Student Account'
               : step === 'login'
               ? `Welcome Back${fullName ? `, ${fullName}` : ''}!`
               : step === 'forgot'
               ? 'Reset Your Password'
               : 'Sign In to LoopEdu'}
           </h1>
-          <p className="text-xs sm:text-sm text-academic-subtle max-w-sm mx-auto">
+          <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto">
             {step === 'signup'
-              ? 'Even for free practice, an account is required so all your attempts, bookmarks, and achievements are saved.'
+              ? 'Proper signup ensures all your attempts, mistake comeback queues, and digital twin vectors are permanently preserved.'
               : step === 'login'
-              ? 'Enter your password to resume your practice sprint and mistake vault.'
+              ? 'Enter your password to access your mission control and active curriculum queue.'
               : step === 'forgot'
               ? 'Enter your registered email and we will send you a secure password reset link.'
-              : 'Login or create your free account to access CBSE practice sets, Loopie AI doubts, and progress tracking.'}
+              : 'Enter your email to resume your practice sprint and telemetry HUD.'}
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-3xl bg-white border border-academic-border p-6 sm:p-8 shadow-sm space-y-5 transition-all">
+        <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5 transition-all">
           {displayError && (
-            <div className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-950 text-xs space-y-2">
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs space-y-2">
               <div className="flex items-start gap-2">
-                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
                 <span className="font-medium leading-relaxed">{displayError}</span>
               </div>
             </div>
           )}
 
           {successMsg && (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs flex items-start gap-2.5">
+            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <span className="font-medium leading-relaxed">{successMsg}</span>
+              <span className="font-semibold leading-relaxed">{successMsg}</span>
             </div>
           )}
 
@@ -289,37 +322,37 @@ function LoginForm() {
           {step === 'email' && (
             <form onSubmit={handleCheckEmail} className="space-y-4">
               <div>
-                <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-forest-950 mb-1.5">
+                <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3.5 pointer-events-none" />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                   <input
                     id="email"
                     type="text"
                     autoComplete="email"
                     required
                     autoFocus
-                    placeholder="e.g. aarav.sharma@gmail.com"
+                    placeholder="e.g. student@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-10 pr-3.5 py-3 text-xs text-forest-950 placeholder:text-academic-subtle focus:bg-white focus:border-forest-800 focus:outline-none focus:ring-1 focus:ring-forest-800 transition"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-3 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#0066FF] focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
                   />
                 </div>
-                <p className="text-[11px] text-academic-subtle mt-1.5">
-                  We check if you already have an account or set up a new free account automatically.
+                <p className="text-[11px] text-slate-500 mt-1.5 font-medium">
+                  We check if you already have an account or set up your profile automatically.
                 </p>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold py-3.5 px-4 rounded-xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Checking account...</span>
+                    <span>Checking credentials...</span>
                   </>
                 ) : (
                   <>
@@ -329,11 +362,11 @@ function LoginForm() {
                 )}
               </button>
 
-              {/* Direct Dev/Owner Fast Sign-In */}
-              <div className="rounded-2xl bg-paper-50 border border-academic-border/70 p-3 space-y-2">
+              {/* Direct Admin Sign-In */}
+              <div className="rounded-2xl bg-amber-50 border border-amber-200 p-3 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-forest-950 flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-forest-700" />
+                  <span className="text-[11px] font-bold text-amber-900 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
                     Direct Admin Sign-In
                   </span>
                   <button
@@ -344,29 +377,29 @@ function LoginForm() {
                       setStep('login');
                       setError('');
                     }}
-                    className="text-[10px] font-mono font-bold uppercase tracking-wider text-forest-900 bg-limeaccent hover:bg-lime-400 px-2.5 py-1 rounded-md transition shadow-2xs"
+                    className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-900 bg-amber-200 hover:bg-amber-300 px-2.5 py-1 rounded-lg transition"
                   >
                     ⚡ Fill Sadish
                   </button>
                 </div>
-                <p className="text-[11px] text-academic-subtle">
-                  Instant admin login for testing with username <span className="font-mono font-bold text-forest-950">Sadish</span>.
+                <p className="text-[11px] text-amber-800">
+                  Instant admin login for testing with username <span className="font-mono font-bold">Sadish</span>.
                 </p>
               </div>
 
               {/* Social / Auth0 Login Option */}
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-academic-border" />
+                  <span className="w-full border-t border-slate-200" />
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase font-mono tracking-wider">
-                  <span className="bg-white px-2 text-academic-subtle">Or continue with</span>
+                  <span className="bg-white px-2 text-slate-400">Or continue with</span>
                 </div>
               </div>
 
               <a
                 href={`/api/auth/login?returnTo=${encodeURIComponent(redirectUrl)}`}
-                className="w-full inline-flex items-center justify-center gap-2.5 bg-paper-50 hover:bg-paper-100 border border-academic-border text-forest-950 font-bold py-2.5 px-4 rounded-xl text-xs transition shadow-2xs group"
+                className="w-full inline-flex items-center justify-center gap-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold py-3 px-4 rounded-2xl text-xs transition shadow-2xs group"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -386,7 +419,7 @@ function LoginForm() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                   />
                 </svg>
-                <span>Continue with Google / Auth0</span>
+                <span>Continue with Google / Single Sign-On</span>
               </a>
             </form>
           )}
@@ -394,10 +427,10 @@ function LoginForm() {
           {/* STEP 2A: EXISTING USER -> LOGIN */}
           {step === 'login' && (
             <form onSubmit={handleLogin} className="space-y-4">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-forest-50/60 border border-forest-100">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-blue-50 border border-blue-200">
                 <div className="flex items-center gap-2 overflow-hidden">
-                  <Mail className="w-4 h-4 text-forest-700 shrink-0" />
-                  <span className="text-xs font-semibold text-forest-950 truncate">{email}</span>
+                  <Mail className="w-4 h-4 text-[#0066FF] shrink-0" />
+                  <span className="text-xs font-bold text-slate-900 truncate">{email}</span>
                 </div>
                 <button
                   type="button"
@@ -406,7 +439,7 @@ function LoginForm() {
                     setPassword('');
                     setError('');
                   }}
-                  className="text-[11px] text-forest-700 font-bold hover:underline shrink-0 ml-2"
+                  className="text-[11px] text-[#0066FF] font-bold hover:underline shrink-0 ml-2"
                 >
                   Change
                 </button>
@@ -414,7 +447,7 @@ function LoginForm() {
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-forest-950">
+                  <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                     Password
                   </label>
                   <button
@@ -423,13 +456,13 @@ function LoginForm() {
                       setStep('forgot');
                       setError('');
                     }}
-                    className="text-[11px] text-academic-subtle hover:text-forest-950 hover:underline"
+                    className="text-[11px] text-[#0066FF] hover:underline font-semibold"
                   >
                     Forgot Password?
                   </button>
                 </div>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3.5 pointer-events-none" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
@@ -439,12 +472,12 @@ function LoginForm() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-10 pr-10 py-3 text-xs text-forest-950 placeholder:text-academic-subtle focus:bg-white focus:border-forest-800 focus:outline-none focus:ring-1 focus:ring-forest-800 transition"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-10 py-3 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-[#0066FF] focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-academic-subtle hover:text-forest-950"
+                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-800"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -454,7 +487,7 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold py-3.5 px-4 rounded-xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -476,9 +509,9 @@ function LoginForm() {
                     setStep('signup');
                     setError('');
                   }}
-                  className="text-xs text-academic-subtle hover:text-forest-950 hover:underline"
+                  className="text-xs text-slate-500 hover:text-slate-900 font-semibold"
                 >
-                  Need a new account? <span className="font-semibold text-forest-900">Sign up instead</span>
+                  Need a new account? <span className="text-[#0066FF] underline font-bold">Sign up instead</span>
                 </button>
               </div>
             </form>
@@ -487,10 +520,10 @@ function LoginForm() {
           {/* STEP 2B: FIRST-TIME USER -> AUTO-CONVERT TO SIGNUP */}
           {step === 'signup' && (
             <form onSubmit={handleSignup} className="space-y-3.5">
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-limeaccent/20 border border-limeaccent/40">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-amber-50 border border-amber-200">
                 <div className="flex items-center gap-2 overflow-hidden">
-                  <Sparkles className="w-4 h-4 text-forest-900 shrink-0" />
-                  <span className="text-xs font-semibold text-forest-950 truncate">First time? Let's get you set up!</span>
+                  <Sparkles className="w-4 h-4 text-amber-700 shrink-0" />
+                  <span className="text-xs font-bold text-amber-900 truncate">First time? Set up your verified profile!</span>
                 </div>
                 <button
                   type="button"
@@ -498,18 +531,18 @@ function LoginForm() {
                     setStep('email');
                     setError('');
                   }}
-                  className="text-[11px] text-forest-800 font-bold hover:underline shrink-0 ml-2"
+                  className="text-[11px] text-amber-900 font-bold hover:underline shrink-0 ml-2"
                 >
                   Change email
                 </button>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-forest-950 mb-1">
-                  Full Name
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Full Name *
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3 pointer-events-none" />
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
                   <input
                     type="text"
                     required
@@ -517,80 +550,81 @@ function LoginForm() {
                     placeholder="e.g. Aarav Sharma"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-10 pr-3.5 py-2.5 text-xs text-forest-950 focus:bg-white focus:border-forest-800 focus:outline-none focus:ring-1 focus:ring-forest-800 transition"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0066FF] focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-forest-950 mb-1">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3 pointer-events-none" />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
                   <input
                     type="email"
                     disabled
                     value={email}
-                    className="w-full rounded-xl border border-academic-border bg-slate-100 pl-10 pr-3.5 py-2.5 text-xs text-forest-900 font-mono"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-100 pl-10 pr-3.5 py-2.5 text-xs text-slate-700 font-mono"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-forest-950 mb-1">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
                     Board / Target
                   </label>
                   <div className="relative">
-                    <GraduationCap className="w-4 h-4 text-academic-subtle absolute left-3 top-3 pointer-events-none" />
+                    <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
                     <select
                       value={grade}
                       onChange={(e) => setGrade(e.target.value)}
-                      className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-8 pr-2 py-2.5 text-xs text-forest-950 focus:bg-white focus:outline-none"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-8 pr-2 py-2.5 text-xs text-slate-900 focus:bg-white focus:outline-none"
                     >
                       <option value="CBSE Class 10">CBSE Class 10</option>
                       <option value="Class 10 ICSE">Class 10 ICSE</option>
                       <option value="Class 9 Foundation">Class 9 Foundation</option>
+                      <option value="JEE / NEET Foundation">JEE / NEET Foundation</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-forest-950 mb-1">
-                    WhatsApp (Parent Report)
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                    WhatsApp (Parent Digest)
                   </label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-academic-subtle absolute left-3 top-3 pointer-events-none" />
+                    <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
                     <input
                       type="tel"
                       placeholder="e.g. 9876543210"
                       value={whatsapp}
                       onChange={(e) => setWhatsapp(e.target.value)}
-                      className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-8 pr-2 py-2.5 text-xs text-forest-950 focus:bg-white focus:outline-none"
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-8 pr-2 py-2.5 text-xs text-slate-900 focus:bg-white focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-forest-950 mb-1">
-                  Create Password (min 6 chars)
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1">
+                  Create Password (min 6 chars) *
                 </label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3 pointer-events-none" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
                     placeholder="Create a secure password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-10 pr-10 py-2.5 text-xs text-forest-950 focus:bg-white focus:border-forest-800 focus:outline-none focus:ring-1 focus:ring-forest-800 transition"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-10 py-2.5 text-xs text-slate-900 focus:bg-white focus:border-[#0066FF] focus:outline-none focus:ring-2 focus:ring-blue-100 transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-2.5 text-academic-subtle hover:text-forest-950"
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-800"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -600,7 +634,7 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold py-3.5 px-4 rounded-xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50 mt-1"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50 mt-1"
               >
                 {loading ? (
                   <>
@@ -609,7 +643,7 @@ function LoginForm() {
                   </>
                 ) : (
                   <>
-                    <span>Create Account &amp; Start Free Practice →</span>
+                    <span>Create Account &amp; Start Practice →</span>
                   </>
                 )}
               </button>
@@ -621,9 +655,9 @@ function LoginForm() {
                     setStep('login');
                     setError('');
                   }}
-                  className="text-xs text-academic-subtle hover:text-forest-950 hover:underline"
+                  className="text-xs text-slate-500 hover:text-slate-900 font-semibold"
                 >
-                  Already have a password? <span className="font-semibold text-forest-900">Sign in here</span>
+                  Already have a password? <span className="font-bold text-[#0066FF] underline">Sign in here</span>
                 </button>
               </div>
             </form>
@@ -636,29 +670,29 @@ function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setStep('login')}
-                  className="p-1 rounded-lg hover:bg-paper-100 text-forest-900 transition"
+                  className="p-1 rounded-xl hover:bg-slate-100 text-slate-800 transition"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
-                <span className="text-xs font-bold text-forest-950">Back to Sign In</span>
+                <span className="text-xs font-bold text-slate-900">Back to Sign In</span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-forest-950 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
                   Your Registered Email ID
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-academic-subtle absolute left-3.5 top-3.5 pointer-events-none" />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                   <input
                     type="email"
                     required
                     placeholder="Enter registered email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-academic-border bg-paper-50/50 pl-10 pr-3.5 py-3 text-xs text-forest-950 focus:bg-white focus:border-forest-800 focus:outline-none transition"
+                    className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-3 text-xs text-slate-900 focus:bg-white focus:border-[#0066FF] focus:outline-none transition"
                   />
                 </div>
-                <p className="text-[11px] text-academic-subtle mt-1.5">
+                <p className="text-[11px] text-slate-500 mt-1.5 font-medium">
                   We will send a password reset verification link to this address.
                 </p>
               </div>
@@ -666,7 +700,7 @@ function LoginForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 bg-forest-900 hover:bg-forest-800 text-limeaccent font-bold py-3.5 px-4 rounded-xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-2xl text-xs tracking-wider uppercase transition shadow-sm disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -683,16 +717,16 @@ function LoginForm() {
             </form>
           )}
 
-          <div className="border-t border-academic-border/70 pt-4 text-center text-xs text-academic-subtle">
+          <div className="border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
             Looking for all 8 subjects &amp; full question bank?{' '}
-            <Link href="/catalogue" className="text-forest-950 font-bold hover:underline">
-              View Subjects (₹299/mo) →
+            <Link href="/catalogue" className="text-[#0066FF] font-bold hover:underline">
+              View Subjects →
             </Link>
           </div>
         </div>
 
-        <div className="text-center text-xs text-academic-subtle">
-          <Link href="/" className="hover:text-forest-950 hover:underline">
+        <div className="text-center text-xs text-slate-500">
+          <Link href="/" className="hover:text-slate-900 hover:underline font-semibold">
             ← Back to LoopEdu Home
           </Link>
         </div>
@@ -705,8 +739,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-[78vh] flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-forest-800" />
+        <div className="min-h-[78vh] flex items-center justify-center bg-slate-50">
+          <Loader2 className="w-6 h-6 animate-spin text-[#0066FF]" />
         </div>
       }
     >

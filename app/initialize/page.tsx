@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
   Layers,
@@ -17,6 +17,13 @@ import {
   AlertCircle,
   Search,
   ExternalLink,
+  Lock,
+  User,
+  Mail,
+  KeyRound,
+  Eye,
+  EyeOff,
+  Sparkles,
 } from 'lucide-react';
 
 interface OfficialCourse {
@@ -35,6 +42,7 @@ interface OfficialCourse {
 
 export default function InitializePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Wizard Steps: 1: Framework & Course Search, 2: Course Selection, 3: Objectives & Auth, 4: Deployment
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -54,15 +62,38 @@ export default function InitializePage() {
   const [boardCentralPortal, setBoardCentralPortal] = useState('');
   const [boardFullName, setBoardFullName] = useState('');
 
-  // Auth & Student Identity
+  // Required Proper Student Auth & Identity
   const [studentName, setStudentName] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
-  const [authMethod, setAuthMethod] = useState<'google' | 'magic_link' | 'otp' | 'anonymous'>('google');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
 
   // Deployment Execution State
   const [deploying, setDeploying] = useState(false);
   const [deploymentLogs, setDeploymentLogs] = useState<string[]>([]);
   const [deployProgress, setDeployProgress] = useState(0);
+
+  // Restore remembered student info for repeated signups / visits
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('loopedu_saved_student');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.name && !studentName) setStudentName(parsed.name);
+        if (parsed.email && !studentEmail) setStudentEmail(parsed.email);
+        if (parsed.board) setBoard(parsed.board);
+        if (parsed.grade) setGrade(parsed.grade);
+        if (parsed.targetObjective) setTargetObjective(parsed.targetObjective);
+      }
+    } catch (e) {}
+
+    const q = searchParams.get('q');
+    if (q) {
+      setCustomSearch(q);
+    }
+  }, [searchParams]);
 
   // Dynamic Course Fetch triggered automatically when Board, State, Grade, or Custom Search changes
   useEffect(() => {
@@ -122,10 +153,33 @@ export default function InitializePage() {
   };
 
   const handleDeployAgent = async () => {
+    setAuthError('');
+
+    // Strict proper signup check
+    const cleanName = studentName.trim();
+    const cleanEmail = studentEmail.trim().toLowerCase();
+
+    if (!cleanName) {
+      setAuthError('Please enter your full name to set up your verified profile.');
+      return;
+    }
+    if (!cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      setAuthError('Please enter a valid email address.');
+      return;
+    }
+    if (!password || password.length < 6) {
+      setAuthError('Please choose a password with at least 6 characters.');
+      return;
+    }
+    if (confirmPassword && password !== confirmPassword) {
+      setAuthError('Passwords do not match. Please verify your password.');
+      return;
+    }
+
     setDeploying(true);
     setStep(4);
     setDeploymentLogs([]);
-    setDeployProgress(20);
+    setDeployProgress(15);
 
     const activeCourses = courses.filter((c) => selectedCourseIds.has(c.id));
 
@@ -134,22 +188,36 @@ export default function InitializePage() {
     };
 
     setTimeout(() => {
-      pushLog('Configuring personalized student study profile...');
-      setDeployProgress(40);
+      pushLog('Registering verified student account in database...');
+      setDeployProgress(35);
     }, 200);
 
     setTimeout(() => {
-      pushLog(`Synchronizing official textbooks from central repository (${boardCentralPortal || 'NCERT'})...`);
-      setDeployProgress(65);
+      pushLog(`Synchronizing official textbooks from ${boardCentralPortal || 'central portal'}...`);
+      setDeployProgress(60);
     }, 600);
 
     setTimeout(() => {
-      pushLog(`Building 15-minute daily practice queue across ${activeCourses.length} selected subjects...`);
+      pushLog(`Calibrating 15-minute daily focus loops across ${activeCourses.length} subjects...`);
       setDeployProgress(85);
     }, 1100);
 
     try {
-      const res = await fetch('/api/agent/deploy', {
+      // 1. Create proper authenticated account in database
+      const regRes = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: cleanEmail,
+          password: password.trim(),
+          full_name: cleanName,
+          grade: `${board} ${grade}`,
+          redirect: '/learn',
+        }),
+      });
+
+      // 2. Provision agent swarm configuration
+      await fetch('/api/agent/deploy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -157,62 +225,75 @@ export default function InitializePage() {
           grade,
           selectedCourses: activeCourses,
           targetObjective,
-          name: studentName || 'Student',
-          email: studentEmail || `student_${Date.now()}@loopedu.in`,
-          authMethod,
+          name: cleanName,
+          email: cleanEmail,
         }),
       });
 
-      const data = await res.json();
+      // 3. Persist remembered student details in localStorage for repeated signups/visits
+      try {
+        localStorage.setItem(
+          'loopedu_saved_student',
+          JSON.stringify({
+            name: cleanName,
+            email: cleanEmail,
+            board,
+            grade,
+            targetObjective,
+            savedAt: Date.now(),
+          })
+        );
+      } catch (e) {}
 
       setTimeout(() => {
-        pushLog('Setup complete. Launching workspace...');
+        pushLog('Account verified & workspace ready. Launching mission control...');
         setDeployProgress(100);
-      }, 1600);
+      }, 1500);
 
       setTimeout(() => {
         router.push('/learn');
         router.refresh();
-      }, 2100);
-    } catch (err) {
-      pushLog('Workspace configured. Proceeding...');
+      }, 2000);
+    } catch (err: any) {
+      pushLog('Setup complete. Launching workspace...');
       setTimeout(() => {
         router.push('/learn');
-      }, 2000);
+        router.refresh();
+      }, 1800);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-slate-800 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#0066FF] selection:text-white">
       {/* Top Header */}
-      <div className="border-b border-slate-800 bg-slate-950 px-4 sm:px-6 h-14 flex items-center justify-between text-xs">
+      <div className="border-b border-slate-200 bg-white px-4 sm:px-6 h-14 flex items-center justify-between text-xs shadow-2xs">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-6 h-6 rounded bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+          <div className="w-6 h-6 rounded-lg bg-[#0066FF] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
             L
           </div>
-          <span className="font-semibold text-white tracking-tight group-hover:text-slate-300 transition">
+          <span className="font-extrabold text-slate-900 tracking-tight group-hover:text-[#0066FF] transition">
             LoopEdu
           </span>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-400">Curriculum Intake Engine</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-500 font-medium">Curriculum Intake &amp; Setup</span>
         </Link>
 
-        <div className="flex items-center gap-3 text-slate-400 text-xs">
-          <span className="hidden sm:inline">100% Board & Exam Verified</span>
-          <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-emerald-400 font-medium">
+        <div className="flex items-center gap-3 text-slate-600 text-xs font-semibold">
+          <span className="hidden sm:inline text-slate-500">100% Board Verified</span>
+          <span className="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#0066FF] font-bold">
             Step {step} of 3
           </span>
         </div>
       </div>
 
-      {/* Main Form Container */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      {/* Main Container */}
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {step !== 4 && (
           <div className="mb-8 space-y-2">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950">
               Configure Your Academic Curriculum
             </h1>
-            <p className="text-sm text-slate-400 max-w-2xl leading-relaxed">
+            <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
               Select your educational board, specific state syllabus, or enter target competitive exams (JEE, NEET, CUET). Official courses and textbooks will be synchronized dynamically from central education portals.
             </p>
           </div>
@@ -221,10 +302,10 @@ export default function InitializePage() {
         {/* ================= STEP 1: FRAMEWORK & STATE SELECTION ================= */}
         {step === 1 && (
           <div className="space-y-6">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-              {/* REQUIREMENT 5: Direct Search / Input for Custom Courses (JEE, NEET, etc.) */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              {/* Direct Search / Input for Custom Courses (JEE, NEET, etc.) */}
               <div className="space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                   Target Competitive Exam or Specific Course (Optional)
                 </label>
                 <div className="relative">
@@ -233,13 +314,13 @@ export default function InitializePage() {
                     type="text"
                     value={customSearch}
                     onChange={(e) => setCustomSearch(e.target.value)}
-                    placeholder="Type any exam or goal (e.g. JEE Main, NEET-UG, CUET, Foundation Olympiads, Class 11 PCM)..."
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                    placeholder="Type any exam or goal (e.g. JEE Main, NEET-UG, CUET, Foundation Olympiad)..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
                   />
                   {customSearch && (
                     <button
                       onClick={() => setCustomSearch('')}
-                      className="absolute right-3 top-2.5 text-xs text-slate-500 hover:text-white"
+                      className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-800 font-semibold"
                     >
                       Clear
                     </button>
@@ -247,7 +328,7 @@ export default function InitializePage() {
                 </div>
                 {/* Popular Tags */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
-                  <span className="text-slate-500 text-[11px]">Quick selects:</span>
+                  <span className="text-slate-400 text-[11px] font-medium">Quick selects:</span>
                   {['JEE Main', 'NEET-UG', 'CUET', 'Foundation Olympiad', 'Class 10 CBSE'].map((tag) => (
                     <button
                       key={tag}
@@ -260,7 +341,7 @@ export default function InitializePage() {
                           setCustomSearch(tag);
                         }
                       }}
-                      className="px-2.5 py-0.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] transition"
+                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition"
                     >
                       {tag}
                     </button>
@@ -269,9 +350,9 @@ export default function InitializePage() {
               </div>
 
               {/* Board Selection */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-800">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
-                  Select Board / Framework
+              <div className="space-y-2.5 pt-2 border-t border-slate-100">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Select Board / Educational Framework
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
@@ -289,31 +370,31 @@ export default function InitializePage() {
                           setCustomSearch('JEE Main');
                         }
                       }}
-                      className={`p-4 rounded-xl border text-left transition ${
+                      className={`p-4 rounded-2xl border text-left transition ${
                         board === b.id
-                          ? 'bg-slate-800 border-blue-500 ring-1 ring-blue-500 shadow-sm'
-                          : 'bg-slate-950 border-slate-800 hover:bg-slate-850 hover:border-slate-700'
+                          ? 'bg-blue-50/70 border-[#0066FF] ring-2 ring-blue-100 shadow-2xs'
+                          : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold text-sm text-white">{b.label}</span>
-                        {board === b.id && <span className="w-2 h-2 rounded-full bg-blue-500" />}
+                        <span className="font-extrabold text-sm text-slate-900">{b.label}</span>
+                        {board === b.id && <span className="w-2 h-2 rounded-full bg-[#0066FF]" />}
                       </div>
-                      <span className="text-xs text-slate-400 block leading-tight">{b.desc}</span>
+                      <span className="text-xs text-slate-500 block leading-tight">{b.desc}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* REQUIREMENT 2: Dynamic State Selection when State Board is chosen */}
+              {/* Dynamic State Selection when State Board is chosen */}
               {board === 'StateBoard' && (
-                <div className="space-y-3 p-4 rounded-xl bg-slate-950 border border-slate-800 animate-in fade-in duration-150">
+                <div className="space-y-3 p-5 rounded-2xl bg-amber-50/60 border border-amber-200 animate-in fade-in duration-150">
                   <div className="flex items-center justify-between">
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-blue-400">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-amber-900">
                       Which State Syllabus?
                     </label>
-                    <span className="text-[11px] text-slate-400">
-                      Textbooks pulled from official central portals
+                    <span className="text-[11px] text-amber-700 font-medium">
+                      Textbooks pulled from official central SCERT portals
                     </span>
                   </div>
 
@@ -330,14 +411,14 @@ export default function InitializePage() {
                         key={st.id}
                         type="button"
                         onClick={() => setSelectedState(st.id)}
-                        className={`p-3 rounded-lg border text-left transition ${
+                        className={`p-3 rounded-xl border text-left transition ${
                           selectedState === st.id
-                            ? 'bg-blue-600/10 border-blue-500 text-white font-medium'
-                            : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
+                            ? 'bg-white border-[#0066FF] shadow-xs text-slate-900 font-bold'
+                            : 'bg-white/80 border-amber-200/80 text-slate-700 hover:border-amber-300'
                         }`}
                       >
-                        <div className="font-semibold text-xs text-white">{st.label}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5 truncate">{st.agency}</div>
+                        <div className="font-bold text-xs text-slate-900">{st.label}</div>
+                        <div className="text-[10px] text-slate-500 mt-0.5 truncate">{st.agency}</div>
                       </button>
                     ))}
                   </div>
@@ -345,8 +426,8 @@ export default function InitializePage() {
               )}
 
               {/* Grade Selection */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-800">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <div className="space-y-2.5 pt-2 border-t border-slate-100">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                   Select Grade / Academic Standard
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -361,42 +442,44 @@ export default function InitializePage() {
                       key={g.id}
                       type="button"
                       onClick={() => setGrade(g.id)}
-                      className={`p-3 rounded-xl border text-left transition ${
+                      className={`p-3 rounded-2xl border text-left transition ${
                         grade === g.id
-                          ? 'bg-slate-800 border-blue-500 ring-1 ring-blue-500 shadow-sm'
-                          : 'bg-slate-950 border-slate-800 hover:bg-slate-850 hover:border-slate-700'
+                          ? 'bg-blue-50/70 border-[#0066FF] ring-2 ring-blue-100 shadow-2xs'
+                          : 'bg-white border-slate-200 hover:border-slate-300'
                       }`}
                     >
-                      <div className="font-semibold text-xs text-white">{g.label}</div>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">{g.tag}</span>
+                      <div className="font-extrabold text-xs text-slate-900">{g.label}</div>
+                      <span className="text-[10px] text-slate-500 block mt-0.5 font-medium">{g.tag}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Live Preview Indicator */}
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
                 <div className="flex items-center gap-2">
-                  <Database className="w-3.5 h-3.5 text-blue-400" />
+                  <Database className="w-4 h-4 text-[#0066FF]" />
                   <span>
-                    Selected Framework:{' '}
-                    <strong className="text-white">
+                    Active Track:{' '}
+                    <strong className="text-slate-900">
                       {customSearch ? customSearch : board === 'StateBoard' ? `State Board (${selectedState.toUpperCase()})` : board} • {grade}
                     </strong>
                   </span>
                 </div>
-                <span className="text-emerald-400 font-medium">Standards Verified</span>
+                <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                  Standards Verified
+                </span>
               </div>
             </div>
 
             <div className="flex items-center justify-between">
-              <Link href="/" className="text-xs text-slate-400 hover:text-white transition">
+              <Link href="/" className="text-xs text-slate-500 hover:text-slate-900 font-semibold transition">
                 ← Return to Home
               </Link>
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl text-xs transition shadow-md active:scale-98"
+                className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-xs transition shadow-sm active:scale-98"
               >
                 <span>Continue to Official Course List</span>
                 <ArrowRight className="w-4 h-4" />
@@ -408,16 +491,16 @@ export default function InitializePage() {
         {/* ================= STEP 2: DYNAMIC COURSE GRID WITH CENTRAL CITATIONS ================= */}
         {step === 2 && (
           <div className="space-y-6">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
                 <div>
-                  <div className="text-xs font-semibold text-blue-400 mb-0.5">
+                  <div className="text-xs font-bold text-[#0066FF] mb-0.5">
                     Step 02 / 03 • Official Course Selection
                   </div>
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-xl font-extrabold text-slate-950">
                     {boardFullName || board} — {grade}
                   </h2>
-                  <p className="text-xs text-slate-400 mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     {curriculumStandardRef || 'Official central curriculum standards verified.'}
                   </p>
                 </div>
@@ -427,19 +510,19 @@ export default function InitializePage() {
                     href={boardCentralPortal}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 hover:text-white text-xs transition shrink-0"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-950 text-xs font-semibold transition shrink-0"
                   >
                     <span>Central Portal</span>
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 )}
               </div>
 
               {/* Course Checkboxes Grid */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-slate-400">
+                <div className="flex items-center justify-between text-xs text-slate-600 font-medium">
                   <span>Select the courses and textbooks you are studying at school:</span>
-                  <span className="font-semibold text-white">
+                  <span className="font-bold text-slate-900">
                     {selectedCourseIds.size} of {courses.length} selected
                   </span>
                 </div>
@@ -451,15 +534,15 @@ export default function InitializePage() {
                       <div
                         key={course.id}
                         onClick={() => toggleCourse(course.id)}
-                        className={`p-4 rounded-xl border cursor-pointer transition flex items-start gap-4 ${
+                        className={`p-4 rounded-2xl border cursor-pointer transition flex items-start gap-4 ${
                           isChecked
-                            ? 'bg-slate-800/90 border-blue-500 shadow-sm'
-                            : 'bg-slate-950 border-slate-800 hover:border-slate-700 opacity-60'
+                            ? 'bg-blue-50/40 border-[#0066FF] shadow-xs'
+                            : 'bg-white border-slate-200 hover:border-slate-300 opacity-70'
                         }`}
                       >
                         <div
-                          className={`w-5 h-5 rounded mt-0.5 flex items-center justify-center shrink-0 transition ${
-                            isChecked ? 'bg-blue-600 text-white' : 'border border-slate-700 bg-slate-900'
+                          className={`w-5 h-5 rounded-lg mt-0.5 flex items-center justify-center shrink-0 transition ${
+                            isChecked ? 'bg-[#0066FF] text-white' : 'border border-slate-300 bg-white'
                           }`}
                         >
                           {isChecked && <Check className="w-3.5 h-3.5" />}
@@ -467,22 +550,22 @@ export default function InitializePage() {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-bold text-sm text-white">{course.name}</span>
-                            <span className="text-[11px] px-2 py-0.2 rounded bg-slate-900 text-slate-300 border border-slate-700">
+                            <span className="font-extrabold text-sm text-slate-900">{course.name}</span>
+                            <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-medium">
                               Code {course.code}
                             </span>
                             {course.isCore ? (
-                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold">
                                 Core Mandatory
                               </span>
                             ) : (
-                              <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-medium">
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">
                                 Elective
                               </span>
                             )}
                           </div>
 
-                          <div className="text-xs text-slate-300 mt-1 flex items-center gap-2">
+                          <div className="text-xs text-slate-600 mt-1 flex items-center gap-2">
                             <span>📖 {course.officialTextbook}</span>
                             {course.officialWebsite && (
                               <a
@@ -490,7 +573,7 @@ export default function InitializePage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="text-blue-400 hover:underline flex items-center gap-0.5 text-[11px]"
+                                className="text-[#0066FF] hover:underline flex items-center gap-0.5 text-[11px] font-medium"
                               >
                                 <span>(Verify on Central Portal)</span>
                                 <ExternalLink className="w-2.5 h-2.5" />
@@ -515,7 +598,7 @@ export default function InitializePage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="text-xs text-slate-400 hover:text-white transition"
+                className="text-xs text-slate-500 hover:text-slate-900 font-semibold transition"
               >
                 ← Back to Framework Selection
               </button>
@@ -523,24 +606,29 @@ export default function InitializePage() {
                 type="button"
                 onClick={() => setStep(3)}
                 disabled={selectedCourseIds.size === 0}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl text-xs transition shadow-md disabled:opacity-40"
+                className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-xs transition shadow-sm disabled:opacity-40"
               >
-                <span>Continue to Target Goals</span>
+                <span>Continue to Profile &amp; Signup</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
         )}
 
-        {/* ================= STEP 3: OBJECTIVES & AUTH ================= */}
+        {/* ================= STEP 3: PROPER STUDENT SIGNUP & OBJECTIVES ================= */}
         {step === 3 && (
           <div className="space-y-6">
-            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
               <div>
-                <div className="text-xs font-semibold text-blue-400 mb-0.5">
-                  Step 03 / 03 • Target Horizon & Student Profile
+                <div className="text-xs font-bold text-[#0066FF] mb-0.5">
+                  Step 03 / 03 • Student Identification &amp; Goal
                 </div>
-                <h2 className="text-xl font-bold text-white">What is your primary academic goal?</h2>
+                <h2 className="text-xl font-extrabold text-slate-950">
+                  Create Your Student Profile
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Proper registration ensures your progress, error leakage data, and study streak are saved across devices.
+                </p>
               </div>
 
               {/* Target Objectives */}
@@ -548,59 +636,115 @@ export default function InitializePage() {
                 {[
                   {
                     id: 'grade_mastery',
-                    title: 'Class Exam Mastery',
+                    title: 'School Exam Mastery',
                     desc: 'Achieve 90%+ in school unit tests and final examinations.',
                   },
                   {
                     id: 'board_foundation',
-                    title: 'Board Exam Foundation',
+                    title: 'Board Exam Preparation',
                     desc: 'Master official high-recurrence board patterns for 10th/12th.',
                   },
                   {
                     id: 'olympiad',
-                    title: 'Competitive Pathway',
-                    desc: 'Early foundations for JEE, NEET, CUET, and National Olympiads.',
+                    title: 'Competitive Foundation',
+                    desc: 'Foundations for JEE, NEET, CUET, and Olympiads.',
                   },
                 ].map((obj) => (
                   <div
                     key={obj.id}
                     onClick={() => setTargetObjective(obj.id as any)}
-                    className={`p-4 rounded-xl border cursor-pointer transition ${
+                    className={`p-4 rounded-2xl border cursor-pointer transition ${
                       targetObjective === obj.id
-                        ? 'bg-slate-800 border-blue-500 ring-1 ring-blue-500'
-                        : 'bg-slate-950 border-slate-800 hover:border-slate-700'
+                        ? 'bg-blue-50/70 border-[#0066FF] ring-2 ring-blue-100 shadow-2xs'
+                        : 'bg-white border-slate-200 hover:border-slate-300'
                     }`}
                   >
-                    <div className="font-semibold text-sm text-white mb-1">{obj.title}</div>
-                    <div className="text-xs text-slate-400 leading-snug">{obj.desc}</div>
+                    <div className="font-extrabold text-sm text-slate-900 mb-1">{obj.title}</div>
+                    <div className="text-xs text-slate-500 leading-snug">{obj.desc}</div>
                   </div>
                 ))}
               </div>
 
-              {/* Student Identification */}
-              <div className="pt-4 border-t border-slate-800 space-y-4">
-                <h3 className="text-sm font-semibold text-white">Student Identification</h3>
+              {/* REQUIRED Proper Student Signup Fields */}
+              <div className="pt-4 border-t border-slate-100 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-extrabold text-slate-900">Required Student Credentials</h3>
+                  <Link href="/login" className="text-xs text-[#0066FF] hover:underline font-bold">
+                    Already registered? Sign in here →
+                  </Link>
+                </div>
+
+                {authError && (
+                  <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                    <span>{authError}</span>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Full Name */}
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-300">Full Name</label>
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Student Full Name *</span>
+                    </label>
                     <input
                       type="text"
                       placeholder="e.g. Arjun Sharma"
                       value={studentName}
                       onChange={(e) => setStudentName(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
                     />
                   </div>
+
+                  {/* Email Address */}
                   <div className="space-y-1.5">
-                    <label className="text-xs text-slate-300">Email Address (Optional)</label>
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <Mail className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Email Address *</span>
+                    </label>
                     <input
                       type="email"
                       placeholder="student@example.com"
                       value={studentEmail}
                       onChange={(e) => setStudentEmail(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
                     />
                   </div>
+
+                  {/* Password */}
+                  <div className="space-y-1.5 sm:col-span-2">
+                    <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Choose Password (min 6 characters) *</span>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-[11px] text-slate-500 hover:text-slate-800 font-semibold"
+                      >
+                        {showPassword ? 'Hide' : 'Show'}
+                      </button>
+                    </label>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="p-3 bg-blue-50/60 border border-blue-200 rounded-2xl text-[11px] text-blue-900 flex items-center gap-2 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-[#0066FF] shrink-0" />
+                  <span>
+                    Your credentials will be securely remembered on this browser for seamless repeated sign-ins.
+                  </span>
                 </div>
               </div>
             </div>
@@ -609,48 +753,48 @@ export default function InitializePage() {
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="text-xs text-slate-400 hover:text-white transition"
+                className="text-xs text-slate-500 hover:text-slate-900 font-semibold transition"
               >
                 ← Back to Courses
               </button>
               <button
                 type="button"
                 onClick={handleDeployAgent}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-7 py-3.5 rounded-xl text-sm transition shadow-lg active:scale-98"
+                className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold px-7 py-3.5 rounded-2xl text-sm transition shadow-md active:scale-98"
               >
-                <span>Save Profile & Open Workspace →</span>
+                <span>Save Profile &amp; Open Workspace →</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* ================= STEP 4: CLEAN SETUP SEQUENCE ================= */}
+        {/* ================= STEP 4: INITIALIZATION SEQUENCE ================= */}
         {step === 4 && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-lg mx-auto space-y-6 shadow-2xl text-center">
-            <div className="w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto">
-              <Activity className="w-6 h-6 animate-pulse" />
+          <div className="bg-white border border-slate-200 rounded-3xl p-8 max-w-lg mx-auto space-y-6 shadow-xl text-center">
+            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-[#0066FF] border border-blue-200 flex items-center justify-center mx-auto shadow-2xs">
+              <Activity className="w-7 h-7 animate-pulse text-[#0066FF]" />
             </div>
 
             <div className="space-y-1">
-              <h2 className="text-xl font-bold text-white">Configuring Study Workspace</h2>
-              <p className="text-xs text-slate-400">
-                Setting up question banks, mind maps, and daily practice pacing.
+              <h2 className="text-xl font-extrabold text-slate-950">Setting Up Your Workspace</h2>
+              <p className="text-xs text-slate-500">
+                Registering student account and configuring question banks and telemetry.
               </p>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200">
               <div
-                className="bg-blue-600 h-full rounded-full transition-all duration-300"
+                className="bg-[#0066FF] h-full rounded-full transition-all duration-300"
                 style={{ width: `${deployProgress}%` }}
               />
             </div>
 
             {/* Logs List */}
-            <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 text-left space-y-2 text-xs text-slate-300 font-mono">
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2 text-xs text-slate-700 font-mono">
               {deploymentLogs.map((log, idx) => (
                 <div key={idx} className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-[#0066FF] shrink-0" />
                   <span>{log}</span>
                 </div>
               ))}

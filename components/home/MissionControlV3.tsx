@@ -16,12 +16,10 @@ import {
   Shield,
   Zap,
   BookOpen,
-  Database,
-  Sliders,
-  ExternalLink,
+  Sparkles,
   ChevronRight,
-  TrendingUp,
-  Check,
+  Target,
+  GraduationCap,
 } from 'lucide-react';
 
 interface MissionControlProps {
@@ -45,9 +43,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
   const agents = {
     diagnostic: {
       name: 'The Diagnostic Agent',
-      code: 'AGENT_DIAGNOSTIC_v4',
+      code: 'AGENT_DIAGNOSTIC',
       badge: 'Cognitive Latency & Leakage Telemetry',
       role: 'Continuous Behavioral Observation',
+      accentColor: 'text-[#0066FF] bg-blue-50 border-blue-200',
       description:
         'Monitors student hesitation timing (latency per question), distractor selection patterns, and error clusters in real-time. Automatically differentiates between careless miscalculations and deep prerequisite knowledge debt.',
       metrics: [
@@ -59,9 +58,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
     },
     socratic: {
       name: 'The Socratic Tutor',
-      code: 'AGENT_SOCRATIC_v4',
-      badge: 'First-Principles Guidance',
+      code: 'AGENT_SOCRATIC',
+      badge: 'First-Principles Stepped Reasoning',
       role: 'Active Problem Deconstruction',
+      accentColor: 'text-amber-800 bg-amber-50 border-amber-200',
       description:
         'Strictly rejects giving away direct answers or canned solutions. Deconstructs complex multi-step questions down to first principles with targeted diagnostic hints, training students to construct their own analytical breakthroughs.',
       metrics: [
@@ -73,9 +73,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
     },
     feynman: {
       name: 'The Feynman Audio Evaluator',
-      code: 'AGENT_FEYNMAN_v4',
+      code: 'AGENT_FEYNMAN',
       badge: 'Voice Conceptual Verification',
       role: 'Verbal Mastery Audit',
+      accentColor: 'text-purple-700 bg-purple-50 border-purple-200',
       description:
         'Prompts the student to turn on their microphone and explain the core scientific law or mathematical theorem in their own plain words. Analyzes conceptual fidelity, detects rote memorization, and awards a verified Feynman Mastery Score.',
       metrics: [
@@ -87,9 +88,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
     },
     curriculum: {
       name: 'The Curriculum Architect',
-      code: 'AGENT_CURRICULUM_v4',
+      code: 'AGENT_CURRICULUM',
       badge: 'Official Board & Recurrence Alignment',
       role: 'Deterministic Syllabus Mapping',
+      accentColor: 'text-emerald-700 bg-emerald-50 border-emerald-200',
       description:
         'Maintains live synchronization with official CBSE, ICSE, and State Board standards (NCERT, KTBS, Balbharati, Samacheer Kalvi). Cross-references every practice item against 10-year official board examination frequency maps and marking rubrics.',
       metrics: [
@@ -101,9 +103,10 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
     },
     sentinel: {
       name: 'The Burnout Sentinel',
-      code: 'AGENT_SENTINEL_v4',
+      code: 'AGENT_SENTINEL',
       badge: 'Cognitive Load & Pacing Regulation',
       role: 'Fatigue Protection & Retention',
+      accentColor: 'text-rose-700 bg-rose-50 border-rose-200',
       description:
         'Enforces a strict, non-negotiable 15-minute daily focus ceiling (The Daily Five). Manages spaced retrieval intervals (SRS) across 24 hours, 72 hours, and 7 days to guarantee permanent memory consolidation without cramming.',
       metrics: [
@@ -118,186 +121,89 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
   const currentAgent = agents[activeAgentTab];
 
   return (
-    <div className="bg-slate-950 text-slate-100 font-sans selection:bg-blue-600 selection:text-white">
-      {/* 1. HERO SECTION: Enterprise Mission Control */}
-      <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28 border-b border-slate-800">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b14_1px,transparent_1px),linear-gradient(to_bottom,#1e293b14_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="bg-slate-50 text-slate-900 font-sans selection:bg-[#0066FF] selection:text-white min-h-screen">
+      {/* 1. HERO SECTION: Light Luminous & High-Contrast (EduVetra Inspired) */}
+      <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-24 border-b border-slate-200/80 bg-gradient-to-b from-white via-blue-50/20 to-slate-50">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
           {/* Top Status Capsule */}
           <div className="flex items-center justify-center">
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-[#0066FF] animate-pulse" />
-              <span className="text-white font-semibold">WORLD’S FIRST AUTONOMOUS AGI STUDENT AGENT</span>
-              <span className="text-slate-600">|</span>
-              <span className="text-slate-400">MISSION-CONTROL ECOSYSTEM</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-medium text-slate-700 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-[#0066FF]" />
+              <span className="text-slate-900 font-bold">Autonomous Student Agent</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-amber-600 font-semibold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                15-Min Calibrated Loop
+              </span>
             </div>
           </div>
 
-          {/* Headline & Manifesto */}
-          <div className="text-center mt-7 max-w-4xl mx-auto space-y-5">
-            <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.12]">
-              The Autonomous Student Agent.
-              <br />
-              <span className="text-slate-400">Deterministic academic mastery.</span>
+          {/* Headline & Subhead */}
+          <div className="text-center mt-8 max-w-3xl mx-auto space-y-5">
+            <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.15]">
+              Deterministic Academic Mastery{' '}
+              <span className="text-[#0066FF]">for Every Student.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed">
-              We reject superficial AI chat wrappers and static PDF guidebooks. LoopEdu operates as a continuous, telemetry-driven pedagogical partner that builds a persistent vector digital twin of your brain and manages your entire academic lifecycle.
+            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+              An active pedagogical operating system that builds a persistent cognitive digital twin of your brain, eliminates guess-work, and turns academic weaknesses into permanent board examination wins.
             </p>
 
             {/* Smart Search & Autonomous Intake Launcher */}
             <div className="max-w-xl mx-auto pt-4">
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-                <Search className="w-5 h-5 text-slate-400 absolute left-4 pointer-events-none" />
+              <form onSubmit={handleSearchSubmit} className="relative flex items-center shadow-lg rounded-2xl bg-white border border-slate-200 focus-within:border-[#0066FF] focus-within:ring-2 focus-within:ring-blue-100 transition p-1.5">
+                <Search className="w-5 h-5 text-slate-400 ml-3 shrink-0 pointer-events-none" />
                 <input
                   type="text"
                   value={typedQuery}
                   onChange={(e) => setTypedQuery(e.target.value)}
-                  placeholder="Enter your board, grade, or goal (e.g. CBSE Class 10, JEE Main, NEET-UG, Karnataka State)..."
-                  className="w-full bg-slate-900 border border-slate-700 rounded-2xl pl-12 pr-40 py-4 text-sm text-white placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:ring-1 focus:ring-[#0066FF] transition shadow-xl"
+                  placeholder="Enter your board, grade, or goal (e.g. CBSE Class 10, JEE, NEET)..."
+                  className="w-full bg-transparent border-0 pl-3 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none"
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 px-4 py-2.5 rounded-xl bg-[#0066FF] hover:bg-blue-500 text-white font-semibold text-xs transition shadow-md"
+                  className="px-5 py-3 rounded-xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-xs transition shadow-sm shrink-0 flex items-center gap-1.5"
                 >
-                  Initialize Agent →
+                  <span>Initialize</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
 
-              {/* Supported Fast Paths */}
-              <div className="flex flex-wrap items-center justify-center gap-2 pt-3 text-xs text-slate-400">
-                <span className="text-slate-500 text-[11px]">Instant Curriculums:</span>
-                {[
-                  { label: 'CBSE Class 10', q: 'CBSE Class 10' },
-                  { label: 'Class 8 Foundation', q: '8th Standard CBSE' },
-                  { label: 'JEE Main Foundation', q: 'JEE Main' },
-                  { label: 'NEET-UG Medical', q: 'NEET' },
-                  { label: 'Karnataka State (KTBS)', q: 'Karnataka State' },
-                  { label: 'Maharashtra (Balbharati)', q: 'Maharashtra State' },
-                ].map((item) => (
-                  <button
-                    key={item.label}
-                    type="button"
-                    onClick={() => router.push(`/initialize?q=${encodeURIComponent(item.q)}`)}
-                    className="px-2.5 py-0.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 text-[11px] transition"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* 2. THE TELEMETRY HUD DASHBOARD (Live Interactive Simulation) */}
-          <div className="mt-14 max-w-5xl mx-auto rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden font-mono">
-            {/* Top Terminal Status Header */}
-            <div className="bg-slate-950 border-b border-slate-800 px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 text-xs">
-              <div className="flex items-center gap-2.5 text-slate-300">
-                <Cpu className="w-4 h-4 text-[#0066FF]" />
-                <span className="font-bold text-white">STUDENT_AGENT_TELEMETRY_HUD</span>
-                <span className="text-slate-600">|</span>
-                <span className="text-emerald-400">STATUS: AGENT ONLINE</span>
-              </div>
-              <div className="flex items-center gap-3 text-[11px] text-slate-400">
-                <span>CURRICULUM: CBSE GRADE 10 (CODE 086 & 041)</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-white">PGVECTOR SYNCED</span>
-              </div>
-            </div>
-
-            {/* HUD Interior */}
-            <div className="p-6 sm:p-8 bg-slate-950 space-y-6">
-              {/* Telemetry Metrics Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Syllabus Velocity</span>
-                  <div className="text-lg font-bold text-emerald-400 tabular-nums">78.4%</div>
-                  <span className="text-[10px] text-slate-400 block">Ahead of board schedule</span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Error Leakage Index</span>
-                  <div className="text-lg font-bold text-blue-400 tabular-nums">3.8%</div>
-                  <span className="text-[10px] text-slate-400 block">Low conceptual debt</span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block">SRS Retention Health</span>
-                  <div className="text-lg font-bold text-cyan-400 tabular-nums">94.2%</div>
-                  <span className="text-[10px] text-slate-400 block">Optimal Ebbinghaus curve</span>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Daily Pacing Budget</span>
-                  <div className="text-lg font-bold text-amber-400 tabular-nums">12m / 15m</div>
-                  <span className="text-[10px] text-slate-400 block">Burnout Sentinel active</span>
-                </div>
-              </div>
-
-              {/* Cognitive Digital Twin Graph Row */}
-              <div className="p-5 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <Brain className="w-4 h-4 text-purple-400" />
-                    <span className="font-bold text-white">COGNITIVE DIGITAL TWIN (SUPABASE PGVECTOR)</span>
-                  </div>
-                  <span className="text-[11px] text-slate-400">VECTOR NAMESPACE: dt_vec_student_10</span>
-                </div>
-
-                {/* Concept Mastery Nodes */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between">
-                    <span className="text-slate-300">Polynomials & Real Proofs</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold">
-                      CONSOLIDATED (96%)
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between">
-                    <span className="text-slate-300">Electricity & Ohm’s Law</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
-                      ACTIVE RECALL (88%)
-                    </span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-between">
-                    <span className="text-slate-300">Quadratic Word Problems</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">
-                      LEAKAGE DETECTED (64%)
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-2 text-[11px] text-slate-400 flex items-center justify-between border-t border-slate-800">
-                  <span>Diagnostic Action: Socratic remediation queued for tomorrow morning session.</span>
-                  <Link href="/initialize" className="text-[#0066FF] hover:underline flex items-center gap-1 font-semibold">
-                    <span>Deploy Your Digital Twin</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
+              <div className="flex items-center justify-center gap-6 pt-4 text-xs text-slate-500 font-medium">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>CBSE & State SCERT Portals</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-amber-500" />
+                  <span>10-Year Recurrence Rubrics</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#0066FF]" />
+                  <span>Zero Rote Guesswork</span>
+                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. THE MULTI-AGENT PEDAGOGICAL SWARM (Interactive Agent Deep Dive) */}
-      <section className="py-20 sm:py-24 bg-slate-950 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl mb-12 space-y-3">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0066FF] bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">
+      {/* 2. THE MULTI-AGENT PEDAGOGICAL SWARM (Light Background + Cobalt & Yellow Accents) */}
+      <section className="py-16 sm:py-24 bg-white border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="max-w-3xl mb-10 space-y-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
               THE MULTI-AGENT ARCHITECTURE
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
               A specialized AI swarm continuously working for you.
             </h2>
-            <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-              Instead of a single chatbot that tries to do everything poorly, LoopEdu orchestrates five specialized autonomous agents working in parallel across your study cycle.
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Instead of a single chatbot that gives away answers, LoopEdu orchestrates five specialized autonomous agents working in parallel across your study cycle.
             </p>
           </div>
 
           {/* Agent Switcher Tabs */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 border-b border-slate-800 pb-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 border-b border-slate-200 pb-4">
             {[
               { id: 'diagnostic', label: '1. Diagnostic Agent', icon: Activity },
               { id: 'socratic', label: '2. Socratic Tutor', icon: BookOpen },
@@ -311,13 +217,13 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
                 <button
                   key={tab.id}
                   onClick={() => setActiveAgentTab(tab.id as any)}
-                  className={`p-3 rounded-xl text-xs transition text-left flex items-center gap-2 border ${
+                  className={`p-3.5 rounded-2xl text-xs transition text-left flex items-center gap-2.5 border ${
                     isActive
-                      ? 'bg-slate-900 border-blue-500 text-white font-bold shadow-sm'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                      ? 'bg-blue-50/70 border-[#0066FF] text-[#0066FF] font-bold shadow-xs'
+                      : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#0066FF]' : 'text-slate-500'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#0066FF]' : 'text-slate-400'}`} />
                   <span className="truncate">{tab.label}</span>
                 </button>
               );
@@ -325,93 +231,87 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
           </div>
 
           {/* Active Agent Detail Card */}
-          <div className="mt-6 p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div className="mt-6 p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
               <div>
-                <div className="flex items-center gap-2 font-mono text-xs">
-                  <span className="text-[#0066FF] font-bold">{currentAgent.code}</span>
-                  <span className="text-slate-600">•</span>
-                  <span className="text-slate-400">{currentAgent.badge}</span>
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="font-mono font-bold text-[#0066FF]">{currentAgent.code}</span>
+                  <span className="text-slate-300">•</span>
+                  <span className={`px-2 py-0.5 rounded-full text-[11px] font-semibold border ${currentAgent.accentColor}`}>
+                    {currentAgent.badge}
+                  </span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mt-1">{currentAgent.name}</h3>
-                <p className="text-xs text-slate-400 mt-0.5">{currentAgent.role}</p>
+                <h3 className="text-2xl font-extrabold text-slate-950 mt-1">{currentAgent.name}</h3>
+                <p className="text-xs text-slate-500 mt-0.5">{currentAgent.role}</p>
               </div>
 
-              <span className="text-xs font-mono px-3 py-1 rounded bg-slate-950 border border-slate-800 text-emerald-400 font-semibold self-start sm:self-auto">
-                AUTONOMOUS ACTIVE
+              <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold self-start sm:self-auto flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>ONLINE & ACTIVE</span>
               </span>
             </div>
 
-            <p className="text-sm text-slate-300 leading-relaxed font-normal">
+            <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
               {currentAgent.description}
             </p>
 
             {/* Agent Telemetry Output Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
               {currentAgent.metrics.map((m, idx) => (
-                <div key={idx} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-                  <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">
+                <div key={idx} className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">
                     {m.label}
                   </span>
-                  <div className="text-sm font-bold text-white mt-0.5 font-mono">{m.val}</div>
+                  <div className="text-base font-bold text-slate-900 mt-0.5">{m.val}</div>
                 </div>
               ))}
             </div>
 
             {/* Simulated Live Output Stream */}
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 flex items-start gap-3">
-              <span className="text-[#0066FF] font-bold shrink-0">AGENT_OUTPUT:</span>
-              <span className="leading-relaxed">{currentAgent.output}</span>
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 text-xs text-slate-800 flex items-start gap-3 shadow-2xs">
+              <span className="font-mono text-[#0066FF] font-bold shrink-0">TELEMETRY_SAMPLE:</span>
+              <span className="leading-relaxed font-medium">{currentAgent.output}</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. SMART AUTONOMOUS INTAKE (Dynamic Curriculum Resolution) */}
-      <section className="py-20 sm:py-24 bg-slate-950 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      {/* 3. SMART AUTONOMOUS INTAKE (Dynamic Curriculum Resolution) */}
+      <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Left Copy */}
             <div className="lg:col-span-5 space-y-4">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full">
-                ZERO HARDCODED FORMS
+              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
+                ZERO HARDCODED DROPDOWNS
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                Smart Autonomous Intake.
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
+                Smart Autonomous Curriculum Intake.
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                When a student selects their grade and board (e.g. CBSE 8th/10th, ICSE, or State Boards), our Curriculum Architect Agent dynamically queries verified standards and pulls official course codes and textbooks directly from central portals.
+              <p className="text-sm text-slate-600 leading-relaxed">
+                When a student selects their grade and board (e.g. CBSE 8th/10th, ICSE, or State Boards), our Curriculum Architect Agent dynamically queries verified central standards and synchronizes official course codes and textbooks directly from education portals.
               </p>
-              <ul className="space-y-2 text-xs text-slate-300 pt-2 font-mono">
+              <ul className="space-y-2.5 text-xs text-slate-700 pt-2 font-medium">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Central Board (NCERT official codes & textbooks)</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Central Board (NCERT official codes &amp; textbooks)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>State Boards: Karnataka KTBS, Maharashtra Balbharati, TN DGE</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Competitive Exam Foundation: JEE Main, NEET-UG, CUET</span>
                 </li>
               </ul>
-              <div className="pt-2">
-                <Link
-                  href="/initialize"
-                  className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl text-xs transition shadow-md"
-                >
-                  <span>Launch Intake Engine</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
             </div>
 
             {/* Right Interactive Mock Grid */}
-            <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-4 font-mono text-xs">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <span className="text-slate-400">Live Intake Simulation:</span>
-                <span className="text-emerald-400 font-bold">CBSE Class 10 (AISSE Verified)</span>
+            <div className="lg:col-span-7 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-md space-y-4 text-xs">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <span className="text-slate-500 font-medium">Live Curriculum Standards Ingestion:</span>
+                <span className="text-[#0066FF] font-bold">CBSE Class 10 (AISSE Verified)</span>
               </div>
 
               <div className="space-y-2.5">
@@ -420,27 +320,29 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
                   { name: 'Science (Physics, Chem, Bio)', code: '086', book: 'NCERT Science Class X', core: true },
                   { name: 'Social Science', code: '087', book: 'Our Pasts, Democratic Politics, Res & Dev', core: true },
                   { name: 'English Language & Literature', code: '184', book: 'First Flight & Footprints', core: true },
-                  { name: 'Coding & AI Skills', code: '417', book: 'CBSE Skill Education Standard X', core: false },
+                  { name: 'Information Technology / AI Skills', code: '402', book: 'CBSE Skill Standards Standard X', core: false },
                 ].map((track, i) => (
                   <div
                     key={i}
-                    className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between"
+                    className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between hover:border-slate-300 transition"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-4 h-4 rounded bg-[#0066FF] text-white flex items-center justify-center font-bold text-[10px]">
+                    <div className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-lg bg-[#0066FF] text-white flex items-center justify-center font-bold text-xs shrink-0">
                         ✓
                       </div>
                       <div>
-                        <span className="font-bold text-white">{track.name}</span>
-                        <span className="text-[10px] text-slate-500 ml-2">Code {track.code}</span>
-                        <div className="text-[10px] text-slate-400 font-sans mt-0.5">📖 {track.book}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-900">{track.name}</span>
+                          <span className="text-[10px] font-mono text-slate-500">Code {track.code}</span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-0.5">📖 {track.book}</div>
                       </div>
                     </div>
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded ${
+                      className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
                         track.core
-                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                          : 'bg-slate-800 text-slate-400'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          : 'bg-slate-200 text-slate-700'
                       }`}
                     >
                       {track.core ? 'MANDATORY' : 'ELECTIVE'}
@@ -449,43 +351,6 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. FINAL MISSION CONTROL INITIALIZATION CALL */}
-      <section className="py-20 sm:py-24 bg-gradient-to-b from-slate-950 to-slate-900 border-b border-slate-800 text-center">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-6">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-[#0066FF] bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full">
-            START YOUR PERFORMANCE ENGINEERING
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Deploy your autonomous student agent in under 60 seconds.
-          </h2>
-          <p className="text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-            Zero setup fees. Zero fluff. Immediate access to your syllabus graph, 15-minute daily practice queue, and persistent cognitive digital twin.
-          </p>
-
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/initialize"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#0066FF] hover:bg-blue-500 text-white font-bold text-sm transition shadow-xl active:scale-95"
-            >
-              Initialize Your Student Agent →
-            </Link>
-
-            <Link
-              href="/login"
-              className="w-full sm:w-auto px-6 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-sm font-semibold transition"
-            >
-              Sign In to Existing Agent
-            </Link>
-          </div>
-
-          <div className="pt-6 text-xs font-mono text-slate-500 flex items-center justify-center gap-6">
-            <span>✓ Verified CBSE, ICSE & State Standards</span>
-            <span>✓ Non-Commercial Academic Access</span>
-            <span>✓ Privacy-Protected Supabase pgvector</span>
           </div>
         </div>
       </section>

@@ -544,23 +544,23 @@ export default function StudyReaderPage({ params }: ReaderProps) {
         </div>
       </div>
 
-      {/* IXL-Inspired Real-Time Study HUD */}
-      <div className="sticky top-[7.5rem] z-20 bg-paper-100/95 backdrop-blur-sm border-b border-academic-border px-4 py-2 shadow-2xs">
+      {/* Real-Time Study Telemetry HUD */}
+      <div className="sticky top-[4.5rem] z-20 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 py-2.5 shadow-2xs">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-4 sm:gap-6">
             {/* Questions Answered */}
-            <div className="flex items-center gap-1.5 font-bold text-forest-950">
-              <span className="text-academic-subtle font-medium uppercase tracking-wider text-[10px]">Questions:</span>
-              <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded-md border border-academic-border shadow-2xs">
+            <div className="flex items-center gap-1.5 font-bold text-slate-800">
+              <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Questions:</span>
+              <span className="font-mono text-xs font-bold bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                 {stats.attemptedCount} / {isEntitled ? questions.length : Math.min(10, questions.length)}
               </span>
             </div>
 
             {/* Time Elapsed */}
-            <div className="flex items-center gap-1.5 font-bold text-forest-950">
-              <Clock className="w-3.5 h-3.5 text-forest-700" />
-              <span className="text-academic-subtle font-medium uppercase tracking-wider text-[10px]">Time:</span>
-              <span className="font-mono text-xs font-bold bg-white px-2 py-0.5 rounded-md border border-academic-border shadow-2xs">
+            <div className="flex items-center gap-1.5 font-bold text-slate-800">
+              <Clock className="w-3.5 h-3.5 text-[#0066FF]" />
+              <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Time:</span>
+              <span className="font-mono text-xs font-bold bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
                 {formatTimer(timeElapsedSeconds)}
               </span>
             </div>
@@ -568,14 +568,14 @@ export default function StudyReaderPage({ params }: ReaderProps) {
 
           {/* SmartScore (0 to 100) */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 bg-forest-900 text-limeaccent px-3 py-1 rounded-xl shadow-xs font-mono font-bold text-xs">
-              <Sparkles className="w-3.5 h-3.5 text-limeaccent" />
+            <div className="flex items-center gap-1.5 bg-[#0066FF] text-white px-3 py-1 rounded-xl shadow-xs font-mono font-bold text-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>SmartScore™</span>
-              <span className="text-xs bg-forest-800 px-1.5 py-0.2 rounded border border-forest-700">
+              <span className="text-xs bg-blue-700 px-1.5 py-0.2 rounded border border-blue-500">
                 {smartScore}
               </span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border bg-white text-forest-900 border-academic-border hidden sm:inline">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border bg-amber-50 text-amber-900 border-amber-200 hidden sm:inline">
               {smartScore >= 90
                 ? '🏆 Board Mastery'
                 : smartScore >= 70

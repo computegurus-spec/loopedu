@@ -122,11 +122,11 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-slate-900 font-sans">
         <button
           onClick={onClose}
-          className="absolute right-5 top-5 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+          className="absolute right-5 top-5 p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -134,23 +134,23 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
         {/* Modal Header */}
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 rounded font-bold">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#0066FF] bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-full">
               Feynman Conceptual Defense
             </span>
-            <span className="text-slate-600 font-mono">•</span>
-            <span className="text-xs text-slate-400 font-mono">{topic}</span>
+            <span className="text-slate-300">•</span>
+            <span className="text-xs text-slate-500 font-semibold">{topic}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-950 tracking-tight">
             Defend Your Solution (No Rote Answers)
           </h2>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <p className="text-xs text-slate-500 leading-relaxed font-normal">
             Richard Feynman proved that if you cannot explain a concept in simple terms, you do not truly understand it. Speak or write your explanation of <em>why</em> the principle works.
           </p>
         </div>
 
         {/* Question Context Pill */}
-        <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono">
-          <strong className="text-blue-400">Target Problem:</strong> {question.slice(0, 160)}
+        <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800">
+          <strong className="text-[#0066FF] font-bold">Target Problem:</strong> {question.slice(0, 160)}
           {question.length > 160 ? '...' : ''}
         </div>
 
@@ -162,7 +162,7 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
                 value={explanation}
                 onChange={(e) => setExplanation(e.target.value)}
                 placeholder="Explain the underlying principle in your own words (e.g. 'The discriminant determines whether the parabola intersects the x-axis because the quadratic formula contains a square root of D...')"
-                className="w-full h-36 bg-slate-950 border border-slate-700 rounded-2xl p-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition resize-none font-mono"
+                className="w-full h-36 bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white focus:ring-2 focus:ring-blue-100 transition resize-none font-sans"
               />
 
               <div className="absolute right-3 bottom-3 flex items-center gap-2">
@@ -171,26 +171,26 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
                   onClick={() => setIsRecording(!isRecording)}
                   className={`p-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition ${
                     isRecording
-                      ? 'bg-rose-500/20 text-rose-400 border-rose-500 animate-pulse'
-                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white'
+                      ? 'bg-rose-50 text-rose-600 border-rose-300 animate-pulse'
+                      : 'bg-white border-slate-200 text-slate-700 hover:text-slate-900 shadow-2xs'
                   }`}
                   title={isRecording ? 'Stop Recording' : 'Dictate with Voice'}
                 >
-                  {isRecording ? <MicOff className="w-4 h-4 text-rose-400" /> : <Mic className="w-4 h-4 text-blue-400" />}
+                  {isRecording ? <MicOff className="w-4 h-4 text-rose-600" /> : <Mic className="w-4 h-4 text-[#0066FF]" />}
                   <span className="hidden sm:inline">{isRecording ? 'Listening...' : 'Voice Defend'}</span>
                 </button>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-300 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-700 flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{error}</span>
               </div>
             )}
 
             <div className="flex items-center justify-between pt-2">
-              <span className="text-[11px] text-slate-500 font-mono">
+              <span className="text-[11px] text-slate-400 font-medium">
                 {explanation.trim().split(/\s+/).filter(Boolean).length} words recorded
               </span>
 
@@ -198,7 +198,7 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
                 type="button"
                 onClick={handleEvaluate}
                 disabled={submitting || !explanation.trim()}
-                className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3 rounded-xl text-xs transition shadow-lg disabled:opacity-40"
+                className="inline-flex items-center gap-2 bg-[#0066FF] hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-xs transition shadow-sm disabled:opacity-40"
               >
                 {submitting ? (
                   <>
@@ -217,39 +217,39 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
         ) : (
           /* Evaluation Results View */
           <div className="space-y-4 animate-in fade-in duration-200">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono">
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800">
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Conceptual Intuition</span>
-                <span className="text-3xl font-extrabold text-blue-400 tabular-nums">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-4 rounded-2xl bg-blue-50/50 border border-blue-200">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Conceptual Intuition</span>
+                <span className="text-3xl font-extrabold text-[#0066FF] tabular-nums">
                   {evaluation.score}
-                  <span className="text-sm text-slate-500"> / 100</span>
+                  <span className="text-sm text-slate-400"> / 100</span>
                 </span>
-                <span className="text-xs text-slate-300 block mt-1">
-                  Grade: <strong className="text-emerald-400">{evaluation.masteryLevel}</strong>
+                <span className="text-xs text-slate-700 block mt-1 font-medium">
+                  Grade: <strong className="text-emerald-700">{evaluation.masteryLevel}</strong>
                 </span>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Core Strengths</span>
-                <p className="text-xs text-slate-300 leading-snug">{evaluation.strengths}</p>
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                <span className="text-[10px] text-slate-500 uppercase tracking-wider block font-semibold">Core Strengths</span>
+                <p className="text-xs text-slate-700 leading-snug">{evaluation.strengths}</p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-1.5">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-bold text-white font-mono uppercase tracking-wider">
-                  Blind Spot & Formula Dependency
+                <AlertCircle className="w-4 h-4 text-amber-600" />
+                <span className="text-xs font-bold text-amber-950 uppercase tracking-wider">
+                  Blind Spot &amp; Formula Dependency
                 </span>
               </div>
-              <p className="text-xs text-slate-300 leading-relaxed font-sans">{evaluation.blindSpot}</p>
+              <p className="text-xs text-amber-900 leading-relaxed font-sans">{evaluation.blindSpot}</p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-blue-950/30 border border-blue-500/30 space-y-1">
-              <span className="text-[11px] font-bold text-blue-400 font-mono uppercase tracking-wider">
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 space-y-1">
+              <span className="text-[11px] font-bold text-[#0066FF] uppercase tracking-wider">
                 Socratic Next Action
               </span>
-              <p className="text-xs text-slate-200 leading-relaxed">{evaluation.socraticRecommendation}</p>
+              <p className="text-xs text-slate-800 leading-relaxed font-medium">{evaluation.socraticRecommendation}</p>
             </div>
 
             <div className="flex items-center justify-between pt-2">
@@ -259,7 +259,7 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
                   setEvaluation(null);
                   setExplanation('');
                 }}
-                className="text-xs text-slate-400 hover:text-white transition font-mono"
+                className="text-xs text-slate-500 hover:text-slate-900 transition font-semibold"
               >
                 ← Retake Concept Defense
               </button>
@@ -267,9 +267,9 @@ export const FeynmanEvaluatorModal: React.FC<FeynmanEvaluatorModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="bg-slate-800 hover:bg-slate-700 text-white font-semibold px-5 py-2.5 rounded-xl text-xs transition"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-2xs"
               >
-                Apply to Session & Close
+                Apply to Session &amp; Close
               </button>
             </div>
           </div>
