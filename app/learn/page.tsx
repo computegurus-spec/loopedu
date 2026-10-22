@@ -249,14 +249,14 @@ export default function WorkspacePage() {
 
           <Link
             href="/consultant"
-            className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-indigo-500 transition flex items-center gap-3 group shadow-2xs"
+            className="p-4 rounded-2xl bg-white border border-slate-200 hover:border-[#0066FF] transition flex items-center gap-3 group shadow-2xs"
           >
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 text-[#0066FF] flex items-center justify-center shrink-0">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-900 group-hover:text-indigo-700">Academic Advisory</div>
-              <div className="text-[10px] text-slate-500">Stream &amp; Careers</div>
+              <div className="text-xs font-bold text-slate-900 group-hover:text-[#0066FF]">Career Planner</div>
+              <div className="text-[10px] text-slate-500">Streams &amp; Trajectories</div>
             </div>
           </Link>
         </section>

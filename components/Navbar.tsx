@@ -126,7 +126,7 @@ export const Navbar: React.FC = () => {
                 }`}
               >
                 <Compass className="w-4 h-4 text-indigo-600" />
-                <span>Advisory</span>
+                <span>Career Planner</span>
               </Link>
 
               <Link
@@ -138,7 +138,17 @@ export const Navbar: React.FC = () => {
                 Curriculum Catalog
               </Link>
             </>
-          ) : null}
+          ) : (
+            <Link
+              href="/consultant"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                isCurrent('/consultant') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <Compass className="w-4 h-4 text-[#0066FF]" />
+              <span>Career Planner</span>
+            </Link>
+          )}
         </nav>
 
         {/* Right side: Auth Controls */}
@@ -213,8 +223,8 @@ export const Navbar: React.FC = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-950 font-medium transition"
                     >
-                      <Compass className="w-4 h-4 text-indigo-600" />
-                      <span>Academic Advisory</span>
+                      <Compass className="w-4 h-4 text-[#0066FF]" />
+                      <span>Career Planner</span>
                     </Link>
 
                     {user.role === 'admin' && (

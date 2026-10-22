@@ -25,53 +25,50 @@ export const AcademicAdvisor: React.FC = () => {
   const [selectedStreamId, setSelectedStreamId] = useState<string>(STREAM_OPTIONS[0].id);
   const [selectedCareerId, setSelectedCareerId] = useState<string>(CAREER_TRAJECTORIES[0].id);
 
-  // Stream Quiz State
-  const [mathAptitude, setMathAptitude] = useState<'high' | 'moderate' | 'low'>('high');
-  const [bioInterest, setBioInterest] = useState<'yes' | 'no'>('no');
-  const [businessInterest, setBusinessInterest] = useState<'yes' | 'no'>('no');
-  const [writingInterest, setWritingInterest] = useState<'yes' | 'no'>('no');
-
   const selectedStream = STREAM_OPTIONS.find((s) => s.id === selectedStreamId) || STREAM_OPTIONS[0];
   const selectedCareer = CAREER_TRAJECTORIES.find((c) => c.id === selectedCareerId) || CAREER_TRAJECTORIES[0];
 
   return (
     <div className="space-y-6">
       {/* Top Advisory Nav Pills */}
-      <div className="p-2 rounded-2xl bg-zinc-900 border border-zinc-800 flex flex-wrap items-center gap-2">
+      <div className="p-1.5 rounded-2xl bg-slate-100 border border-slate-200 flex flex-wrap items-center gap-2">
         <button
+          type="button"
           onClick={() => setActiveTab('stream_advisor')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono transition flex items-center gap-2 border ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border ${
             activeTab === 'stream_advisor'
-              ? 'bg-zinc-100 text-zinc-950 font-bold border-white'
-              : 'bg-zinc-950/70 text-zinc-400 hover:text-white border-zinc-800'
+              ? 'bg-[#0066FF] text-white border-[#0066FF] shadow-sm'
+              : 'bg-white text-slate-700 hover:text-slate-900 border-slate-200'
           }`}
         >
-          <Compass className="w-3.5 h-3.5" />
+          <Compass className="w-4 h-4" />
           <span>Stream Selection (Post-10th)</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('career_trajectories')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono transition flex items-center gap-2 border ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border ${
             activeTab === 'career_trajectories'
-              ? 'bg-zinc-100 text-zinc-950 font-bold border-white'
-              : 'bg-zinc-950/70 text-zinc-400 hover:text-white border-zinc-800'
+              ? 'bg-[#0066FF] text-white border-[#0066FF] shadow-sm'
+              : 'bg-white text-slate-700 hover:text-slate-900 border-slate-200'
           }`}
         >
-          <Target className="w-3.5 h-3.5" />
+          <Target className="w-4 h-4" />
           <span>Reverse Career Trajectories</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setActiveTab('exam_timeline')}
-          className={`px-4 py-2 rounded-xl text-xs font-mono transition flex items-center gap-2 border ${
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border ${
             activeTab === 'exam_timeline'
-              ? 'bg-zinc-100 text-zinc-950 font-bold border-white'
-              : 'bg-zinc-950/70 text-zinc-400 hover:text-white border-zinc-800'
+              ? 'bg-[#0066FF] text-white border-[#0066FF] shadow-sm'
+              : 'bg-white text-slate-700 hover:text-slate-900 border-slate-200'
           }`}
         >
-          <Calendar className="w-3.5 h-3.5" />
-          <span>Board & Entrance Exam Calendar</span>
+          <Calendar className="w-4 h-4" />
+          <span>Board &amp; Entrance Exam Calendar</span>
         </button>
       </div>
 
@@ -80,7 +77,7 @@ export const AcademicAdvisor: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Stream Options List */}
           <div className="lg:col-span-1 space-y-3">
-            <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 px-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 px-1">
               Official Academic Streams
             </div>
             {STREAM_OPTIONS.map((stream) => {
@@ -91,62 +88,62 @@ export const AcademicAdvisor: React.FC = () => {
                   onClick={() => setSelectedStreamId(stream.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-zinc-900 border-zinc-500 shadow-lg ring-1 ring-zinc-500'
-                      : 'bg-zinc-950 border-zinc-850 hover:border-zinc-700'
+                      ? 'bg-blue-50/80 border-[#0066FF] shadow-sm ring-1 ring-blue-100'
+                      : 'bg-white border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white">{stream.name}</span>
+                    <span className="text-sm font-bold text-slate-900">{stream.name}</span>
                     <span
-                      className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         stream.academicIntensity === 'Very High'
-                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20'
-                          : 'bg-zinc-800 text-zinc-300'
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}
                     >
-                      {stream.academicIntensity} Intensity
+                      {stream.academicIntensity}
                     </span>
                   </div>
-                  <div className="text-[11px] font-mono text-zinc-400 mt-1">{stream.badge}</div>
+                  <div className="text-xs text-slate-500 mt-1 font-medium">{stream.badge}</div>
                 </div>
               );
             })}
           </div>
 
           {/* Stream Detail Inspector */}
-          <div className="lg:col-span-2 p-6 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-6">
+          <div className="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-sm">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#0066FF] mb-1">
                 <span>COMPREHENSIVE STREAM BREAKDOWN</span>
               </div>
-              <h3 className="text-xl font-bold text-white tracking-tight">{selectedStream.name}</h3>
-              <p className="text-sm text-zinc-300 mt-2 leading-relaxed">{selectedStream.suitedFor}</p>
+              <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight">{selectedStream.name}</h3>
+              <p className="text-sm text-slate-600 mt-2 leading-relaxed">{selectedStream.suitedFor}</p>
             </div>
 
             {/* Core & Electives Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2 font-bold">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                   Mandatory Core Tier
                 </span>
-                <ul className="space-y-1.5 text-xs text-zinc-200 font-mono">
+                <ul className="space-y-1.5 text-xs text-slate-800 font-medium">
                   {selectedStream.coreSubjects.map((sub, i) => (
                     <li key={i} className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF]" />
                       <span>{sub}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span className="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2 font-bold">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                   Recommended High-Yield Electives
                 </span>
-                <ul className="space-y-1.5 text-xs text-zinc-200 font-mono">
+                <ul className="space-y-1.5 text-xs text-slate-800 font-medium">
                   {selectedStream.popularElectives.map((ele, i) => (
                     <li key={i} className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                       <span>{ele}</span>
                     </li>
                   ))}
@@ -155,15 +152,15 @@ export const AcademicAdvisor: React.FC = () => {
             </div>
 
             {/* Career Gateways */}
-            <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-              <span className="text-xs font-mono uppercase tracking-wider text-emerald-400 block mb-2 font-bold">
-                Direct Career Gateways
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 block mb-2">
+                Direct Career Gateways Unlocked
               </span>
               <div className="flex flex-wrap gap-2">
                 {selectedStream.careerGateways.map((gate, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-950 border border-zinc-800 text-zinc-200"
+                    className="px-3 py-1 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-800 shadow-2xs"
                   >
                     {gate}
                   </span>
@@ -173,10 +170,10 @@ export const AcademicAdvisor: React.FC = () => {
 
             {/* Critical Caveats / Warnings */}
             {selectedStream.riskWarnings.length > 0 && (
-              <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 space-y-1">
-                <div className="font-bold flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>Strategic Advisory Warning</span>
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-1.5">
+                <div className="font-bold flex items-center gap-1.5 text-amber-950">
+                  <AlertTriangle className="w-4 h-4 text-amber-600" />
+                  <span>Strategic Advisory Assessment</span>
                 </div>
                 {selectedStream.riskWarnings.map((warn, i) => (
                   <p key={i} className="leading-relaxed">
@@ -194,7 +191,7 @@ export const AcademicAdvisor: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Career Target List */}
           <div className="lg:col-span-1 space-y-3">
-            <div className="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-1 px-1">
+            <div className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 px-1">
               High-Growth Global Careers
             </div>
             {CAREER_TRAJECTORIES.map((career) => {
@@ -205,50 +202,52 @@ export const AcademicAdvisor: React.FC = () => {
                   onClick={() => setSelectedCareerId(career.id)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-zinc-900 border-zinc-500 shadow-lg ring-1 ring-zinc-500'
-                      : 'bg-zinc-950 border-zinc-850 hover:border-zinc-700'
+                      ? 'bg-blue-50/80 border-[#0066FF] shadow-sm ring-1 ring-blue-100'
+                      : 'bg-white border-slate-200 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white">{career.title}</span>
-                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
+                    <span className="text-sm font-bold text-slate-900">{career.title}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                       {career.category}
                     </span>
                   </div>
-                  <div className="text-[11px] text-zinc-400 mt-1 line-clamp-1">{career.tagline}</div>
+                  <div className="text-xs text-slate-500 mt-1 line-clamp-1">{career.tagline}</div>
                 </div>
               );
             })}
           </div>
 
           {/* Reverse Engineering Roadmap */}
-          <div className="lg:col-span-2 p-6 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-6">
+          <div className="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-sm">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20">
-                REVERSE CAREER ARCHITECTURE
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0066FF] bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
+                REVERSE CAREER ENGINEERING
               </span>
-              <h3 className="text-2xl font-bold text-white tracking-tight mt-2">{selectedCareer.title}</h3>
-              <p className="text-sm text-zinc-300 mt-1">{selectedCareer.tagline}</p>
+              <h3 className="text-2xl font-extrabold text-slate-950 tracking-tight mt-2.5">{selectedCareer.title}</h3>
+              <p className="text-sm text-slate-600 mt-1">{selectedCareer.tagline}</p>
             </div>
 
             {/* Step-by-Step Backwards Timeline */}
             <div className="space-y-4">
               {/* Step 1: 10th Foundation */}
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-mono font-bold text-cyan-400">
+                  <span className="text-xs font-bold text-[#0066FF]">
                     STEP 1: Class 10 Foundation Prerequisite
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-500">Current Phase</span>
+                  <span className="text-[10px] font-semibold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                    Current Phase
+                  </span>
                 </div>
-                <div className="text-xs text-zinc-300 mb-2">
-                  Must build maximum conceptual velocity in:
+                <div className="text-xs text-slate-600 mb-2 font-medium">
+                  Must build maximum conceptual mastery in:
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedCareer.class10FocusAreas.map((f, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-950 border border-zinc-800 text-zinc-200"
+                      className="px-3 py-1 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-800 shadow-2xs"
                     >
                       {f}
                     </span>
@@ -257,28 +256,28 @@ export const AcademicAdvisor: React.FC = () => {
               </div>
 
               {/* Step 2: 11th & 12th Academic Path */}
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span className="text-xs font-mono font-bold text-emerald-400 block mb-2">
-                  STEP 2: Class 11 & 12 Academic Stream
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-bold text-emerald-700 block mb-2">
+                  STEP 2: Class 11 &amp; 12 Academic Stream
                 </span>
-                <div className="text-xs text-zinc-200 font-mono mb-1">
+                <div className="text-xs text-slate-800 font-semibold mb-1">
                   <strong>Recommended Stream:</strong> {selectedCareer.recommendedStream}
                 </div>
-                <div className="text-xs text-zinc-400 font-mono">
+                <div className="text-xs text-slate-600">
                   <strong>Mandatory Subjects:</strong> {selectedCareer.mandatory12thSubjects.join(', ')}
                 </div>
               </div>
 
               {/* Step 3: Key Entrance Gateways */}
-              <div className="p-4 rounded-xl bg-zinc-900 border border-zinc-800">
-                <span className="text-xs font-mono font-bold text-indigo-400 block mb-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="text-xs font-bold text-indigo-700 block mb-2">
                   STEP 3: Primary Entrance Gateways
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {selectedCareer.keyEntranceExams.map((exam, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg text-xs font-mono bg-zinc-950 border border-zinc-800 text-zinc-200"
+                      className="px-3 py-1 rounded-xl text-xs font-semibold bg-white border border-slate-200 text-slate-800 shadow-2xs"
                     >
                       {exam}
                     </span>
@@ -288,20 +287,20 @@ export const AcademicAdvisor: React.FC = () => {
 
               {/* Step 4: Premier Destinations */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800">
-                  <span className="text-[11px] font-mono font-bold text-zinc-400 block mb-1">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <span className="text-xs font-bold text-slate-700 block mb-1">
                     Top Indian Institutions
                   </span>
-                  <div className="text-xs text-zinc-200 font-mono">
+                  <div className="text-xs text-slate-800 font-medium">
                     {selectedCareer.topCollegesIndia.join(' • ')}
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-zinc-900 border border-zinc-800">
-                  <span className="text-[11px] font-mono font-bold text-zinc-400 block mb-1">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                  <span className="text-xs font-bold text-slate-700 block mb-1">
                     Global Benchmark Programs
                   </span>
-                  <div className="text-xs text-zinc-200 font-mono">
+                  <div className="text-xs text-slate-800 font-medium">
                     {selectedCareer.globalPathways.join(' • ')}
                   </div>
                 </div>
@@ -313,19 +312,17 @@ export const AcademicAdvisor: React.FC = () => {
 
       {/* TAB 3: Board & Entrance Exam Calendar */}
       {activeTab === 'exam_timeline' && (
-        <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
-            <div>
-              <h3 className="text-lg font-bold text-white tracking-tight">
-                Academic & Entrance Examination Milestone Radar
-              </h3>
-              <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                Official national timelines for CBSE, ICSE, and foundational competitive Olympiads.
-              </p>
-            </div>
+        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-sm">
+          <div className="pb-4 border-b border-slate-100">
+            <h3 className="text-xl font-extrabold text-slate-950 tracking-tight">
+              Academic &amp; Entrance Examination Milestone Radar
+            </h3>
+            <p className="text-xs text-slate-500 mt-1">
+              Official national timelines for CBSE, ICSE, and foundational competitive Olympiads.
+            </p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             {[
               {
                 period: 'Mid-October 2026',
@@ -365,20 +362,20 @@ export const AcademicAdvisor: React.FC = () => {
             ].map((milestone, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-xl bg-zinc-900 border border-zinc-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 hover:border-slate-300 transition"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-cyan-400">{milestone.period}</span>
-                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300">
+                    <span className="text-xs font-bold text-[#0066FF]">{milestone.period}</span>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white text-slate-700 border border-slate-200">
                       {milestone.target}
                     </span>
                   </div>
-                  <div className="text-sm font-semibold text-white">{milestone.event}</div>
-                  <div className="text-xs text-zinc-400 leading-relaxed">{milestone.action}</div>
+                  <div className="text-sm font-bold text-slate-900">{milestone.event}</div>
+                  <div className="text-xs text-slate-600 leading-relaxed">{milestone.action}</div>
                 </div>
 
-                <span className="shrink-0 text-[10px] font-mono px-2 py-1 rounded bg-zinc-950 border border-zinc-800 text-zinc-300">
+                <span className="shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-white border border-slate-200 text-slate-800 shadow-2xs">
                   {milestone.badge}
                 </span>
               </div>

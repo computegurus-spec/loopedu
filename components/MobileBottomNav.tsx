@@ -49,7 +49,7 @@ export const MobileBottomNav: React.FC = () => {
       match: (p: string) => p.startsWith('/flashcards'),
     },
     {
-      label: 'Advisory',
+      label: 'Career',
       href: '/consultant',
       icon: Compass,
       match: (p: string) => p.startsWith('/consultant'),
