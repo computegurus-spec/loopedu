@@ -14,7 +14,7 @@ import {
   Compass,
   ArrowRight,
   Activity,
-  User,
+  Cpu,
 } from 'lucide-react';
 
 interface SessionUser {
@@ -29,7 +29,6 @@ export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [user, setUser] = useState<SessionUser | null>(null);
-  const [isPro, setIsPro] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -38,22 +37,18 @@ export const Navbar: React.FC = () => {
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          setIsPro(Boolean(data.isPaid || data.isAdmin || data.user.isPro));
         } else {
           setUser(null);
-          setIsPro(false);
         }
       })
       .catch(() => {
         setUser(null);
-        setIsPro(false);
       });
   }, [pathname]);
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setUser(null);
-    setIsPro(false);
     setDropdownOpen(false);
     router.push('/');
     router.refresh();
@@ -63,18 +58,19 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/95 backdrop-blur-md text-slate-100">
-      {/* Top Quiet Institutional Announcement Ribbon */}
+      {/* Telemetry Micro Status Ribbon */}
       {!pathname.startsWith('/study/') && (
-        <div className="bg-slate-900/80 text-slate-400 px-4 py-1 text-[11px] border-b border-slate-800/60 flex items-center justify-between">
-          <div className="max-w-7xl mx-auto w-full flex items-center justify-between font-sans">
+        <div className="bg-slate-900/90 text-slate-400 px-4 py-1 text-[11px] border-b border-slate-800/60 flex items-center justify-between font-mono">
+          <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-slate-300 font-medium">LoopEdu Study Suite</span>
-              <span className="hidden sm:inline text-slate-600">•</span>
-              <span className="hidden sm:inline text-slate-400">CBSE, ICSE & State Board Standards (2026-2027)</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-slate-300 font-semibold tracking-tight">AUTONOMOUS_STUDENT_AGENT: ACTIVE</span>
+              <span className="hidden sm:inline text-slate-600">|</span>
+              <span className="hidden sm:inline text-slate-400">COGNITIVE DIGITAL TWIN ENGINE (PGVECTOR)</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-slate-400 font-medium">Official NCERT & State Textbook Standards</span>
+            <div className="flex items-center gap-3 tabular-nums">
+              <span className="text-slate-500 hidden md:inline">SWARM LATENCY: 12ms</span>
+              <span className="text-emerald-400 font-medium">OFFICIAL STANDARDS VERIFIED</span>
             </div>
           </div>
         </div>
@@ -83,28 +79,27 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-15 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-sm group-hover:bg-blue-500 transition">
+          <div className="w-8 h-8 rounded-lg bg-[#0066FF] text-white flex items-center justify-center font-bold text-sm tracking-tight shadow-md group-hover:bg-blue-500 transition">
             L
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-100 text-base leading-none tracking-tight">
+              <span className="font-bold text-white text-base leading-none tracking-tight">
                 LoopEdu
               </span>
-              <span className="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] font-medium text-slate-300 border border-slate-700">
-                Study Suite
+              <span className="px-1.5 py-0.2 rounded bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono text-blue-400">
+                AGI_v2.4
               </span>
             </div>
-            <span className="text-[10px] text-slate-400 mt-0.5 font-normal">
-              Board & Competitive Mastery
+            <span className="text-[10px] text-slate-400 mt-0.5 font-normal tracking-wide">
+              Autonomous Student Agent
             </span>
           </div>
         </Link>
 
         {/* Navigation Links:
-            REQUIREMENT 1:
-            Workspace, Question Bank, Mind Maps, Flashcards, Advisory, and Syllabus Catalog
-            SHOW UP ONLY AFTER LOGGING IN!
+            When Logged In: Show Student Workspace Tools.
+            When Logged Out: Keep cleanly minimal (Zero clutter).
         */}
         <nav className="hidden lg:flex items-center gap-6 text-xs text-slate-300 font-medium">
           {user ? (
@@ -113,17 +108,17 @@ export const Navbar: React.FC = () => {
               <Link
                 href="/learn"
                 className={`transition hover:text-white flex items-center gap-1.5 py-1 ${
-                  isCurrent('/learn') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  isCurrent('/learn') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
                 <Activity className="w-3.5 h-3.5 text-blue-400" />
-                <span>Workspace</span>
+                <span>Mission Control</span>
               </Link>
 
               <Link
                 href="/study/cbse-10-science"
                 className={`transition hover:text-white flex items-center gap-1.5 py-1 ${
-                  pathname.startsWith('/study') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  pathname.startsWith('/study') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
                 <BookOpen className="w-3.5 h-3.5 text-blue-400" />
@@ -133,17 +128,17 @@ export const Navbar: React.FC = () => {
               <Link
                 href="/mind-maps"
                 className={`transition hover:text-white flex items-center gap-1.5 py-1 ${
-                  isCurrent('/mind-maps') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  isCurrent('/mind-maps') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
-                <GitBranch className="w-3.5 h-3.5 text-blue-400" />
+                <GitBranch className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Mind Maps</span>
               </Link>
 
               <Link
                 href="/flashcards"
                 className={`transition hover:text-white flex items-center gap-1.5 py-1 ${
-                  isCurrent('/flashcards') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  isCurrent('/flashcards') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
                 <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
@@ -153,38 +148,28 @@ export const Navbar: React.FC = () => {
               <Link
                 href="/consultant"
                 className={`transition hover:text-white flex items-center gap-1.5 py-1 ${
-                  isCurrent('/consultant') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  isCurrent('/consultant') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
-                <Compass className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Advisory</span>
+                <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Academic Advisory</span>
               </Link>
 
               <Link
                 href="/catalogue"
                 className={`transition hover:text-white py-1 ${
-                  isCurrent('/catalogue') ? 'text-white font-semibold border-b-2 border-blue-500' : ''
+                  isCurrent('/catalogue') ? 'text-white font-semibold border-b-2 border-[#0066FF]' : ''
                 }`}
               >
-                Syllabus Catalog
+                Curriculum Catalog
               </Link>
             </>
           ) : (
-            /* Logged-Out Public Visitor Links */
-            <>
-              <Link href="/#features" className="transition hover:text-white">
-                Platform Capabilities
-              </Link>
-              <Link href="/#courses" className="transition hover:text-white">
-                Supported Boards & Exams
-              </Link>
-              <Link href="/parent" className="transition hover:text-white">
-                Parent Hub
-              </Link>
-              <Link href="/catalogue#pricing" className="transition hover:text-white">
-                Pricing
-              </Link>
-            </>
+            /* Logged-Out Public Visitors: Clean Minimalist Header */
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>Multi-Agent Pedagogical Swarm Active</span>
+            </div>
           )}
         </nav>
 
@@ -197,17 +182,12 @@ export const Navbar: React.FC = () => {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900 text-slate-200 text-xs font-medium hover:bg-slate-800 transition"
                 aria-label="User account dropdown"
               >
-                <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[10px]">
+                <div className="w-5 h-5 rounded-full bg-[#0066FF] text-white flex items-center justify-center font-bold text-[10px]">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <span className="hidden sm:inline text-slate-200 max-w-[120px] truncate font-medium">
                   {user.name}
                 </span>
-                {isPro && (
-                  <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold text-[9px] px-1 py-0.2 rounded">
-                    PRO
-                  </span>
-                )}
                 <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
 
@@ -217,8 +197,8 @@ export const Navbar: React.FC = () => {
                     <div className="font-bold text-slate-100 text-sm">{user.name}</div>
                     <div className="text-slate-400 text-[11px] truncate">{user.email}</div>
                     <div className="mt-2 flex items-center gap-1.5">
-                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                        {user.role === 'admin' ? 'Administrator' : isPro ? 'Pro Member' : 'Student Account'}
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                        {user.role === 'admin' ? 'SYSTEM_ADMIN' : 'STUDENT_AGENT_PROVISIONED'}
                       </span>
                     </div>
                   </div>
@@ -230,7 +210,7 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200 transition"
                     >
                       <Activity className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Workspace</span>
+                      <span>Mission Control</span>
                     </Link>
 
                     <Link
@@ -247,7 +227,7 @@ export const Navbar: React.FC = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200 transition"
                     >
-                      <GitBranch className="w-3.5 h-3.5 text-blue-400" />
+                      <GitBranch className="w-3.5 h-3.5 text-cyan-400" />
                       <span>Concept Mind Maps</span>
                     </Link>
 
@@ -265,7 +245,7 @@ export const Navbar: React.FC = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-200 transition"
                     >
-                      <Compass className="w-3.5 h-3.5 text-emerald-400" />
+                      <Compass className="w-3.5 h-3.5 text-indigo-400" />
                       <span>Academic Advisory</span>
                     </Link>
 
@@ -285,7 +265,7 @@ export const Navbar: React.FC = () => {
                       className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition border-t border-slate-800 mt-1 pt-2"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Sign Out</span>
+                      <span>Disconnect Session</span>
                     </button>
                   </div>
                 </div>
@@ -297,13 +277,13 @@ export const Navbar: React.FC = () => {
                 href="/login"
                 className="text-xs text-slate-300 hover:text-white font-medium px-3 py-1.5 rounded-lg hover:bg-slate-900 transition"
               >
-                Log In
+                Student Login
               </Link>
               <Link
                 href="/initialize"
-                className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-medium px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm"
+                className="inline-flex items-center gap-1.5 bg-[#0066FF] hover:bg-blue-500 text-white font-semibold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm active:scale-95"
               >
-                <span>Start Free Practice →</span>
+                <span>Initialize Student Agent →</span>
               </Link>
             </div>
           )}

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { BottomTicker } from '@/components/BottomTicker';
 import { ChatWidget } from '@/components/ChatWidget';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 
@@ -169,7 +168,6 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
-        <BottomTicker />
         <ChatWidget />
         <MobileBottomNav />
       </body>
