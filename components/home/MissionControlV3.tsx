@@ -19,7 +19,9 @@ import {
   ChevronRight,
   Target,
   GraduationCap,
+  Compass,
 } from 'lucide-react';
+import { GlobalEducationNews } from './GlobalEducationNews';
 
 interface MissionControlProps {
   isLoggedIn?: boolean;
@@ -125,15 +127,26 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
               An active pedagogical operating system that builds a persistent cognitive digital twin of your brain, eliminates guess-work, and turns academic weaknesses into permanent board examination wins.
             </p>
 
-            {/* Direct High-Impact CTA */}
-            <div className="pt-4 max-w-xl mx-auto space-y-4">
-              <div className="flex items-center justify-center">
+            {/* Direct High-Impact Dual CTA */}
+            <div className="pt-4 max-w-2xl mx-auto space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link
                   href="/initialize"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-sm transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-sm transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform"
                 >
                   <span>Configure Your Study Plan</span>
                   <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <Link
+                  href="/consultant"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 hover:border-slate-300 font-bold text-sm transition shadow-2xs hover:shadow-xs"
+                >
+                  <Compass className="w-4 h-4 text-[#0066FF]" />
+                  <span>AI Career &amp; Stream Planner</span>
+                  <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-amber-100 text-amber-800 border border-amber-200">
+                    AI
+                  </span>
                 </Link>
               </div>
 
@@ -244,7 +257,62 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
           </div>
         </div>
       </section>
+
+      {/* 3. DEDICATED CAREER & STREAM ARCHITECT BANNER */}
+      <section className="py-14 sm:py-20 bg-gradient-to-b from-slate-50 via-blue-50/20 to-white border-b border-slate-200/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="p-8 sm:p-12 rounded-3xl bg-white border border-blue-200/90 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
+            <div className="space-y-4 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>DATA-DRIVEN STREAM SELECTION &amp; EXAM BLUEPRINTS</span>
+              </div>
+
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">
+                Get an AI-Generated Career Plan <br className="hidden sm:inline" />
+                Based on Your Marks &amp; Passions.
+              </h2>
+
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
+                No more peer-pressure or guesswork. Enter your scores in Maths and Science alongside your interests to receive a complete, personalized 4-year roadmap with official links and eligibility criteria for JEE, NEET, CUET, CLAT, NDA, and top global universities.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500 pt-1">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>Verified Official Exam Portals</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span>Tailored Subject Combinations</span>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#0066FF]" />
+                  <span>Zero Biased Advice</span>
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col gap-3">
+              <Link
+                href="/consultant"
+                className="w-full inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-extrabold text-sm transition shadow-md hover:shadow-lg active:scale-98"
+              >
+                <Compass className="w-4 h-4" />
+                <span>Launch Career Planner →</span>
+              </Link>
+              <div className="text-center text-[11px] text-slate-400 font-medium">
+                Free • Instant 1-Click Generation
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. GLOBAL INDIAN EDUCATION NEWS WIRE (Updated Daily with Source Links) */}
+      <GlobalEducationNews />
     </div>
   );
 };
+
 

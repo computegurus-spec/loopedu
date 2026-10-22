@@ -17,11 +17,13 @@ import {
   ChevronRight,
   Sliders,
   ExternalLink,
+  Sparkles,
 } from 'lucide-react';
 import { STREAM_OPTIONS, CAREER_TRAJECTORIES, StreamOption, CareerTrajectory } from '@/lib/data/consultant';
+import { PersonalizedCareerEngine } from './PersonalizedCareerEngine';
 
 export const AcademicAdvisor: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'stream_advisor' | 'career_trajectories' | 'exam_timeline'>('stream_advisor');
+  const [activeTab, setActiveTab] = useState<'personalized_architect' | 'stream_advisor' | 'career_trajectories' | 'exam_timeline'>('personalized_architect');
   const [selectedStreamId, setSelectedStreamId] = useState<string>(STREAM_OPTIONS[0].id);
   const [selectedCareerId, setSelectedCareerId] = useState<string>(CAREER_TRAJECTORIES[0].id);
 
@@ -32,6 +34,22 @@ export const AcademicAdvisor: React.FC = () => {
     <div className="space-y-6">
       {/* Top Advisory Nav Pills */}
       <div className="p-1.5 rounded-2xl bg-slate-100 border border-slate-200 flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setActiveTab('personalized_architect')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border ${
+            activeTab === 'personalized_architect'
+              ? 'bg-[#0066FF] text-white border-[#0066FF] shadow-sm'
+              : 'bg-white text-slate-700 hover:text-slate-900 border-slate-200'
+          }`}
+        >
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          <span>Personalized Career Architect</span>
+          <span className="text-[9px] uppercase px-1.5 py-0.5 rounded-full font-black bg-amber-400 text-slate-950">
+            NEW
+          </span>
+        </button>
+
         <button
           type="button"
           onClick={() => setActiveTab('stream_advisor')}
@@ -71,6 +89,11 @@ export const AcademicAdvisor: React.FC = () => {
           <span>Board &amp; Entrance Exam Calendar</span>
         </button>
       </div>
+
+      {/* TAB 0: Personalized AI Career Architect (Primary) */}
+      {activeTab === 'personalized_architect' && (
+        <PersonalizedCareerEngine />
+      )}
 
       {/* TAB 1: Stream Selection Advisor */}
       {activeTab === 'stream_advisor' && (

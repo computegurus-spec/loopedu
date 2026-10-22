@@ -6,8 +6,9 @@ export default async function HomePage() {
   const user = await getSessionUser();
 
   return (
-    <div className="bg-slate-950 text-slate-100 min-h-screen">
+    <div className="bg-slate-50 text-slate-900 min-h-screen">
       <MissionControlV3 isLoggedIn={Boolean(user)} />
     </div>
   );
 }
+
