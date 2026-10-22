@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { notFound, useSearchParams } from 'next/navigation';
 import { MathRenderer } from '@/components/MathRenderer';
 import { AIHintCoach } from '@/components/study/AIHintCoach';
-import { LoopieChatWidget } from '@/components/study/LoopieChatWidget';
+import { SocraticTutorWidget } from '@/components/study/SocraticTutorWidget';
+import { FeynmanEvaluatorModal } from '@/components/study/FeynmanEvaluatorModal';
 import { generateWatermark } from '@/lib/utils';
 import { SubjectSlug, Question, StudentAchievement } from '@/types';
 import { TrialMilestoneModal } from '@/components/study/TrialMilestoneModal';
@@ -27,6 +28,7 @@ import {
   Check,
   Clock,
   ListOrdered,
+  Mic,
 } from 'lucide-react';
 
 interface ReaderProps {
@@ -115,6 +117,9 @@ export default function StudyReaderPage({ params }: ReaderProps) {
 
   // Trial Milestone Modal
   const [trialModalOpen, setTrialModalOpen] = useState(false);
+
+  // Feynman Concept Defense Modal
+  const [feynmanOpen, setFeynmanOpen] = useState(false);
 
   // IXL HUD Live States
   const [timeElapsedSeconds, setTimeElapsedSeconds] = useState(0);
@@ -426,14 +431,14 @@ export default function StudyReaderPage({ params }: ReaderProps) {
               Sign In to Practice {subjectInfo?.name || 'CBSE Class 10'}
             </h2>
             <p className="text-xs sm:text-sm text-academic-subtle max-w-md mx-auto leading-relaxed">
-              Even for our <strong>100% Free Weekly Practice Sprint (10 Questions)</strong>, logging in ensures all your attempts, mistakes, SmartScore™, and Loopie AI doubts are saved to your account.
+              Logging in ensures your cognitive telemetry, mistake comeback queue, SmartScore™, and Socratic inquiry logs are saved to your account.
             </p>
           </div>
 
           <div className="rounded-2xl bg-paper-50 border border-academic-border p-4 text-left space-y-2.5 text-xs">
             <div className="flex items-center gap-2.5 font-bold text-forest-950">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>100% Free Practice Sprint Unlocked</span>
+              <span>Free Practice Sprint Unlocked</span>
             </div>
             <div className="flex items-center gap-2.5 font-bold text-forest-950">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -441,7 +446,7 @@ export default function StudyReaderPage({ params }: ReaderProps) {
             </div>
             <div className="flex items-center gap-2.5 font-bold text-forest-950">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>5 Free Loopie 🦉 AI Doubt Inquiries Included Daily</span>
+              <span>Autonomous Socratic Pedagogical Inquiries Included Daily</span>
             </div>
           </div>
 
@@ -876,22 +881,33 @@ export default function StudyReaderPage({ params }: ReaderProps) {
 
               {/* Answer & Explanation Reveal */}
               <div className="pt-2 space-y-4">
-                <button
-                  onClick={() => setRevealed(!revealed)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition shadow-sm"
-                >
-                  {revealed ? (
-                    <>
-                      <EyeOff className="w-4 h-4 text-emerald-400" />
-                      <span>Hide Model Answer</span>
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="w-4 h-4 text-emerald-400" />
-                      <span>Reveal Model Answer & Step-by-Step Method</span>
-                    </>
-                  )}
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => setRevealed(!revealed)}
+                    className="inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-sm"
+                  >
+                    {revealed ? (
+                      <>
+                        <EyeOff className="w-4 h-4 text-emerald-400" />
+                        <span>Hide Model Answer</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4 text-emerald-400" />
+                        <span>Reveal Model Answer & Rubric</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setFeynmanOpen(true)}
+                    className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-sm"
+                    title="Defend this concept aloud or in writing to test true understanding"
+                  >
+                    <Mic className="w-4 h-4 text-white" />
+                    <span>Feynman Concept Defense →</span>
+                  </button>
+                </div>
 
                 {revealed && (
                   <div className="p-6 sm:p-7 rounded-2xl bg-[#0F172A] border border-slate-800 text-white space-y-6 shadow-xl animate-in fade-in">
@@ -1105,12 +1121,22 @@ export default function StudyReaderPage({ params }: ReaderProps) {
         studentName={userSession?.name || 'Class 10 Learner'}
       />
 
-      {/* Loopie AI Doubt Solver (CBSE Class 10 Grounded) */}
-      <LoopieChatWidget
+      {/* Socratic Reasoning Partner Widget */}
+      <SocraticTutorWidget
         topic={currentQ?.topic || 'General Practice'}
-        subjectName={subjectInfo?.name || 'CBSE Class 10'}
+        subjectName={subjectInfo?.name || 'Academic Standard'}
         subjectSlug={slug}
         questionContext={currentQ?.question || ''}
+      />
+
+      {/* Feynman Conceptual Defense Modal */}
+      <FeynmanEvaluatorModal
+        isOpen={feynmanOpen}
+        onClose={() => setFeynmanOpen(false)}
+        question={currentQ?.question || ''}
+        topic={currentQ?.topic || 'General Practice'}
+        subjectName={subjectInfo?.name || 'Academic Standard'}
+        referenceExplanation={currentQ?.explanation || ''}
       />
     </div>
   );

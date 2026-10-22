@@ -207,7 +207,7 @@ export function TrialMilestoneModal({
               <span className="text-xs font-bold text-forest-950">Don't want to wait 7 days?</span>
             </div>
             <p className="text-[11px] text-forest-700 mt-0.5">
-              Unlock all 200 questions + downloadable 10-year question dossiers for only ₹299/mo.
+              Unlock full 200 questions + downloadable 10-year question dossiers immediately.
             </p>
           </div>
 
@@ -216,7 +216,7 @@ export function TrialMilestoneModal({
             subjectName={subjectName}
             priceInr={299}
             isPublished={true}
-            buttonText="Unlock All 200 (₹299)"
+            buttonText="Unlock Full Dossier →"
             className="w-full sm:w-auto text-xs py-2.5 px-4"
           />
         </div>

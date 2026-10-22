@@ -100,24 +100,22 @@ export async function POST(req: NextRequest) {
       metadata: { topic, doubtQuery: doubt.slice(0, 100) },
     }).catch(() => {});
 
-    // Strict Board & Topic Bound System Prompt
-    const systemPrompt = `You are Loopie 🦉, the official, friendly, and authoritative AI CBSE Class 10 Tutor for LoopEdu.
+    // Strict Board & Topic Bound Socratic System Prompt
+    const systemPrompt = `You are the Autonomous Socratic Pedagogical Partner in the LoopEdu Mission-Control Ecosystem.
 
 STRICT OPERATING CONSTRAINTS:
-1. BOARD BOUNDARY: You MUST ground ALL answers strictly in the official CBSE Class 10 NCERT curriculum and official CBSE marking schemes.
+1. CURRICULUM BOUNDARY: You MUST ground all explanations strictly in official curriculum standards, NCERT frameworks, and official board marking rubrics.
 2. CURRENT TOPIC BOUNDARY: The student is currently studying:
-   - Board: Central Board of Secondary Education (CBSE Class 10)
    - Subject: ${subjectName}
    - Active Topic: ${topic}
    - Active Problem Under Study: "${questionContext.slice(0, 300)}"
-3. TOPIC FOCUS ENFORCEMENT: If the student asks about something unrelated to this specific topic (or outside CBSE Class 10), politely deflect and refocus them:
-   "🦉 Loopie stays focused! I am strictly bound to your active CBSE Class 10 topic: **${topic}**. Let's keep our preparation sharp—ask me any doubt on this topic or its NCERT formulas!"
-4. PEDAGOGY:
-   - Provide clear, encouraging, step-by-step explanations.
-   - Show how CBSE awards marks for every step.
+3. SOCRATIC PEDAGOGICAL DIRECTIVE (CRITICAL):
+   - NEVER hand out the final numerical or algebraic answer directly.
+   - Deconstruct confusion into first principles and step-by-step guidance.
+   - Ask clarifying counter-questions to verify where the student's reasoning stalled.
    - Use standard LaTeX notation (e.g. $x^2 + 5x + 6 = 0$) for mathematical equations.
-   - Highlight common board exam pitfalls ("Watch out for this CBSE trap...").
-   - Sign off briefly with an encouraging owl emoji 🦉.`;
+   - Highlight official board traps and sign convention errors.
+   - Maintain a razor-sharp, enterprise-grade, supportive tone. No cartoon mascots or childish fluff.`;
 
     const apiKey = process.env.OPENAI_API_KEY;
 
@@ -175,14 +173,14 @@ STRICT OPERATING CONSTRAINTS:
       }
     }
 
-    // High-Fidelity Verified NCERT Fallback
-    const fallbackReply = `🦉 **Loopie's NCERT Step Guide on ${topic}**:
+    // High-Fidelity Verified Socratic Step Guidance Fallback
+    const fallbackReply = `**Socratic Deconstruction on ${topic}**:
 
-1. **Core CBSE Principle**: Always start by writing the governing theorem or definition from your NCERT textbook.
-2. **Formula & Units**: In the CBSE marking scheme, stating the fundamental equation awards half a mark even before calculation.
-3. **Key Check for ${topic}**: Make sure your units match (e.g., convert minutes to seconds, cm to metres) before calculating.
+1. **First Principles Framework**: Identify the governing physical or mathematical conservation law / theorem.
+2. **Step Decomposition**: In the official board marking rubric, stating the governing formula and given variables secures step marks immediately.
+3. **Common Board Trap for ${topic}**: Double-check sign conventions and unit conversions before solving the root or final value.
 
-Keep going—you're doing great! Ask me any specific step you'd like to break down further. 🦉`;
+Which specific step or variable in this problem feels ambiguous?`;
 
     return NextResponse.json({
       success: true,

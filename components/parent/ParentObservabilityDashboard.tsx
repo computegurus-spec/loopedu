@@ -53,7 +53,7 @@ export const ParentObservabilityDashboard: React.FC = () => {
     {
       name: 'Mathematics Standard (041)',
       status: 'active',
-      plan: '₹299/month',
+      plan: 'Active Track',
       accuracy: 82,
       masteredUnits: '1 of 6',
       unlockedPdf: 'Unit 1: Real Numbers & Polynomials (30 Questions)',
@@ -63,7 +63,7 @@ export const ParentObservabilityDashboard: React.FC = () => {
     {
       name: 'Science (086) - Phys, Chem, Bio',
       status: 'active',
-      plan: '₹299/month',
+      plan: 'Active Track',
       accuracy: 76,
       masteredUnits: '1 of 5',
       unlockedPdf: 'Unit 1: Chemical Reactions & Acids (25 Questions)',
@@ -73,12 +73,12 @@ export const ParentObservabilityDashboard: React.FC = () => {
     {
       name: 'Social Science (087)',
       status: 'not_subscribed',
-      plan: '₹299/month',
+      plan: 'Available Track',
       accuracy: 0,
       masteredUnits: '0 of 5',
       unlockedPdf: 'None',
       recentTopic: 'Not started',
-      nextMilestone: 'Subscribe to activate daily 15-min habit',
+      nextMilestone: 'Activate to begin daily 15-min habit',
     },
   ];
 
@@ -359,10 +359,10 @@ View full observability dashboard: ${origin}/parent`;
           <div>
             <h3 className="font-serif font-bold text-base text-forest-950 flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-forest-700" />
-              <span>Subject Breakdown & Subscription Status (₹299/mo)</span>
+              <span>Subject Breakdown & Curriculum Status</span>
             </h3>
             <p className="text-xs text-academic-subtle">
-              Choose and monitor subjects individually. Add or pause anytime.
+              Choose and monitor subjects individually. Add or pause tracks anytime.
             </p>
           </div>
 
@@ -370,7 +370,7 @@ View full observability dashboard: ${origin}/parent`;
             href="/catalogue"
             className="inline-flex items-center gap-1 text-xs font-bold text-forest-900 hover:text-forest-700 underline"
           >
-            <span>Add Another Subject (₹299/mo)</span>
+            <span>Explore All Subjects</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -388,11 +388,11 @@ View full observability dashboard: ${origin}/parent`;
                   </span>
                   {sub.status === 'active' ? (
                     <span className="bg-forest-100 text-forest-900 border border-forest-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                      Active Subscription ({sub.plan})
+                      {sub.plan}
                     </span>
                   ) : (
                     <span className="bg-paper-200 text-forest-600 text-[10px] font-medium px-2 py-0.5 rounded-full">
-                      Not Enrolled
+                      Available Track
                     </span>
                   )}
                 </div>
@@ -418,9 +418,9 @@ View full observability dashboard: ${origin}/parent`;
                 ) : (
                   <Link
                     href={`/catalogue`}
-                    className="inline-flex items-center gap-1 bg-limeaccent hover:bg-limeaccent-hover text-forest-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow-xs"
+                    className="inline-flex items-center gap-1 bg-forest-900 hover:bg-forest-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition shadow-xs"
                   >
-                    <span>Enrol for ₹299/mo</span>
+                    <span>Activate Track</span>
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 )}

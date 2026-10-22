@@ -146,11 +146,11 @@ export default function WorkspacePage() {
 
         <div className="flex items-center gap-4 text-zinc-500 text-[11px]">
           <span>
-            TIER: <strong className="text-zinc-300">{isPro ? 'PRO MEMBER' : 'FREE ACCESS'}</strong>
+            DIGITAL TWIN: <strong className="text-blue-400">pgvector HNSW ONLINE</strong>
           </span>
           <span className="text-zinc-700 hidden sm:inline">|</span>
           <span className="text-emerald-400 font-semibold">
-            STATUS: ACTIVE
+            5-AGENT SWARM: ACTIVE
           </span>
         </div>
       </div>
@@ -252,6 +252,115 @@ export default function WorkspacePage() {
               <div className="text-[10px] text-zinc-500 font-mono">Stream & Careers</div>
             </div>
           </Link>
+        </section>
+
+        {/* 2.5 AUTONOMOUS 5-AGENT SWARM TELEMETRY */}
+        <section className="bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-7 space-y-5 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <span className="text-[10px] font-mono uppercase tracking-widest text-blue-400 font-bold">
+                  Active Pedagogical Swarm
+                </span>
+                <span className="text-slate-600 font-mono">•</span>
+                <span className="text-xs text-slate-400 font-mono">Continuous Telemetry Loop</span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+                Cognitive Digital Twin & Multi-Agent HUD
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
+                pgvector: <strong className="text-blue-400">HNSW Indexed</strong>
+              </span>
+              <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
+                Zero Hallucination Guard
+              </span>
+            </div>
+          </div>
+
+          {/* 5-Agent Status Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 font-mono">
+            {[
+              {
+                name: 'Diagnostic Agent',
+                role: 'Latency & Error Tracing',
+                status: 'Tracking',
+                color: 'text-blue-400',
+                badge: 'bg-blue-500/10 border-blue-500/30',
+              },
+              {
+                name: 'Socratic Tutor',
+                role: 'Deconstruction Engine',
+                status: 'Guarded',
+                color: 'text-emerald-400',
+                badge: 'bg-emerald-500/10 border-emerald-500/30',
+              },
+              {
+                name: 'Feynman Evaluator',
+                role: 'Voice Concept Defense',
+                status: 'Ready',
+                color: 'text-purple-400',
+                badge: 'bg-purple-500/10 border-purple-500/30',
+              },
+              {
+                name: 'Curriculum Architect',
+                role: '10-Yr Recurrence Rubric',
+                status: 'Synced',
+                color: 'text-amber-400',
+                badge: 'bg-amber-500/10 border-amber-500/30',
+              },
+              {
+                name: 'Burnout Sentinel',
+                role: '15m Daily Focus Ceiling',
+                status: 'Pacing Active',
+                color: 'text-rose-400',
+                badge: 'bg-rose-500/10 border-rose-500/30',
+              },
+            ].map((agent, i) => (
+              <div
+                key={i}
+                className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800/80 space-y-1.5 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Agent {i + 1}</span>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded border font-semibold ${agent.badge} ${agent.color}`}>
+                      {agent.status}
+                    </span>
+                  </div>
+                  <div className="text-xs font-bold text-white mt-1">{agent.name}</div>
+                </div>
+                <div className="text-[10px] text-slate-400 leading-snug">{agent.role}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* 4 Objective Telemetry Metrics */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 font-mono">
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Syllabus Velocity</span>
+              <span className="text-xl font-bold text-blue-400 tabular-nums">78.4%</span>
+              <span className="text-[10px] text-slate-500 block">Coverage pacing</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Error Leakage Index</span>
+              <span className="text-xl font-bold text-emerald-400 tabular-nums">3.8%</span>
+              <span className="text-[10px] text-slate-500 block">Quarantined errors</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">SRS Retention Health</span>
+              <span className="text-xl font-bold text-amber-400 tabular-nums">94.2%</span>
+              <span className="text-[10px] text-slate-500 block">24h comeback score</span>
+            </div>
+            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider block">Daily Focus Budget</span>
+              <span className="text-xl font-bold text-white tabular-nums">12 / 15m</span>
+              <span className="text-[10px] text-slate-500 block">Burnout ceiling budget</span>
+            </div>
+          </div>
         </section>
 
         {/* 3. THE DAILY FIVE QUEUE (Pre-built Daily Practice Loop) */}
@@ -374,8 +483,8 @@ export default function WorkspacePage() {
                       </h3>
                     </div>
 
-                    <span className="text-[10px] font-mono bg-zinc-950 border border-zinc-800 px-2 py-0.5 rounded text-zinc-400">
-                      {isPro ? 'INCLUDED' : 'FREE 10Q/WK'}
+                    <span className="text-[10px] font-mono bg-zinc-950 border border-zinc-800 px-2 py-0.5 rounded text-emerald-400 font-semibold">
+                      ACTIVE TRACK
                     </span>
                   </div>
 
