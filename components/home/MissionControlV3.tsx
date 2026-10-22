@@ -9,7 +9,6 @@ import {
   Layers,
   Search,
   ArrowRight,
-  CheckCircle2,
   Brain,
   Mic,
   Clock,
@@ -263,85 +262,7 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
           </div>
         </div>
       </section>
-
-      {/* 3. SMART AUTONOMOUS INTAKE (Dynamic Curriculum Resolution) */}
-      <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            {/* Left Copy */}
-            <div className="lg:col-span-5 space-y-4">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">
-                ZERO HARDCODED DROPDOWNS
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
-                Smart Autonomous Curriculum Intake.
-              </h2>
-              <p className="text-sm text-slate-600 leading-relaxed">
-                When a student selects their grade and board (e.g. CBSE 8th/10th, ICSE, or State Boards), our Curriculum Architect Agent dynamically queries verified central standards and synchronizes official course codes and textbooks directly from education portals.
-              </p>
-              <ul className="space-y-2.5 text-xs text-slate-700 pt-2 font-medium">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Central Board (NCERT official codes &amp; textbooks)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>State Boards: Karnataka KTBS, Maharashtra Balbharati, TN DGE</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Competitive Exam Foundation: JEE Main, NEET-UG, CUET</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Right Interactive Mock Grid */}
-            <div className="lg:col-span-7 p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-md space-y-4 text-xs">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <span className="text-slate-500 font-medium">Live Curriculum Standards Ingestion:</span>
-                <span className="text-[#0066FF] font-bold">CBSE Class 10 (AISSE Verified)</span>
-              </div>
-
-              <div className="space-y-2.5">
-                {[
-                  { name: 'Mathematics (Standard)', code: '041', book: 'NCERT Class X (ncert.nic.in)', core: true },
-                  { name: 'Science (Physics, Chem, Bio)', code: '086', book: 'NCERT Science Class X', core: true },
-                  { name: 'Social Science', code: '087', book: 'Our Pasts, Democratic Politics, Res & Dev', core: true },
-                  { name: 'English Language & Literature', code: '184', book: 'First Flight & Footprints', core: true },
-                  { name: 'Information Technology / AI Skills', code: '402', book: 'CBSE Skill Standards Standard X', core: false },
-                ].map((track, i) => (
-                  <div
-                    key={i}
-                    className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between hover:border-slate-300 transition"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-lg bg-[#0066FF] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                        ✓
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900">{track.name}</span>
-                          <span className="text-[10px] font-mono text-slate-500">Code {track.code}</span>
-                        </div>
-                        <div className="text-[11px] text-slate-500 mt-0.5">📖 {track.book}</div>
-                      </div>
-                    </div>
-                    <span
-                      className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                        track.core
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : 'bg-slate-200 text-slate-700'
-                      }`}
-                    >
-                      {track.core ? 'MANDATORY' : 'ELECTIVE'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
+
