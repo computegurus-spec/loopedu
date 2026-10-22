@@ -125,23 +125,15 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
               An active pedagogical operating system that builds a persistent cognitive digital twin of your brain, eliminates guess-work, and turns academic weaknesses into permanent board examination wins.
             </p>
 
-            {/* Direct High-Impact CTAs */}
+            {/* Direct High-Impact CTA */}
             <div className="pt-4 max-w-xl mx-auto space-y-4">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="flex items-center justify-center">
                 <Link
                   href="/initialize"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-sm transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform"
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl bg-[#0066FF] hover:bg-blue-600 text-white font-bold text-sm transition shadow-md hover:shadow-lg hover:-translate-y-0.5 transform"
                 >
                   <span>Configure Your Study Plan</span>
                   <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <Link
-                  href="/catalogue"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold text-sm transition shadow-2xs"
-                >
-                  <BookOpen className="w-4 h-4 text-[#0066FF]" />
-                  <span>Explore Curriculum Catalog</span>
                 </Link>
               </div>
 

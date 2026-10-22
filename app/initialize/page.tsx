@@ -305,9 +305,16 @@ function InitializeWizardContent() {
             <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
               {/* Direct Search / Input for Custom Courses (JEE, NEET, etc.) */}
               <div className="space-y-2">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Target Competitive Exam or Specific Course (Optional)
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Target Competitive Exam or Specific Course
+                  </label>
+                  {customSearch.trim() && (
+                    <span className="text-[11px] font-semibold text-[#0066FF] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                      Standard Board/Grade Bypassed
+                    </span>
+                  )}
+                </div>
                 <div className="relative">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                   <input
@@ -315,12 +322,13 @@ function InitializeWizardContent() {
                     value={customSearch}
                     onChange={(e) => setCustomSearch(e.target.value)}
                     placeholder="Type any exam or goal (e.g. JEE Main, NEET-UG, CUET, Foundation Olympiad)..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-16 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#0066FF] focus:bg-white transition"
                   />
                   {customSearch && (
                     <button
+                      type="button"
                       onClick={() => setCustomSearch('')}
-                      className="absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-800 font-semibold"
+                      className="absolute right-3 top-2.5 text-xs text-rose-600 hover:text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md font-semibold border border-rose-200 transition"
                     >
                       Clear
                     </button>
@@ -329,19 +337,16 @@ function InitializeWizardContent() {
                 {/* Popular Tags */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
                   <span className="text-slate-400 text-[11px] font-medium">Quick selects:</span>
-                  {['JEE Main', 'NEET-UG', 'CUET', 'Foundation Olympiad', 'Class 10 CBSE'].map((tag) => (
+                  {['JEE Main', 'NEET-UG', 'CUET', 'Foundation Olympiad'].map((tag) => (
                     <button
                       key={tag}
                       type="button"
-                      onClick={() => {
-                        if (tag.includes('CBSE')) {
-                          setCustomSearch('');
-                          setBoard('CBSE');
-                        } else {
-                          setCustomSearch(tag);
-                        }
-                      }}
-                      className="px-2.5 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition"
+                      onClick={() => setCustomSearch(tag)}
+                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium transition ${
+                        customSearch === tag
+                          ? 'bg-[#0066FF] text-white shadow-2xs font-bold'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                      }`}
                     >
                       {tag}
                     </button>
@@ -349,11 +354,22 @@ function InitializeWizardContent() {
                 </div>
               </div>
 
-              {/* Board Selection */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-100">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Select Board / Educational Framework
-                </label>
+              {/* Board Selection (Disabled when custom competitive course is active) */}
+              <div
+                className={`space-y-2.5 pt-2 border-t border-slate-100 transition-opacity duration-150 ${
+                  customSearch.trim() ? 'opacity-35 pointer-events-none select-none' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Select Board / Educational Framework
+                  </label>
+                  {customSearch.trim() && (
+                    <span className="text-[10px] text-slate-500 font-medium italic">
+                      (Disabled while competitive exam is active)
+                    </span>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {[
                     { id: 'CBSE', label: 'CBSE', desc: 'Central Board (NCERT)' },
@@ -364,6 +380,7 @@ function InitializeWizardContent() {
                     <button
                       key={b.id}
                       type="button"
+                      disabled={Boolean(customSearch.trim())}
                       onClick={() => {
                         setBoard(b.id);
                         if (b.id === 'COMPETITIVE' && !customSearch) {
@@ -386,8 +403,8 @@ function InitializeWizardContent() {
                 </div>
               </div>
 
-              {/* Dynamic State Selection when State Board is chosen */}
-              {board === 'StateBoard' && (
+              {/* Dynamic State Selection when State Board is chosen and no custom search is active */}
+              {!customSearch.trim() && board === 'StateBoard' && (
                 <div className="space-y-3 p-5 rounded-2xl bg-amber-50/60 border border-amber-200 animate-in fade-in duration-150">
                   <div className="flex items-center justify-between">
                     <label className="block text-xs font-bold uppercase tracking-wider text-amber-900">
@@ -425,11 +442,22 @@ function InitializeWizardContent() {
                 </div>
               )}
 
-              {/* Grade Selection */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-100">
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
-                  Select Grade / Academic Standard
-                </label>
+              {/* Grade Selection (Disabled when custom competitive course is active) */}
+              <div
+                className={`space-y-2.5 pt-2 border-t border-slate-100 transition-opacity duration-150 ${
+                  customSearch.trim() ? 'opacity-35 pointer-events-none select-none' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+                    Select Grade / Academic Standard
+                  </label>
+                  {customSearch.trim() && (
+                    <span className="text-[10px] text-slate-500 font-medium italic">
+                      (Disabled while competitive exam is active)
+                    </span>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                   {[
                     { id: '8th Standard', label: '8th Standard', tag: 'Foundation' },
@@ -441,6 +469,7 @@ function InitializeWizardContent() {
                     <button
                       key={g.id}
                       type="button"
+                      disabled={Boolean(customSearch.trim())}
                       onClick={() => setGrade(g.id)}
                       className={`p-3 rounded-2xl border text-left transition ${
                         grade === g.id
@@ -462,7 +491,9 @@ function InitializeWizardContent() {
                   <span>
                     Active Track:{' '}
                     <strong className="text-slate-900">
-                      {customSearch ? customSearch : board === 'StateBoard' ? `State Board (${selectedState.toUpperCase()})` : board} • {grade}
+                      {customSearch.trim()
+                        ? customSearch.trim()
+                        : `${board === 'StateBoard' ? `State Board (${selectedState.toUpperCase()})` : board} • ${grade}`}
                     </strong>
                   </span>
                 </div>
