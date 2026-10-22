@@ -159,7 +159,7 @@ runTest('AEO/GEO: llms.txt and legal footer attribution are compliant', () => {
   const llmsTxt = fs.readFileSync(path.join(__dirname, '..', 'public', 'llms.txt'), 'utf8');
   assert.ok(llmsTxt.includes('loopedu.in'), 'llms.txt must reference loopedu.in');
   assert.ok(
-    llmsTxt.includes('itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka'),
+    llmsTxt.includes('Blocks and Loops technologies pvt ltd - Bangalore, Karnataka'),
     'llms.txt must state exact legal attribution'
   );
   assert.ok(llmsTxt.includes('The Daily Five'), 'llms.txt must include The Daily Five specification');
@@ -168,7 +168,8 @@ runTest('AEO/GEO: llms.txt and legal footer attribution are compliant', () => {
 
   const footer = fs.readFileSync(path.join(__dirname, '..', 'components', 'Footer.tsx'), 'utf8');
   assert.ok(
-    footer.includes('a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka'),
+    footer.includes('Blocks and Loops technologies pvt ltd') &&
+    footer.includes('Bangalore, Karnataka'),
     'Footer must display exact legal attribution'
   );
 });

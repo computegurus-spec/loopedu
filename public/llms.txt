@@ -1,7 +1,7 @@
 # LoopEdu (loopedu.in)
 
 > The 15-Minute Daily Habit Platform for CBSE Class 10 Board Examinations
-> A product of itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka
+> A product of Blocks and Loops technologies pvt ltd - Bangalore, Karnataka
 > Website: https://loopedu.in
 
 ## Overview
@@ -50,5 +50,5 @@ LoopEdu (https://loopedu.in) is an AI-powered daily practice platform built for 
 
 ## Legal Entity & Publishing Statement
 LoopEdu is an independent educational technology platform.
-A product of itappens.ai | Blocks and Loops technologies pvt ltd - Bangalore, Karnataka.
-LoopEdu is independent and not affiliated with, authorized, or endorsed by the Central Board of Secondary Education (CBSE) or NCERT.
+A product of Blocks and Loops technologies pvt ltd - Bangalore, Karnataka.
+LoopEdu is independent and not officially affiliated to any educational board.

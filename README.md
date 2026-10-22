@@ -9,7 +9,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary-forest)](https://loopedu.in)
 
-*a product of **itappens.ai** | **Blocks and Loops technologies pvt ltd** — Bangalore, Karnataka*
+*a product of **Blocks and Loops technologies pvt ltd** — Bangalore, Karnataka*
 
 </div>
 
@@ -153,6 +153,6 @@ Pre-configured credentials for administrative verification and curriculum inspec
 
 ## 📄 Legal & Corporate Attribution
 
-* **Operating Entity:** LoopEdu is an independent educational technology platform developed and operated by **Blocks and Loops technologies pvt ltd** (Bangalore, Karnataka) and powered by **itappens.ai**.
-* **Independence Notice:** LoopEdu is independent and not affiliated with, authorized, or endorsed by CBSE, NCERT, NTA, or any state examination board.
+* **Operating Entity:** LoopEdu is an independent educational technology platform developed and operated by **Blocks and Loops technologies pvt ltd** (Bangalore, Karnataka).
+* **Independence Notice:** LoopEdu is an independent educational technology platform and is not officially affiliated to any educational board.
 * **Copyright:** © 2026–2027 LoopEdu (`loopedu.in`). All rights reserved.

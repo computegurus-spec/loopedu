@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
             LoopEdu is an independent educational technology platform developed by Blocks and Loops Technologies Pvt Ltd and is not officially affiliated to any educational board .
           </p>
           <p>
-            LoopEdu is a product of <strong className="text-forest-950">itappens.ai</strong> | <strong className="text-forest-950">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka.
+            LoopEdu is a product of <strong className="text-slate-900">Blocks and Loops technologies pvt ltd</strong> - Bangalore, Karnataka.
           </p>
         </div>
       </div>
