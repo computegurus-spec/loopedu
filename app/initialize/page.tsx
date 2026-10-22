@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -40,7 +40,7 @@ interface OfficialCourse {
   sampleTopics?: string[];
 }
 
-export default function InitializePage() {
+function InitializeWizardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -805,3 +805,18 @@ export default function InitializePage() {
     </div>
   );
 }
+
+export default function InitializePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+          <div className="w-8 h-8 border-4 border-[#0066FF] border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <InitializeWizardContent />
+    </Suspense>
+  );
+}
+
