@@ -128,15 +128,6 @@ export const Navbar: React.FC = () => {
                 <Compass className="w-4 h-4 text-indigo-600" />
                 <span>Career Planner</span>
               </Link>
-
-              <Link
-                href="/catalogue"
-                className={`transition hover:text-slate-900 py-1 ${
-                  isCurrent('/catalogue') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                Curriculum Catalog
-              </Link>
             </>
           ) : (
             <>
@@ -158,15 +149,6 @@ export const Navbar: React.FC = () => {
                 className="transition hover:text-slate-900 py-1 text-slate-600 hover:text-slate-900"
               >
                 Global Education News
-              </Link>
-
-              <Link
-                href="/catalogue"
-                className={`transition hover:text-slate-900 py-1 ${
-                  isCurrent('/catalogue') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                Curriculum Catalog
               </Link>
 
               <Link
