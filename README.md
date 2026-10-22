@@ -1,8 +1,8 @@
-# LoopEdu (Beta) • `loopedu.in`
+# LoopEdu • `loopedu.in`
 
 <div align="center">
 
-**The 15-Minute Daily Habit Platform for School & Competitive Exams**
+**The Autonomous Multi-Agent Student Operating System & Cognitive Habit Engine**
 
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
@@ -17,69 +17,65 @@
 
 ## 🌟 Executive Overview
 
-**LoopEdu** transforms high-stakes exam preparation from painful, last-minute cramming into an effortless, daily **15-minute habit loop**. Inspired by Duolingo's behavioral psychology and active recall cognitive science, LoopEdu replaces 500-page bulky question books with bite-sized daily sets, spaced error revision, and real-time parent observability.
+**LoopEdu** transforms high-stakes school and competitive exam preparation from passive rote cramming into an active, intelligent **15-minute daily mastery loop**. 
 
-Starting with **CBSE Class 10**, the platform is expanding across senior secondary school boards and premier competitive entrance examinations (**JEE Main & Advanced, NEET UG, CUET, Foundation & Olympiads**).
+Designed as a modern student mission control, LoopEdu pairs learners with an autonomous multi-agent cognitive architecture. Instead of generic AI wrappers or 500-page static PDFs, students interact with specialized reasoning agents that architect personalized curriculums, provide Socratic step-by-step guidance, evaluate conceptual defense via the Feynman technique, and automate spaced repetition.
+
+Covering **CBSE Class 10**, **State Boards (Karnataka, Maharashtra, etc.)**, **Foundation & Olympiads**, and competitive entrance streams (**JEE Main & Advanced, NEET UG**).
 
 ---
 
-## 🏛️ The 3 Core Product Pillars
+## 🤖 Multi-Agent Cognitive Swarm
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        THE LOOPEDU ECOSYSTEM                           │
-├──────────────────┬───────────────────────┬─────────────────────────────┤
-│ 1. THE DAILY FIVE│ 2. MISTAKE COMEBACK   │ 3. PARENT OBSERVABILITY     │
-│  Bite-Sized Loop │   Active Recall Vault │    Anti-Micromanagement     │
-│  • 5 high-yield  │  • Automated error log│   • Calm honesty metre      │
-│    questions/day │  • 3d, 7d, 14d spaced │   • 1-click WhatsApp report │
-│  • Streak XP     │    repetition         │   • Curriculum coverage     │
-│  • Unlock PDFs   │  • Solved 2x to master│     readiness index         │
-└──────────────────┴───────────────────────┴─────────────────────────────┘
+│                      LOOPEDU AGENTIC ECOSYSTEM                         │
+├────────────────────┬───────────────────────┬───────────────────────────┤
+│ 1. CURRICULUM ARCH │ 2. SOCRATIC REASONER  │ 3. FEYNMAN DEFENSE AGENT  │
+│    Dynamic Intake  │    Guided Inquiry     │    Conceptual Clarity     │
+│  • Board/State sync│  • Zero spoonfed ans  │  • Layman explanation test│
+│  • Official books  │  • First-principles   │  • Detects cognitive gap  │
+│  • Custom search   │  • Calibrated hints   │  • Natural voice & text   │
+├────────────────────┼───────────────────────┼───────────────────────────┤
+│ 4. SPACED RECALL   │ 5. BURNOUT SENTINEL   │ 6. PARENT OBSERVABILITY   │
+│    Memory Retention│    Fatigue Prevention │    Calm Honesty Metre     │
+│  • Error vault     │  • 15-min daily budget│  • Zero-nag WhatsApp card │
+│  • 24h/3d/7d cycle │  • 3 new + 2 retries  │  • Objective syllabus %   │
+│  • 2x clear rule   │  • Streak preservation│  • Honest mastery metrics │
+└────────────────────┴───────────────────────┴───────────────────────────┘
 ```
 
-### 1. The Daily Five (Student Gamification)
-* **Bite-Sized Routine:** Every morning, students receive exactly 5 high-yield questions tailored to their enrolled track to beat study fatigue in under 15 minutes.
-* **Streak Momentum:** Completing daily loops maintains consecutive-day streaks with forgiving streak-freeze mechanics.
-* **Unlockable Milestones:** Finishing a chapter loop grants students direct access to download curated, high-value **10-Year Question Bank Dossiers** as trophy rewards.
+### 1. Curriculum Architect Agent
+* **Dynamic Framework Adaptation:** Interactively constructs official course frameworks for any board (CBSE, State Boards, ICSE) and grade on demand.
+* **Official Syllabus Ingestion:** Maps direct textbook chapters, paper codes, and official central resources instead of generic, outdated question dumps.
+* **Personalized Goal Alignment:** Calibrates daily queues according to student targets (Board Exam 95%+, Olympiad rigor, or Conceptual Foundation).
 
-### 2. The Mistake Comeback (Spaced Active Recall)
-* **Automated Error Vault:** Every question answered incorrectly is automatically flagged and routed to a personalized error vault instead of being lost.
-* **Spaced Repetition Schedule:** Flagged problems dynamically resurface **3 days, 7 days, and 14 days** later to cement concepts before exams.
-* **Redemption Clearance:** A concept is only cleared from the active loop once the student successfully solves it twice consecutively without hints.
+### 2. Socratic Reasoning Partner
+* **Anti-Spoonfeeding:** Rejects superficial answer generation. Questions are broken down through first-principles Socratic breadcrumbs.
+* **Adaptive Inquiry:** When a student gets stuck, the agent asks probing counter-questions to help them deduce the correct formula or proof independently.
 
-### 3. The Parent Observability Hub (Calm Oversight)
-* **Anti-Micromanagement:** Eliminates daily nagging by providing parents a clean, high-level digest answering two core questions: *"Did my child complete today's path?"* and *"What chapters are fully secure?"*
-* **The Honesty Metre:** Transparent, uninflated accuracy and question counts rather than artificial score percentages.
-* **1-Click WhatsApp Progress Reports:** Pre-formats crisp text summaries ready to share with family or tutors with one tap.
+### 3. Feynman Conceptual Defense Agent
+* **Explain-It-To-A-Child:** Students test their real mastery by explaining concepts aloud or in writing using simple, jargon-free analogies.
+* **Cognitive Leakage Detection:** Pinpoints hand-waving and misapplied theorems in real time and routes remediations into the next morning's session.
 
----
+### 4. Active Recall & Error Vault Engine
+* **Automated Mistake Comeback:** Every incorrect answer is automatically captured and tagged in the student's personal error vault.
+* **Calibrated Spaced Repetition:** Resurfaces tricky questions at spaced intervals (24 hours, 3 days, 7 days) to reinforce long-term memory.
+* **Mastery Criterion:** Concepts are only cleared from the active queue after 2 consecutive unassisted correct solutions.
 
-## 📚 Curriculum Roadmap & Tracks
-
-### Currently Live (CBSE Class 10 — 8 Verified Tracks)
-* **Mathematics (Standard — Code 041):** 200 high-yield proofs, algebraic formulations & coordinate geometry.
-* **Mathematics (Basic — Code 241):** 200 questions focused on NCERT core foundations and arithmetic progressions.
-* **Science (Code 086):** Balanced physics calculations, balanced chemistry equations & biology step diagrams.
-* **Social Science (Code 087):** History, Geography, Democratic Politics, and Economics analytical questions.
-* **English Language & Literature (Code 184):** Prose, poetry, analytical paragraphs & integrated grammar.
-* **English Communicative (Code 101):** Literature reader drama/fiction and advanced editing.
-* **German (Code 017):** Reading comprehension, grammar & structured written expression (B1.1 level).
-* **Artificial Intelligence (Code 417):** Employability skills, computer vision, NLP (TF-IDF/BoW) & evaluation metrics.
-
-### Expanding Curriculum (In Active Development)
-* 🎯 **Competitive Entrance:** JEE Main & Advanced (Physics, Chemistry, Maths), NEET UG (NCERT line-by-line Biology, Chem, Physics).
-* 🎯 **Senior Secondary (CBSE 11 & 12):** Science, Commerce, and Humanities.
-* 🎯 **Junior Foundation & Olympiads (Classes 8 & 9):** Mental arithmetic, NTSE & Olympiad inquiry challenges.
-* 🎯 **Multi-Board Expansion:** ICSE Class 10 and major State Board tracks.
+### 5. Burnout Sentinel & Focus Ceiling
+* **15-Minute High-Yield Budget:** Enforces a focused daily limit (e.g., 3 new questions + 2 spaced retries) to prevent cognitive overload.
+* **Streak Momentum:** Sustains continuous daily learning habits with forgiving freeze mechanisms and milestone unlocking.
 
 ---
 
-## 💳 Pricing & Commercial Model
+## 🎨 Design System & Aesthetics
 
-* **Modular Subscription:** **₹299 / month** per subject track (or all-inclusive bundles).
-* **Zero Hidden Lock-ins:** Monthly recurring billing with freedom to pause or cancel anytime.
-* **Milestone Rewards:** Unlocks downloadable 10-year question bank PDFs for offline revision as chapters are conquered.
+* **Palette:** Crisp, enterprise SaaS light mode with an ultra-clean `#F8FAFC` slate canvas and pure `#FFFFFF` layered cards.
+* **Primary Accent:** Electric Cobalt (`#0066FF`) for high-contrast primary actions, focus indicators, and telemetry badges.
+* **Status Badges:** Warm Amber (`#F59E0B` / `#FEF08A`) highlighting streaks, active recall states, and concept health.
+* **Typography:** Inter, Outfit, and KaTeX mathematical notation for textbook-quality typesetting.
+* **Zero Distractions:** No generic chatbot wrappers, cartoon mascots, or promotional clutter.
 
 ---
 
@@ -87,13 +83,13 @@ Starting with **CBSE Class 10**, the platform is expanding across senior seconda
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Framework** | [Next.js 14](https://nextjs.org/) (App Router, React Server Components, Route Handlers) |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) (Strict typing across schema & store) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) (Custom academic palette: Forest, Paper, Lime Accent) |
-| **Math & Formulae** | [KaTeX](https://katex.org/) (`MathRenderer.tsx` for LaTeX mathematical notation) |
-| **Database** | [Supabase](https://supabase.com/) / PostgreSQL (`supabase/schema.sql`) |
-| **Payments** | [Razorpay](https://razorpay.com/) (UPI, NetBanking, Cards, Webhooks with HMAC SHA256 validation) |
-| **Mobile Ready** | [Capacitor](https://capacitorjs.com/) (`capacitor.config.json` for Android & iOS packaging) |
+| **Framework** | [Next.js 14](https://nextjs.org/) (App Router, Server Components, Route Handlers, Suspense boundaries) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) (Strict end-to-end schema & type safety) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com/) (Custom cobalt & warm amber design tokens) |
+| **Math Typesetting** | [KaTeX](https://katex.org/) (`MathRenderer.tsx` for LaTeX equations & chemical balance) |
+| **Database & Vector** | [Supabase](https://supabase.com/) / PostgreSQL with `pgvector` for digital twin concept tracking |
+| **Authentication** | Session-backed student authentication with repeat credential hydration in `localStorage` |
+| **Mobile Deployment** | [Capacitor](https://capacitorjs.com/) for Android & iOS packaging |
 
 ---
 
@@ -116,7 +112,7 @@ Copy `.env.example` to `.env.local`:
 cp .env.example .env.local
 ```
 
-Configure your local secrets in `.env.local`:
+Populate your local keys:
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_PRICE_PER_SUBJECT_INR=299
@@ -132,10 +128,10 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Automated Verification Suite
-Run the 9-point verification test suite:
+### 5. Automated Verification Test Suite
+Run the 9-point platform integrity suite:
 ```bash
-npm run test:verify
+npm run test
 ```
 
 ### 6. Production Build
@@ -146,24 +142,17 @@ npm start
 
 ---
 
-## 🔑 Pre-Configured Owner / Administrator Login
+## 🔐 Administrative & Demo Access
 
-For administrative and demonstration access, the app includes pre-configured owner credentials:
+Pre-configured credentials for administrative verification and curriculum inspection:
 * **Username:** `Sadish`
 * **Password:** `Sadish`
-* **Access Level:** System Administrator + Full PRO Member (all 8 subject tracks automatically unlocked)
+* **Access Level:** System Administrator + Full PRO Member (all verified tracks unlocked)
 
 ---
 
-## 📋 Production Deployment Guide
+## 📄 Legal & Corporate Attribution
 
-For full production deployment instructions, cloud database setup, live Razorpay keys, and DNS configuration:
-👉 Please refer to [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md).
-
----
-
-## 📄 Legal & Corporate Disclaimer
-
-* **Corporate Entity:** LoopEdu is an independent educational platform created and operated by **Blocks and Loops technologies pvt ltd** (Bangalore, Karnataka) and powered by **itappens.ai**.
-* **Independence Notice:** LoopEdu is completely independent and is not affiliated with, endorsed by, or authorized by the Central Board of Secondary Education (CBSE), NCERT, NTA, or any government body.
+* **Operating Entity:** LoopEdu is an independent educational technology platform developed and operated by **Blocks and Loops technologies pvt ltd** (Bangalore, Karnataka) and powered by **itappens.ai**.
+* **Independence Notice:** LoopEdu is independent and not affiliated with, authorized, or endorsed by CBSE, NCERT, NTA, or any state examination board.
 * **Copyright:** © 2026–2027 LoopEdu (`loopedu.in`). All rights reserved.
