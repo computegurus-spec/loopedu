@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  Cpu,
+  Activity,
   Layers,
   Flame,
   Star,
@@ -15,11 +15,10 @@ import {
   ArrowRight,
   ChevronRight,
   Calendar,
-  Activity,
-  Terminal,
-  Shield,
-  Zap,
   BookOpen,
+  GitBranch,
+  Compass,
+  Zap,
   BarChart3,
   Sliders,
 } from 'lucide-react';
@@ -33,22 +32,21 @@ interface SelectedCourse {
   chapterCount?: number;
 }
 
-export default function TelemetryCommandCenterPage() {
+export default function WorkspacePage() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [isPro, setIsPro] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Deployed Swarm Configuration State
+  // Deployed Student Configuration State
   const [agentBoard, setAgentBoard] = useState('CBSE');
   const [agentGrade, setAgentGrade] = useState('8th Standard');
   const [activeCourses, setActiveCourses] = useState<SelectedCourse[]>([]);
   const [statusBar, setStatusBar] = useState(
-    'System Status: Agent Online • Curriculum Loaded: CBSE Grade 8 • Diagnostic Ready'
+    'System Status: Online • Curriculum Loaded: CBSE Grade 8 • Diagnostic Ready'
   );
-  const [vectorNamespace, setVectorNamespace] = useState('dt_vec_primary');
 
-  // Daily Routine & Velocity Telemetry
+  // Daily Routine & Velocity Metrics
   const [selectedMinutes, setSelectedMinutes] = useState<'5min' | '10min' | '15min'>('15min');
   const [streak, setStreak] = useState(0);
   const [smartScore, setSmartScore] = useState(78);
@@ -87,7 +85,7 @@ export default function TelemetryCommandCenterPage() {
       })
       .catch(() => {});
 
-    // 3. Hydrate Deployed Agent Configuration from Cookie or LocalStorage
+    // 3. Hydrate Deployed Configuration from Cookie
     try {
       const match = document.cookie.match(/loopedu_agent_config=([^;]+)/);
       if (match && match[1]) {
@@ -95,13 +93,12 @@ export default function TelemetryCommandCenterPage() {
         if (config.board) setAgentBoard(config.board);
         if (config.grade) setAgentGrade(config.grade);
         if (config.statusBar) setStatusBar(config.statusBar);
-        if (config.digitalTwinNamespace) setVectorNamespace(config.digitalTwinNamespace);
         if (Array.isArray(config.selectedCourses) && config.selectedCourses.length > 0) {
           setActiveCourses(config.selectedCourses);
         }
       }
     } catch (e) {
-      console.warn('Could not parse agent config cookie:', e);
+      console.warn('Could not parse configuration cookie:', e);
     }
   }, [router]);
 
@@ -127,8 +124,8 @@ export default function TelemetryCommandCenterPage() {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-100 font-mono">
         <div className="flex flex-col items-center gap-3">
-          <Cpu className="w-8 h-8 text-emerald-400 animate-pulse" />
-          <p className="text-xs text-zinc-400">CONNECTING_TO_TELEMETRY_COMMAND_CENTER...</p>
+          <Activity className="w-6 h-6 text-emerald-400 animate-pulse" />
+          <p className="text-xs text-zinc-400">Loading student workspace...</p>
         </div>
       </div>
     );
@@ -138,10 +135,10 @@ export default function TelemetryCommandCenterPage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans pb-24 selection:bg-zinc-800 selection:text-white">
-      {/* 1. SYSTEM STATUS BAR (Phase 5 Specified Format) */}
+      {/* 1. Status Bar */}
       <div className="border-b border-zinc-800/80 bg-zinc-950 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
         <div className="flex items-center gap-2.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-400" />
           <span className="text-zinc-200 font-bold tracking-tight">
             {statusBar}
           </span>
@@ -149,23 +146,23 @@ export default function TelemetryCommandCenterPage() {
 
         <div className="flex items-center gap-4 text-zinc-500 text-[11px]">
           <span>
-            NAMESPACE: <strong className="text-zinc-300">{vectorNamespace.slice(0, 15)}</strong>
+            TIER: <strong className="text-zinc-300">{isPro ? 'PRO MEMBER' : 'FREE ACCESS'}</strong>
           </span>
           <span className="text-zinc-700 hidden sm:inline">|</span>
           <span className="text-emerald-400 font-semibold">
-            TELEMETRY: LIVE
+            STATUS: ACTIVE
           </span>
         </div>
       </div>
 
-      {/* Main Command Center Container */}
+      {/* Main Workspace Container */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-10">
-        {/* Header Hero Telemetry */}
+        {/* Header Hero */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-b border-zinc-800/80 pb-8">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-zinc-900 border border-zinc-800 px-2.5 py-0.5 rounded">
-                Autonomous Mission Control
+                Daily Study Workspace
               </span>
               <span className="text-zinc-600 font-mono">•</span>
               <span className="text-xs text-zinc-400 font-mono">
@@ -176,7 +173,7 @@ export default function TelemetryCommandCenterPage() {
               Welcome back, {firstName}.
             </h1>
             <p className="text-sm text-zinc-400 mt-1 max-w-xl">
-              Your autonomous agent swarm has pre-built your daily 15-minute practice queue and synchronized your syllabus dependency graph.
+              Your personalized study loop is calibrated for 15 minutes a day. Master concepts, review flashcards, and consult your academic roadmap.
             </p>
           </div>
 
@@ -202,13 +199,68 @@ export default function TelemetryCommandCenterPage() {
           </div>
         </div>
 
-        {/* 2. THE DAILY FIVE QUEUE (Pre-built Daily Practice Loop) */}
+        {/* 2. THE 5 CORE PILLARS TOOLBAR */}
+        <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Link
+            href="/study/cbse-10-science"
+            className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition flex items-center gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+              <BookOpen className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white group-hover:text-zinc-200">Question Bank</div>
+              <div className="text-[10px] text-zinc-500 font-mono">1,600+ Questions</div>
+            </div>
+          </Link>
+
+          <Link
+            href="/mind-maps"
+            className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition flex items-center gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+              <GitBranch className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white group-hover:text-zinc-200">Concept Mind Maps</div>
+              <div className="text-[10px] text-zinc-500 font-mono">Visual Hierarchy</div>
+            </div>
+          </Link>
+
+          <Link
+            href="/flashcards"
+            className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition flex items-center gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+              <RotateCcw className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white group-hover:text-zinc-200">Flashcards</div>
+              <div className="text-[10px] text-zinc-500 font-mono">Spaced Repetition</div>
+            </div>
+          </Link>
+
+          <Link
+            href="/consultant"
+            className="p-4 rounded-2xl bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 transition flex items-center gap-3 group"
+          >
+            <div className="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+              <Compass className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-white group-hover:text-zinc-200">Academic Advisory</div>
+              <div className="text-[10px] text-zinc-500 font-mono">Stream & Careers</div>
+            </div>
+          </Link>
+        </section>
+
+        {/* 3. THE DAILY FIVE QUEUE (Pre-built Daily Practice Loop) */}
         <section className="bg-gradient-to-b from-zinc-900/90 to-zinc-900/50 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded font-bold">
-                  Burnout Sentinel Baseline
+                <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">
+                  Recommended Daily Pacing
                 </span>
                 <span className="text-xs text-zinc-500 font-mono">• 15m Ceiling Budget</span>
               </div>
@@ -216,7 +268,7 @@ export default function TelemetryCommandCenterPage() {
                 The Daily Five Queue
               </h2>
               <p className="text-xs text-zinc-400 mt-0.5">
-                Pre-built for your {displayCourses.length} active {agentBoard} tracks. High-yield board and NCERT questions with step-by-step marking rubrics.
+                Calibrated for your {displayCourses.length} active {agentBoard} tracks. High-yield board and NCERT questions with step-by-step guidance.
               </p>
             </div>
 
@@ -256,16 +308,16 @@ export default function TelemetryCommandCenterPage() {
               className="inline-flex items-center gap-2 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800/80 text-zinc-300 font-mono px-5 py-4 rounded-2xl text-xs transition"
             >
               <Calendar className="w-4 h-4 text-zinc-400" />
-              <span>Upcoming Test Planner...</span>
+              <span>Upcoming Exam Planner...</span>
             </button>
           </div>
 
           {/* Calm Test Planner */}
           {showTestPlanner && (
             <div className="mt-4 p-5 bg-zinc-950 border border-zinc-800 rounded-2xl max-w-lg space-y-3 font-mono text-xs">
-              <h4 className="font-bold text-white text-xs">📅 Upcoming Exam Target Target Planner</h4>
+              <h4 className="font-bold text-white text-xs">📅 School Exam Target Planner</h4>
               <p className="text-zinc-400 text-[11px]">
-                Enter your upcoming school test date. LoopEdu’s Burnout Sentinel calculates a steady, non-cramming daily trajectory.
+                Enter your upcoming school test date. LoopEdu calculates a steady, non-cramming daily trajectory.
               </p>
               <input
                 type="date"
@@ -285,23 +337,23 @@ export default function TelemetryCommandCenterPage() {
           )}
         </section>
 
-        {/* 3. SYLLABUS VELOCITY HUD (Shows active progress across dynamically chosen courses) */}
+        {/* 4. SYLLABUS VELOCITY (Shows active progress across dynamically chosen courses) */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-blue-400" /> Syllabus Velocity HUD
+                <BarChart3 className="w-4 h-4 text-blue-400" /> Active Course Velocity
               </h2>
               <p className="text-xs text-zinc-400 mt-0.5">
-                Active coverage across chosen {agentBoard} {agentGrade} courses
+                Coverage across chosen {agentBoard} {agentGrade} courses
               </p>
             </div>
 
             <Link
-              href="/my-subjects"
+              href="/catalogue"
               className="text-xs font-mono text-zinc-400 hover:text-white flex items-center gap-1 transition"
             >
-              Configure Tracks <ChevronRight className="w-3.5 h-3.5" />
+              View Full Catalog <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
@@ -365,7 +417,7 @@ export default function TelemetryCommandCenterPage() {
           </div>
         </section>
 
-        {/* 4. YOUR NEXT SMALL WIN (Mistake Revision Queue) */}
+        {/* 5. MISTAKE COMEBACK */}
         {mistakeCount > 0 ? (
           <section className="bg-zinc-900/60 border border-orange-500/30 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-3.5">
@@ -398,32 +450,6 @@ export default function TelemetryCommandCenterPage() {
             </span>
           </section>
         )}
-
-        {/* 5. COGNITIVE DIGITAL TWIN VECTOR TELEMETRY */}
-        <section className="bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6 space-y-4 font-mono text-xs">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-            <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-emerald-400" />
-              <span className="font-bold text-white">COGNITIVE_DIGITAL_TWIN_STATUS</span>
-            </div>
-            <span className="text-zinc-500 text-[11px]">PGVECTOR HNSW INDEX</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-zinc-400">
-            <div>
-              <span className="text-zinc-500 text-[10px] block">VECTOR NAMESPACE</span>
-              <span className="text-zinc-200 font-bold">{vectorNamespace}</span>
-            </div>
-            <div>
-              <span className="text-zinc-500 text-[10px] block">KNOWLEDGE FRONTIER CONFIDENCE</span>
-              <span className="text-emerald-400 font-bold">92.4% (±3.1%)</span>
-            </div>
-            <div>
-              <span className="text-zinc-500 text-[10px] block">BURNOUT SENTINEL STATUS</span>
-              <span className="text-blue-400 font-bold">ACTIVE (15m CAP ENFORCED)</span>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, Layers, Cpu, Terminal } from 'lucide-react';
+import { Activity, BookOpen, GitBranch, RotateCcw, Compass } from 'lucide-react';
 
 export const MobileBottomNav: React.FC = () => {
   const pathname = usePathname();
@@ -15,35 +15,41 @@ export const MobileBottomNav: React.FC = () => {
 
   const navItems = [
     {
-      label: 'Control',
+      label: 'Workspace',
       href: '/learn',
       icon: Activity,
       match: (p: string) => p === '/learn' || p === '/today',
     },
     {
-      label: 'Tracks',
-      href: '/my-subjects',
-      icon: Layers,
-      match: (p: string) => p.startsWith('/my-subjects') || p.startsWith('/library'),
+      label: 'Questions',
+      href: '/study/cbse-10-science',
+      icon: BookOpen,
+      match: (p: string) => p.startsWith('/study') || p.startsWith('/catalogue'),
     },
     {
-      label: 'Telemetry',
-      href: '/progress',
-      icon: Cpu,
-      match: (p: string) => p.startsWith('/progress'),
+      label: 'Mind Maps',
+      href: '/mind-maps',
+      icon: GitBranch,
+      match: (p: string) => p.startsWith('/mind-maps'),
     },
     {
-      label: 'Intake',
-      href: '/initialize',
-      icon: Terminal,
-      match: (p: string) => p === '/initialize',
+      label: 'Flashcards',
+      href: '/flashcards',
+      icon: RotateCcw,
+      match: (p: string) => p.startsWith('/flashcards'),
+    },
+    {
+      label: 'Advisory',
+      href: '/consultant',
+      icon: Compass,
+      match: (p: string) => p.startsWith('/consultant'),
     },
   ];
 
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-lg border-t border-zinc-800 px-2 py-1 flex items-center justify-around shadow-2xl"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-lg border-t border-zinc-800 px-2 py-1 flex items-center justify-around shadow-2xl"
     >
       {navItems.map((item) => {
         const isActive = item.match(pathname);
@@ -52,7 +58,7 @@ export const MobileBottomNav: React.FC = () => {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg font-mono transition ${
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-lg font-mono transition ${
               isActive
                 ? 'text-zinc-100 font-bold'
                 : 'text-zinc-500 hover:text-zinc-300 font-medium'

@@ -7,10 +7,14 @@ import {
   ShieldCheck,
   ChevronDown,
   LogOut,
-  Terminal,
-  Activity,
   Layers,
-  Cpu,
+  BookOpen,
+  GitBranch,
+  RotateCcw,
+  Compass,
+  ArrowRight,
+  Activity,
+  Sliders,
 } from 'lucide-react';
 
 interface SessionUser {
@@ -55,23 +59,23 @@ export const Navbar: React.FC = () => {
     router.refresh();
   };
 
-  const isCurrent = (path: string) => pathname === path;
+  const isCurrent = (path: string) => pathname === path || pathname.startsWith(path + '/');
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-zinc-950/95 backdrop-blur-md text-zinc-100">
-      {/* Telemetry micro-ribbon */}
+      {/* SaaS Status Telemetry Ribbon */}
       {!pathname.startsWith('/study/') && (
         <div className="bg-zinc-900/90 text-zinc-400 px-4 py-1 text-[11px] font-mono border-b border-zinc-800/80 flex items-center justify-between">
           <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-zinc-300">SWARM_TELEMETRY: ONLINE</span>
-              <span className="hidden sm:inline text-zinc-600">|</span>
-              <span className="hidden sm:inline text-zinc-400">AGI ARCHITECT ENGINE ACTIVE</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="text-zinc-300 font-semibold">STUDY SUITE v2.4</span>
+              <span className="hidden sm:inline text-zinc-600">•</span>
+              <span className="hidden sm:inline text-zinc-400">OFFICIAL NCERT / BOARD STANDARDS</span>
             </div>
             <div className="flex items-center gap-3 tabular-nums">
-              <span className="text-zinc-500 hidden md:inline">LATENCY: 12ms</span>
-              <span className="text-emerald-400 font-semibold">NCERT / BOARD VERIFIED</span>
+              <span className="text-zinc-500 hidden md:inline">SYSTEM LATENCY: 12ms</span>
+              <span className="text-emerald-400 font-medium">CBSE • ICSE • FOUNDATION</span>
             </div>
           </div>
         </div>
@@ -89,93 +93,78 @@ export const Navbar: React.FC = () => {
                 LoopEdu
               </span>
               <span className="px-1.5 py-0.2 rounded border border-zinc-800 bg-zinc-900 text-[10px] font-mono text-zinc-400">
-                AGI_v2.4
+                PRO
               </span>
             </div>
-            <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-400 mt-1">
-              Mission Control
+            <span className="text-[9px] font-mono uppercase tracking-widest text-zinc-500 mt-0.5">
+              Integrated Study Suite
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-mono text-zinc-400">
-          {user ? (
-            <>
-              <Link
-                href="/learn"
-                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
-                  isCurrent('/learn') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
-                }`}
-              >
-                <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Command Center</span>
-              </Link>
-              <Link
-                href="/my-subjects"
-                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
-                  isCurrent('/my-subjects') || isCurrent('/library') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Active Tracks</span>
-              </Link>
-              <Link
-                href="/progress"
-                className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
-                  isCurrent('/progress') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
-                }`}
-              >
-                <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Telemetry HUD</span>
-              </Link>
-              <Link
-                href="/catalogue"
-                className={`transition hover:text-zinc-100 ${
-                  isCurrent('/catalogue') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
-                }`}
-              >
-                Curriculums
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/#architecture"
-                className="transition hover:text-zinc-100 flex items-center gap-1"
-              >
-                <Cpu className="w-3.5 h-3.5 text-zinc-500" />
-                <span>Agent Architecture</span>
-              </Link>
+        {/* Navigation Links (The 5 Core Pillars) */}
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-mono text-zinc-400">
+          <Link
+            href="/learn"
+            className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+              isCurrent('/learn') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            <Activity className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Workspace</span>
+          </Link>
 
-              <Link
-                href="/#intake"
-                className="transition hover:text-zinc-100 flex items-center gap-1"
-              >
-                <Terminal className="w-3.5 h-3.5 text-zinc-500" />
-                <span>Dynamic Intake</span>
-              </Link>
+          <Link
+            href="/study/cbse-10-science"
+            className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+              pathname.startsWith('/study') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5 text-blue-400" />
+            <span>Question Bank</span>
+          </Link>
 
-              <Link
-                href="/catalogue"
-                className={`transition hover:text-zinc-100 ${
-                  isCurrent('/catalogue') ? 'text-zinc-100 font-bold' : ''
-                }`}
-              >
-                Official Standards
-              </Link>
+          <Link
+            href="/mind-maps"
+            className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+              isCurrent('/mind-maps') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            <GitBranch className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Mind Maps</span>
+          </Link>
 
-              <Link
-                href="/catalogue#pricing"
-                className="transition hover:text-zinc-100"
-              >
-                Compute Access
-              </Link>
-            </>
-          )}
+          <Link
+            href="/flashcards"
+            className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+              isCurrent('/flashcards') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+            <span>Flashcards</span>
+          </Link>
+
+          <Link
+            href="/consultant"
+            className={`transition hover:text-zinc-100 flex items-center gap-1.5 ${
+              isCurrent('/consultant') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            <Compass className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Advisory</span>
+          </Link>
+
+          <Link
+            href="/catalogue"
+            className={`transition hover:text-zinc-100 ${
+              isCurrent('/catalogue') ? 'text-zinc-100 font-bold border-b border-zinc-200 pb-0.5' : ''
+            }`}
+          >
+            Syllabus Catalog
+          </Link>
         </nav>
 
-        {/* Right side: Auth & Telemetry Controls */}
+        {/* Right side: Auth Controls */}
         <div className="flex items-center gap-3">
           {user ? (
             <div className="relative">
@@ -205,7 +194,7 @@ export const Navbar: React.FC = () => {
                     <div className="text-zinc-400 text-[11px] truncate">{user.email}</div>
                     <div className="mt-2 flex items-center gap-1.5">
                       <span className="inline-block px-2 py-0.5 rounded text-[9px] font-mono uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
-                        {user.role === 'admin' ? 'SYSTEM_ROOT' : isPro ? 'COMPUTE_PRO' : 'STUDENT_AGENT'}
+                        {user.role === 'admin' ? 'SYSTEM_ADMIN' : isPro ? 'PRO_MEMBER' : 'STUDENT_ACCOUNT'}
                       </span>
                     </div>
                   </div>
@@ -217,16 +206,34 @@ export const Navbar: React.FC = () => {
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
                       <Activity className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Mission Control</span>
+                      <span>Workspace</span>
                     </Link>
 
                     <Link
-                      href="/my-subjects"
+                      href="/mind-maps"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
-                      <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Active Tracks</span>
+                      <GitBranch className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>Concept Mind Maps</span>
+                    </Link>
+
+                    <Link
+                      href="/flashcards"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Active Recall Flashcards</span>
+                    </Link>
+
+                    <Link
+                      href="/consultant"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
+                    >
+                      <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Academic Advisory</span>
                     </Link>
 
                     <Link
@@ -234,8 +241,8 @@ export const Navbar: React.FC = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-zinc-200 transition"
                     >
-                      <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-                      <span>Telemetry HUD</span>
+                      <Layers className="w-3.5 h-3.5 text-zinc-400" />
+                      <span>Progress & Readiness</span>
                     </Link>
 
                     {user.role === 'admin' && (
@@ -245,7 +252,7 @@ export const Navbar: React.FC = () => {
                         className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-zinc-800 text-amber-400 transition"
                       >
                         <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>Root Admin Console</span>
+                        <span>Admin Console</span>
                       </Link>
                     )}
 
@@ -254,7 +261,7 @@ export const Navbar: React.FC = () => {
                       className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition border-t border-zinc-800 mt-1 pt-2"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      <span>Disconnect Session</span>
+                      <span>Sign Out</span>
                     </button>
                   </div>
                 </div>
@@ -272,8 +279,7 @@ export const Navbar: React.FC = () => {
                 href="/initialize"
                 className="inline-flex items-center gap-1.5 bg-zinc-100 hover:bg-white text-zinc-950 font-mono font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm"
               >
-                <Terminal className="w-3.5 h-3.5 text-zinc-950" />
-                <span>Initialize Agent →</span>
+                <span>Start Free Practice →</span>
               </Link>
             </div>
           )}
