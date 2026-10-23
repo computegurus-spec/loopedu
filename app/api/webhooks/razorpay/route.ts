@@ -26,6 +26,14 @@ export async function POST(req: NextRequest) {
 
     console.log(`[Razorpay Webhook] Received event: ${event}`);
 
+    // Process subscription events with idempotency ledger
+    const { processSubscriptionWebhook } = await import('@/lib/payments/subscriptionPlans');
+    const subResult = processSubscriptionWebhook(
+      rawBody,
+      signature,
+      process.env.RAZORPAY_WEBHOOK_SECRET || 'dev_webhook_simulation'
+    );
+
     if (event === 'payment.captured' || event === 'order.paid') {
       const razorpayOrderId = order?.id || payment?.order_id;
       const razorpayPaymentId = payment?.id;
@@ -57,9 +65,10 @@ export async function POST(req: NextRequest) {
     await logAdminAction('system_webhook', 'WEBHOOK_PROCESSED', 'webhook_event', event, {
       id: payload.id,
       event,
+      subStatus: subResult.status,
     });
 
-    return NextResponse.json({ status: 'ok', received: true });
+    return NextResponse.json({ status: 'ok', received: true, event, subStatus: subResult.status });
   } catch (err: any) {
     console.error('[Razorpay Webhook Error]', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

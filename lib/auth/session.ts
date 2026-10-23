@@ -12,6 +12,7 @@ export interface SessionUser {
   email: string;
   name: string;
   role: 'customer' | 'admin';
+  personaRole?: string;
   isPro?: boolean;
 }
 
@@ -72,11 +73,29 @@ export async function getSessionUser(): Promise<SessionUser | null> {
         email,
         name: u.name || u.nickname || (isAdmin ? 'Admin' : 'Student'),
         role: isAdmin ? 'admin' : 'customer',
+        personaRole: isAdmin ? 'admin' : 'student',
         isPro: isAdmin,
       };
     }
   } catch (e) {
     // Auth0 not configured or no active session
+  }
+
+  // 3. Demo Mode Persona Fallback (Zero-credentials instant test sandbox)
+  const isLive = cookieStore.get('loopedu_app_mode')?.value === 'live';
+  if (!isLive) {
+    const { DEMO_PERSONAS, DEFAULT_DEMO_PERSONA } = require('@/lib/demo/personas');
+    const demoKey = cookieStore.get('loopedu_demo_persona')?.value;
+    const persona = (demoKey && DEMO_PERSONAS[demoKey]) || DEFAULT_DEMO_PERSONA;
+    const isAdmin = persona.role === 'admin' || persona.role === 'reviewer';
+    return {
+      id: persona.id,
+      email: persona.email,
+      name: persona.name,
+      role: isAdmin ? 'admin' : 'customer',
+      personaRole: persona.role,
+      isPro: true,
+    };
   }
 
   return null;

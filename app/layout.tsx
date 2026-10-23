@@ -4,6 +4,8 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ChatWidget } from '@/components/ChatWidget';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
+import { DemoProvider } from '@/lib/demo/DemoContext';
+import { DemoModeBanner } from '@/components/demo/DemoModeBanner';
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://loopedu.in';
 
@@ -164,12 +166,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-paper text-forest-900 selection:bg-limeaccent selection:text-forest-950">
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        <Footer />
-        <ChatWidget />
-        <MobileBottomNav />
+      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-teal-500 selection:text-white">
+        <DemoProvider>
+          <DemoModeBanner />
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          <Footer />
+          <ChatWidget />
+          <MobileBottomNav />
+        </DemoProvider>
       </body>
     </html>
   );
