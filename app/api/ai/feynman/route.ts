@@ -16,11 +16,19 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const nvidiaKey = process.env.NVIDIA_API_KEY;
+    const openAiKey = process.env.OPENAI_API_KEY;
+    const apiKey = nvidiaKey || openAiKey;
 
     // Deterministic pedagogical evaluation rubric
     if (apiKey) {
       try {
+        const isNvidia = Boolean(nvidiaKey || apiKey.startsWith('nvapi-'));
+        const endpoint = isNvidia
+          ? 'https://integrate.api.nvidia.com/v1/chat/completions'
+          : 'https://api.openai.com/v1/chat/completions';
+        const model = isNvidia ? 'meta/llama-3.1-70b-instruct' : 'gpt-4o-mini';
+
         const systemPrompt = `You are the Feynman Concept Defense Evaluator in an autonomous pedagogical multi-agent system.
 Your job is to test if a student truly understands the underlying concept (the "Why") rather than just memorizing formulas or rote steps.
 
@@ -29,7 +37,7 @@ Question: "${question}"
 Topic: "${topic}" (${subjectName || 'Academic Standard'})
 Reference Conceptual Principle: "${correctExplanation || topic}"
 
-Return a JSON response with:
+Return ONLY a valid JSON object with:
 {
   "score": number (0 to 100),
   "masteryLevel": "Intuitive Mastery" | "Solid Understanding" | "Partial / Formula-Heavy" | "Misconception Detected",
@@ -39,21 +47,27 @@ Return a JSON response with:
 }
 Keep feedback concise, high-signal, enterprise-grade, and free of patronizing fluff or emojis.`;
 
-        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        const requestBody: any = {
+          model,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Student Explanation: "${conceptExplanation}"` },
+          ],
+          temperature: 0.2,
+        };
+
+        // OpenAI supports response_format: { type: 'json_object' }
+        if (!isNvidia) {
+          requestBody.response_format = { type: 'json_object' };
+        }
+
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            response_format: { type: 'json_object' },
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: `Student Explanation: "${conceptExplanation}"` },
-            ],
-            temperature: 0.2,
-          }),
+          body: JSON.stringify(requestBody),
         });
 
         if (res.ok) {

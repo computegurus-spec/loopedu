@@ -33,8 +33,11 @@ export async function POST(req: NextRequest) {
       userQuery = '',
     } = body;
 
+    const nvidiaKey = process.env.NVIDIA_API_KEY;
+    const openAiKey = process.env.OPENAI_API_KEY;
     const apiKey =
-      process.env.OPENAI_API_KEY ||
+      nvidiaKey ||
+      openAiKey ||
       process.env.AI_API_KEY ||
       process.env.GEMINI_API_KEY;
 
@@ -51,8 +54,13 @@ CRITICAL GROUNDING RULES:
 8. If the student asks something beyond Class 10, clearly reply: "This concept is beyond the Class 10 CBSE NCERT syllabus."
 Keep formatting clean using standard Markdown and LaTeX math syntax (e.g. $x^2 + bx + c = 0$).`;
 
-    if (apiKey && process.env.OPENAI_API_KEY) {
-      // Live OpenAI API call with gpt-4o-mini
+    if (apiKey) {
+      const isNvidia = Boolean(nvidiaKey || apiKey.startsWith('nvapi-'));
+      const endpoint = isNvidia
+        ? 'https://integrate.api.nvidia.com/v1/chat/completions'
+        : 'https://api.openai.com/v1/chat/completions';
+      const model = isNvidia ? 'meta/llama-3.1-70b-instruct' : 'gpt-4o-mini';
+
       let userPrompt = '';
       if (action === 'xray') userPrompt = `Provide a progressive 3-step Socratic X-Ray hint for this CBSE Class 10 problem. DO NOT reveal the final numeric answer or option. Step 1: The Detective Clue (what to notice). Step 2: The Guiding Socratic Question. Step 3: What to verify. Problem: "${question}". Topic: ${topic}.`;
       else if (action === 'hint') userPrompt = `Give me a progressive hint to solve this problem without revealing the answer. Question: "${question}". Verified Topic: ${topic}.`;
@@ -62,33 +70,37 @@ Keep formatting clean using standard Markdown and LaTeX math syntax (e.g. $x^2 +
       else if (action === 'another_way') userPrompt = `Explain another valid alternative method to solve this. Question: "${question}". Solution: "${explanation}".`;
       else userPrompt = `Student Question: "${userQuery}". Context Problem: "${question}". Topic: ${topic}. Answer as per NCERT Class 10.`;
 
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: userPrompt },
-          ],
-          temperature: 0.2, // Low temperature for high factual adherence to NCERT
-          max_tokens: 400,
-        }),
-      });
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userPrompt },
+            ],
+            temperature: 0.2, // Low temperature for high factual adherence to NCERT
+            max_tokens: 400,
+          }),
+        });
 
-      if (response.ok) {
-        const json = await response.json();
-        const content = json.choices?.[0]?.message?.content;
-        if (content) {
-          return NextResponse.json({
-            success: true,
-            provider: 'live-openai-ncert-grounded',
-            text: content,
-          });
+        if (response.ok) {
+          const json = await response.json();
+          const content = json.choices?.[0]?.message?.content;
+          if (content) {
+            return NextResponse.json({
+              success: true,
+              provider: isNvidia ? 'nvidia-nim-llama3' : 'live-openai-ncert-grounded',
+              text: content,
+            });
+          }
         }
+      } catch (fetchErr) {
+        console.warn('AI API call failed, falling back to verified generator:', fetchErr);
       }
     }
 

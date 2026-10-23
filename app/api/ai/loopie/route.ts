@@ -117,10 +117,18 @@ STRICT OPERATING CONSTRAINTS:
    - Highlight official board traps and sign convention errors.
    - Maintain a razor-sharp, enterprise-grade, supportive tone. No cartoon mascots or childish fluff.`;
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const nvidiaKey = process.env.NVIDIA_API_KEY;
+    const openAiKey = process.env.OPENAI_API_KEY;
+    const apiKey = nvidiaKey || openAiKey;
 
     if (apiKey) {
       try {
+        const isNvidia = Boolean(nvidiaKey || apiKey.startsWith('nvapi-'));
+        const endpoint = isNvidia
+          ? 'https://integrate.api.nvidia.com/v1/chat/completions'
+          : 'https://api.openai.com/v1/chat/completions';
+        const model = isNvidia ? 'meta/llama-3.1-70b-instruct' : 'gpt-4o-mini';
+
         const messagesPayload: any[] = [
           { role: 'system', content: systemPrompt },
         ];
@@ -138,14 +146,14 @@ STRICT OPERATING CONSTRAINTS:
           content: `Topic: ${topic}\nCurrent Problem Context: ${questionContext}\nStudent Doubt: ${doubt}`,
         });
 
-        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        const res = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: 'gpt-4o-mini',
+            model,
             messages: messagesPayload,
             temperature: 0.25,
             max_tokens: 500,
