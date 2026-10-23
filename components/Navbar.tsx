@@ -72,94 +72,61 @@ export const Navbar: React.FC = () => {
         </Link>
 
         {/* Navigation Links:
-            When Logged In: Show Student Workspace Tools.
-            When Logged Out: Clean & Minimalist.
+            Visible ONLY after login (Student Workspace Services)
         */}
-        <nav className="hidden lg:flex items-center gap-6 text-xs text-slate-600 font-semibold">
-          {user ? (
-            /* Logged-In Student Workspace Links */
-            <>
-              <Link
-                href="/learn"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  isCurrent('/learn') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <Activity className="w-4 h-4 text-[#0066FF]" />
-                <span>Mission Control</span>
-              </Link>
+        {user && (
+          <nav className="hidden lg:flex items-center gap-6 text-xs text-slate-600 font-semibold">
+            <Link
+              href="/learn"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                isCurrent('/learn') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <Activity className="w-4 h-4 text-[#0066FF]" />
+              <span>Mission Control</span>
+            </Link>
 
-              <Link
-                href="/study/cbse-10-science"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  pathname.startsWith('/study') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <BookOpen className="w-4 h-4 text-[#0066FF]" />
-                <span>Question Bank</span>
-              </Link>
+            <Link
+              href="/study/cbse-10-science"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                pathname.startsWith('/study') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <BookOpen className="w-4 h-4 text-[#0066FF]" />
+              <span>Question Bank</span>
+            </Link>
 
-              <Link
-                href="/mind-maps"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  isCurrent('/mind-maps') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <GitBranch className="w-4 h-4 text-cyan-600" />
-                <span>Mind Maps</span>
-              </Link>
+            <Link
+              href="/mind-maps"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                isCurrent('/mind-maps') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <GitBranch className="w-4 h-4 text-cyan-600" />
+              <span>Mind Maps</span>
+            </Link>
 
-              <Link
-                href="/flashcards"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  isCurrent('/flashcards') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <RotateCcw className="w-4 h-4 text-amber-600" />
-                <span>Flashcards</span>
-              </Link>
+            <Link
+              href="/flashcards"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                isCurrent('/flashcards') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <RotateCcw className="w-4 h-4 text-amber-600" />
+              <span>Flashcards</span>
+            </Link>
 
-              <Link
-                href="/consultant"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  isCurrent('/consultant') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <Compass className="w-4 h-4 text-indigo-600" />
-                <span>Career Planner</span>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/consultant"
-                className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
-                  isCurrent('/consultant') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
-                }`}
-              >
-                <Compass className="w-4 h-4 text-[#0066FF]" />
-                <span>Career Planner</span>
-                <span className="px-1.5 py-0.2 rounded-full text-[9px] font-extrabold bg-blue-100 text-[#0066FF]">
-                  AI
-                </span>
-              </Link>
-
-              <Link
-                href="#education-news"
-                className="transition hover:text-slate-900 py-1 text-slate-600 hover:text-slate-900"
-              >
-                Global Education News
-              </Link>
-
-              <Link
-                href="/study/cbse-10-science"
-                className="transition hover:text-slate-900 py-1 text-slate-600 hover:text-slate-900"
-              >
-                Practice Question Bank
-              </Link>
-            </>
-          )}
-        </nav>
+            <Link
+              href="/consultant"
+              className={`transition hover:text-slate-900 flex items-center gap-1.5 py-1 ${
+                isCurrent('/consultant') ? 'text-[#0066FF] font-bold border-b-2 border-[#0066FF]' : ''
+              }`}
+            >
+              <Compass className="w-4 h-4 text-indigo-600" />
+              <span>Career Planner</span>
+            </Link>
+          </nav>
+        )}
 
         {/* Right side: Auth Controls */}
         <div className="flex items-center gap-3">
@@ -261,14 +228,6 @@ export const Navbar: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2 sm:gap-3">
-              <Link
-                href="/consultant"
-                className="lg:hidden text-xs text-slate-700 hover:text-slate-950 font-semibold px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 transition flex items-center gap-1"
-                title="AI Career & Stream Planner"
-              >
-                <Compass className="w-3.5 h-3.5 text-[#0066FF]" />
-                <span className="hidden sm:inline">Planner</span>
-              </Link>
               <Link
                 href="/login"
                 className="text-xs text-slate-700 hover:text-slate-950 font-semibold px-3 py-2 rounded-xl hover:bg-slate-100 transition"

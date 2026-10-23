@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
-import { notFound, useSearchParams } from 'next/navigation';
+import { notFound, useSearchParams, useRouter } from 'next/navigation';
 import { MathRenderer } from '@/components/MathRenderer';
 import { AIHintCoach } from '@/components/study/AIHintCoach';
 import { SocraticTutorWidget } from '@/components/study/SocraticTutorWidget';
@@ -87,6 +87,7 @@ function cleanQuestionSnippet(raw: string): string {
 }
 
 export default function StudyReaderPage({ params }: ReaderProps) {
+  const router = useRouter();
   const slug = params.slug as SubjectSlug;
   const searchParams = useSearchParams();
   const initialQ = searchParams.get('q');
@@ -152,6 +153,10 @@ export default function StudyReaderPage({ params }: ReaderProps) {
         // Fetch session
         const sessRes = await fetch('/api/auth/session');
         const sessData = await sessRes.json();
+        if (!sessData.user) {
+          router.push(`/login?redirect=/study/${slug}`);
+          return;
+        }
         setUserSession(sessData.user);
 
         // Fetch questions

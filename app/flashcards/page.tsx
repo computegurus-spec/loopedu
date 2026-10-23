@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { getSessionUser } from '@/lib/auth/session';
 import { FlashcardDeck } from '@/components/flashcards/FlashcardDeck';
 import { RotateCcw, Clock, CheckCircle2, Zap } from 'lucide-react';
 
@@ -9,7 +11,12 @@ export const metadata: Metadata = {
     'Master formulas, laws, and definitions with Leitner spaced repetition flashcards for CBSE and ICSE exams.',
 };
 
-export default function FlashcardsPage() {
+export default async function FlashcardsPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/login?redirect=/flashcards');
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 py-10 sm:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">

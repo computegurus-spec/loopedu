@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { getSessionUser } from '@/lib/auth/session';
 import { AcademicAdvisor } from '@/components/consultant/AcademicAdvisor';
 import { Compass, Briefcase, GraduationCap, Target } from 'lucide-react';
 
@@ -9,7 +11,12 @@ export const metadata: Metadata = {
     'Data-backed stream selection after Class 10, reverse career path engineering, and board/entrance exam roadmap.',
 };
 
-export default function ConsultantPage() {
+export default async function ConsultantPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/login?redirect=/consultant');
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 py-10 sm:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">

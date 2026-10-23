@@ -1,7 +1,8 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSubject, getSampleQuestions } from '@/lib/db/store';
+import { getSessionUser } from '@/lib/auth/session';
 import { SubjectSlug } from '@/types';
 import { CheckoutButton } from '@/components/CheckoutButton';
 import { MathRenderer } from '@/components/MathRenderer';
@@ -34,7 +35,13 @@ export async function generateMetadata({ params }: SubjectPageProps) {
 }
 
 export default async function SubjectDetailPage({ params }: SubjectPageProps) {
+  const user = await getSessionUser();
   const slug = params.slug as SubjectSlug;
+
+  if (!user) {
+    redirect(`/login?redirect=/subject/${slug}`);
+  }
+
   const subject = await getSubject(slug);
 
   if (!subject) {

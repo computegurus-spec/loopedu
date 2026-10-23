@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { MathRenderer } from '@/components/MathRenderer';
 import { AIHintCoach } from '@/components/study/AIHintCoach';
 import {
@@ -267,12 +268,26 @@ const CHALLENGE_BANKS: Record<string, { name: string; questions: ChallengeQuesti
 };
 
 export default function FreeChallengePage() {
+  const router = useRouter();
   const [selectedSubject, setSelectedSubject] = useState<string>('science');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [writtenRevealed, setWrittenRevealed] = useState(false);
   const [userAssessments, setUserAssessments] = useState<Record<number, boolean>>({});
   const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/auth/session')
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.user) {
+          router.push('/login?redirect=/challenge');
+        }
+      })
+      .catch(() => {
+        router.push('/login?redirect=/challenge');
+      });
+  }, [router]);
 
   const bank = CHALLENGE_BANKS[selectedSubject] || CHALLENGE_BANKS.science;
   const currentQ = bank.questions[currentIndex];

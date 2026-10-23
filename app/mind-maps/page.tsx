@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { getSessionUser } from '@/lib/auth/session';
 import { MindMapViewer } from '@/components/mindmaps/MindMapViewer';
 import { GitBranch, Layers, BookOpen, Sparkles } from 'lucide-react';
 
@@ -9,7 +11,12 @@ export const metadata: Metadata = {
     'Visual concept maps for CBSE & ICSE subjects. Master dependencies, key formulas, and chapter trees at a glance.',
 };
 
-export default function MindMapsPage() {
+export default async function MindMapsPage() {
+  const user = await getSessionUser();
+  if (!user) {
+    redirect('/login?redirect=/mind-maps');
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 py-10 sm:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
