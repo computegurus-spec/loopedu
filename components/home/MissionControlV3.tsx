@@ -22,6 +22,8 @@ import {
   Compass,
 } from 'lucide-react';
 import { GlobalEducationNews } from './GlobalEducationNews';
+import { ServicesHookShowcase } from './ServicesHookShowcase';
+import { CollegeDiscoveryHooks } from './CollegeDiscoveryHooks';
 
 interface MissionControlProps {
   isLoggedIn?: boolean;
@@ -267,7 +269,13 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
         </div>
       </section>
 
-      {/* 3. DEDICATED CAREER & STREAM ARCHITECT BANNER (Visible only after login) */}
+      {/* 3. HOOKS FOR ALL SERVICES (Platform Capabilities Showcase) */}
+      <ServicesHookShowcase isLoggedIn={isLoggedIn} />
+
+      {/* 4. COLLEGDEKHO-INSPIRED COLLEGE & EXAM DISCOVERY + LEAD HOOKS */}
+      <CollegeDiscoveryHooks isLoggedIn={isLoggedIn} />
+
+      {/* 5. DEDICATED CAREER & STREAM ARCHITECT BANNER (Visible only after login) */}
       {isLoggedIn && (
         <section className="py-14 sm:py-20 bg-gradient-to-b from-slate-50 via-blue-50/20 to-white border-b border-slate-200/80">
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
