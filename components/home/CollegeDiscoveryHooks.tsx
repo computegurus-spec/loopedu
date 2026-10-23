@@ -151,15 +151,15 @@ export const CollegeDiscoveryHooks: React.FC<{ isLoggedIn?: boolean }> = ({ isLo
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-white via-blue-50/20 to-slate-50 border-b border-slate-200/80">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-12">
-        {/* Header (Inspired by CollegeDekho & Shiksha) */}
+        {/* Header: Verified Institutional Benchmarks */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-900 border border-amber-200">
               <Building2 className="w-3.5 h-3.5 text-amber-600" />
-              <span>COLLEGEDEKHO-STYLE ADMISSION &amp; EXAM DISCOVERY</span>
+              <span>PREMIER ACCREDITED INSTITUTIONS</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">
-              Explore Top Verified Colleges &amp; Admission Cutoffs
+              Top University Trajectories &amp; Placement Benchmarks
             </h2>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
               Compare accredited universities across India by NIRF rankings, highest placement packages, accepted entrance exams, and eligibility cutoffs. 100% transparent and objective.
@@ -247,7 +247,7 @@ export const CollegeDiscoveryHooks: React.FC<{ isLoggedIn?: boolean }> = ({ isLo
           ))}
         </div>
 
-        {/* 1-Click Free Counseling & Cutoff Shortlisting Lead Hook (The CollegeDekho Playbook) */}
+        {/* 1-Click Free Counseling & Cutoff Shortlisting Lead Hook */}
         <div className="p-8 sm:p-10 rounded-3xl bg-slate-900 text-white shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
           <div className="space-y-3 max-w-xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">

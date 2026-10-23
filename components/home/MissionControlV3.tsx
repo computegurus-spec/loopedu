@@ -272,7 +272,7 @@ export const MissionControlV3: React.FC<MissionControlProps> = ({ isLoggedIn }) 
       {/* 3. HOOKS FOR ALL SERVICES (Platform Capabilities Showcase) */}
       <ServicesHookShowcase isLoggedIn={isLoggedIn} />
 
-      {/* 4. COLLEGDEKHO-INSPIRED COLLEGE & EXAM DISCOVERY + LEAD HOOKS */}
+      {/* 4. VERIFIED COLLEGE & EXAM DISCOVERY + LEAD HOOKS */}
       <CollegeDiscoveryHooks isLoggedIn={isLoggedIn} />
 
       {/* 5. DEDICATED CAREER & STREAM ARCHITECT BANNER (Visible only after login) */}
