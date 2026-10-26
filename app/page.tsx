@@ -1,14 +1,14 @@
 import React from 'react';
-import { getSessionUser } from '@/lib/auth/session';
-import { MissionControlV3 } from '@/components/home/MissionControlV3';
+import { Metadata } from 'next';
+import { PublicLandingPage } from '@/components/landing/PublicLandingPage';
 
-export default async function HomePage() {
-  const user = await getSessionUser();
+export const metadata: Metadata = {
+  title: 'LoopEdu • India Exam & Career Companion | Tools, Pathways & Practice',
+  description:
+    'An information-first guide to LoopEdu tools. Compare career pathways after Class 10 & 12, verify national exam eligibility, and build consistent 15-minute daily study habits.',
+};
 
-  return (
-    <div className="bg-slate-50 text-slate-900 min-h-screen">
-      <MissionControlV3 isLoggedIn={Boolean(user)} />
-    </div>
-  );
+export default function HomePage() {
+  return <PublicLandingPage />;
 }
 

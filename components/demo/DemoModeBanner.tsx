@@ -1,43 +1,50 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useDemo } from '@/lib/demo/DemoContext';
 import { DEMO_PERSONAS } from '@/lib/demo/personas';
-import { ShieldAlert, User, ChevronDown, RotateCcw, Sparkles, Check, ExternalLink } from 'lucide-react';
+import { Sparkles, User, ChevronDown, RotateCcw, Check, Info } from 'lucide-react';
 import Link from 'next/link';
 
 export const DemoModeBanner: React.FC = () => {
+  const pathname = usePathname();
   const { isDemo, activePersona, setPersonaById, toggleAppMode, resetDemoData } = useDemo();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  // Strictly remove demo banner from the public landing page
+  if (pathname === '/') {
+    return null;
+  }
+
   if (!isDemo) {
     return (
-      <div className="bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 flex items-center justify-between border-b border-slate-800">
+      <div className="bg-[#17324D] text-slate-300 text-[11px] py-1.5 px-4 flex items-center justify-between border-b border-slate-800">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-semibold text-white">LIVE MODE ACTIVATED</span>
-          <span className="text-slate-400">| Connecting to live services</span>
+          <span className="font-semibold text-white">LIVE ACCOUNT MODE</span>
+          <span className="text-slate-400">| Connected to live records</span>
         </div>
         <button
           onClick={toggleAppMode}
-          className="text-amber-400 hover:text-amber-300 font-bold underline transition"
+          className="text-teal-400 hover:text-teal-300 font-bold underline transition"
         >
-          Switch to Synthetic Demo Mode
+          Switch to Interactive Preview
         </button>
       </div>
     );
   }
 
   return (
-    <aside aria-label="Demonstration Mode Notice" className="bg-amber-500 text-slate-950 text-xs font-medium py-1 px-3 sm:px-6 shadow-sm border-b border-amber-600/30 sticky top-0 z-50">
+    <aside aria-label="Interactive Preview Mode Notice" className="bg-[#17324D] text-slate-100 text-xs font-medium py-1 px-3 sm:px-6 shadow-sm border-b border-slate-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1 bg-slate-950 text-amber-400 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">
-            <ShieldAlert className="w-3 h-3" />
-            DEMO MODE
+          <span className="inline-flex items-center gap-1 bg-[#168C83] text-white px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 text-amber-300" />
+            INTERACTIVE PREVIEW
           </span>
-          <span className="text-slate-900 text-xs font-semibold hidden md:inline">
-            Zero-credential isolated sandbox • Real payments &amp; external dispatches disabled.
+          <span className="text-slate-300 text-xs font-normal hidden md:inline">
+            Interactive preview sandbox with sample student data • External dispatches disabled • Explore tools risk-free.
           </span>
         </div>
 

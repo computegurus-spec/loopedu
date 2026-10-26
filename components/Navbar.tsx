@@ -19,6 +19,8 @@ import {
   UserCheck,
   Award,
   Users,
+  Menu,
+  X,
 } from 'lucide-react';
 import { useDemo } from '@/lib/demo/DemoContext';
 
@@ -63,8 +65,13 @@ export const Navbar: React.FC = () => {
 
   const isCurrent = (path: string) => pathname === path || pathname.startsWith(path + '/');
 
-  // In demo mode, activePersona provides the authenticated persona
-  const currentUser = isDemo
+  const isLandingPage = pathname === '/';
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // In demo mode, activePersona provides the authenticated persona only for app routes
+  const currentUser = isLandingPage
+    ? null
+    : isDemo
     ? {
         id: activePersona.id,
         name: activePersona.name,
@@ -87,108 +94,141 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-base tracking-tight shadow-sm group-hover:bg-teal-700 transition relative">
+          <div className="w-9 h-9 rounded-xl bg-[#168C83] text-white flex items-center justify-center font-bold text-base tracking-tight shadow-sm group-hover:bg-[#12736b] transition relative">
             <span>L</span>
             <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-white" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-slate-950 text-xl leading-none tracking-tight">
+            <span className="font-extrabold text-[#17324D] text-xl leading-none tracking-tight">
               LoopEdu
             </span>
-            <span className="text-[9px] text-slate-500 font-medium">India Exam &amp; Career Companion</span>
+            <span className="text-[10px] text-[#667085] font-medium">India Exam &amp; Career Companion</span>
           </div>
         </Link>
 
-        {/* Navigation Links:
-            Student & Aspirant Core Surfaces: Today, My Paths, Exams, Prepare, Updates, Coach
-        */}
-        <nav className="hidden lg:flex items-center gap-5 text-xs text-slate-600 font-semibold">
-          <Link
-            href="/today"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/today') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>Today</span>
-          </Link>
-
-          <Link
-            href="/paths"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/paths') || isCurrent('/consultant') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <Compass className="w-4 h-4 text-teal-600" />
-            <span>My Paths</span>
-          </Link>
-
-          <Link
-            href="/exams"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/exams') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <Award className="w-4 h-4 text-blue-600" />
-            <span>Exams &amp; Opportunities</span>
-          </Link>
-
-          <Link
-            href="/prepare"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/prepare') || pathname.startsWith('/study') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-emerald-600" />
-            <span>Prepare</span>
-          </Link>
-
-          <Link
-            href="/updates"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/updates') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <Bell className="w-4 h-4 text-indigo-600" />
-            <span>Updates</span>
-          </Link>
-
-          <Link
-            href="/coach"
-            className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-              isCurrent('/coach') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
-            }`}
-          >
-            <HeartHandshake className="w-4 h-4 text-rose-500" />
-            <span>Mind Coach</span>
-          </Link>
-
-          {isParent && (
+        {/* Public Navigation on Landing Page vs Application Navigation on App Pages */}
+        {isLandingPage ? (
+          <nav className="hidden md:flex items-center gap-7 text-xs text-[#667085] font-semibold">
+            <a
+              href="#tools"
+              className="transition hover:text-[#17324D] py-1 text-slate-700 hover:font-bold"
+            >
+              Tools
+            </a>
+            <a
+              href="#how-it-works"
+              className="transition hover:text-[#17324D] py-1 text-slate-700 hover:font-bold"
+            >
+              How it works
+            </a>
+            <a
+              href="#coverage"
+              className="transition hover:text-[#17324D] py-1 text-slate-700 hover:font-bold"
+            >
+              Coverage
+            </a>
+            <a
+              href="#updates"
+              className="transition hover:text-[#17324D] py-1 text-slate-700 hover:font-bold"
+            >
+              Updates
+            </a>
+            <a
+              href="#pricing"
+              className="transition hover:text-[#17324D] py-1 text-slate-700 hover:font-bold"
+            >
+              Pricing
+            </a>
+          </nav>
+        ) : (
+          <nav className="hidden lg:flex items-center gap-5 text-xs text-slate-600 font-semibold">
             <Link
-              href="/parent"
+              href="/today"
               className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-                isCurrent('/parent') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+                isCurrent('/today') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
               }`}
             >
-              <Users className="w-4 h-4 text-cyan-600" />
-              <span>Parent Hub</span>
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Today</span>
             </Link>
-          )}
 
-          {isAdminOrReviewer && (
             <Link
-              href="/admin"
+              href="/paths"
               className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
-                isCurrent('/admin') ? 'text-amber-800 font-bold border-b-2 border-amber-600' : ''
+                isCurrent('/paths') || isCurrent('/consultant') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
               }`}
             >
-              <ShieldCheck className="w-4 h-4 text-amber-600" />
-              <span>Editorial Console</span>
+              <Compass className="w-4 h-4 text-teal-600" />
+              <span>My Paths</span>
             </Link>
-          )}
-        </nav>
 
-        {/* Right side: Auth Controls & Profile */}
+            <Link
+              href="/exams"
+              className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                isCurrent('/exams') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+              }`}
+            >
+              <Award className="w-4 h-4 text-blue-600" />
+              <span>Exams &amp; Opportunities</span>
+            </Link>
+
+            <Link
+              href="/prepare"
+              className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                isCurrent('/prepare') || pathname.startsWith('/study') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+              }`}
+            >
+              <BookOpen className="w-4 h-4 text-emerald-600" />
+              <span>Prepare</span>
+            </Link>
+
+            <Link
+              href="/updates"
+              className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                isCurrent('/updates') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+              }`}
+            >
+              <Bell className="w-4 h-4 text-indigo-600" />
+              <span>Updates</span>
+            </Link>
+
+            <Link
+              href="/coach"
+              className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                isCurrent('/coach') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+              }`}
+            >
+              <HeartHandshake className="w-4 h-4 text-rose-500" />
+              <span>Mind Coach</span>
+            </Link>
+
+            {isParent && (
+              <Link
+                href="/parent"
+                className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                  isCurrent('/parent') ? 'text-teal-700 font-bold border-b-2 border-teal-600' : ''
+                }`}
+              >
+                <Users className="w-4 h-4 text-cyan-600" />
+                <span>Parent Hub</span>
+              </Link>
+            )}
+
+            {isAdminOrReviewer && (
+              <Link
+                href="/admin"
+                className={`transition hover:text-slate-950 flex items-center gap-1.5 py-1 ${
+                  isCurrent('/admin') ? 'text-amber-800 font-bold border-b-2 border-amber-600' : ''
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4 text-amber-600" />
+                <span>Editorial Console</span>
+              </Link>
+            )}
+          </nav>
+        )}
+
+        {/* Right side: Auth Controls & Actions */}
         <div className="flex items-center gap-3">
           {currentUser ? (
             <div className="relative">
@@ -315,20 +355,71 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2 sm:gap-3">
               <Link
                 href="/login"
-                className="text-xs text-slate-700 hover:text-slate-950 font-semibold px-3 py-2 rounded-xl hover:bg-slate-100 transition"
+                className="text-xs text-[#17324D] hover:text-[#168C83] font-semibold px-3 py-2 rounded-xl hover:bg-slate-100 transition"
               >
-                Sign In
+                Sign in
               </Link>
               <Link
-                href="/initialize"
-                className="inline-flex items-center gap-1.5 bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition shadow-sm active:scale-95"
+                href="/paths"
+                className="inline-flex items-center gap-1.5 bg-[#168C83] hover:bg-[#12736b] text-white font-bold px-4 py-2 rounded-xl text-xs transition shadow-2xs active:scale-95"
               >
-                <span>Get Started</span>
+                <span>Get started</span>
               </Link>
+              {isLandingPage && (
+                <button
+                  type="button"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="md:hidden p-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition"
+                  aria-label="Toggle navigation menu"
+                >
+                  {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                </button>
+              )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Mobile Drawer on Landing Page */}
+      {isLandingPage && mobileMenuOpen && (
+        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3 shadow-lg text-xs animate-in fade-in duration-150">
+          <a
+            href="#tools"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 font-semibold text-[#17324D] hover:text-[#168C83]"
+          >
+            Tools
+          </a>
+          <a
+            href="#how-it-works"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 font-semibold text-[#17324D] hover:text-[#168C83]"
+          >
+            How it works
+          </a>
+          <a
+            href="#coverage"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 font-semibold text-[#17324D] hover:text-[#168C83]"
+          >
+            Coverage
+          </a>
+          <a
+            href="#updates"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 font-semibold text-[#17324D] hover:text-[#168C83]"
+          >
+            Updates
+          </a>
+          <a
+            href="#pricing"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 font-semibold text-[#17324D] hover:text-[#168C83]"
+          >
+            Pricing
+          </a>
+        </div>
+      )}
     </header>
   );
 };

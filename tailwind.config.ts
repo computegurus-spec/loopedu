@@ -9,6 +9,40 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        navy: {
+          DEFAULT: "#17324D",
+          50: "#e8edf2",
+          100: "#c7d4e0",
+          700: "#1d4164",
+          800: "#17324D",
+          900: "#11253a",
+          950: "#0c1a29",
+        },
+        teal: {
+          DEFAULT: "#168C83",
+          50: "#f0f8f7",
+          100: "#d9edea",
+          200: "#b5ded8",
+          300: "#8ac9c1",
+          400: "#4ea99f",
+          500: "#168C83",
+          600: "#168C83",
+          700: "#12736b",
+          800: "#0e5a54",
+          900: "#0a413d",
+        },
+        offwhite: {
+          DEFAULT: "#F7F6F2",
+          warm: "#F7F6F2",
+        },
+        mutedgrey: {
+          DEFAULT: "#667085",
+          300: "#D0D5DD",
+          400: "#98A2B3",
+          500: "#667085",
+          600: "#475467",
+          700: "#344054",
+        },
         forest: {
           50: "#F0F5F2",
           100: "#DEEBE4",
@@ -47,6 +81,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
+          "'DM Sans'",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",

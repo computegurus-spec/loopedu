@@ -166,7 +166,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJsonLd) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-teal-500 selection:text-white">
+      <body className="min-h-screen flex flex-col bg-[#F7F6F2] text-[#17324D] selection:bg-[#168C83] selection:text-white">
         <DemoProvider>
           <DemoModeBanner />
           <Navbar />
