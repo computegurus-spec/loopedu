@@ -1,14 +1,26 @@
 import React from 'react';
-import { getSessionUser } from '@/lib/auth/session';
-import { MissionControlV3 } from '@/components/home/MissionControlV3';
+import { Metadata } from 'next';
+import { EnterpriseHomePage } from '@/components/enterprise/EnterpriseHomePage';
 
-export default async function HomePage() {
-  const user = await getSessionUser();
+export const metadata: Metadata = {
+  title: 'LoopEdu Enterprise • India’s Exam & Career Intelligence Companion',
+  description:
+    'Authoritative statutory eligibility AST checker, 3-pathway career comparison with unbundled college cost calculators, and active 15-minute daily diagnostic practice. Built on gazette clarity, zero marketing telecalls, and fair modular pricing.',
+  keywords: [
+    'IIT JEE Main',
+    'NEET UG',
+    'UPSC CSE',
+    'SSC CGL',
+    'IBPS PO',
+    'RRB NTPC',
+    'CBSE Class 10',
+    'CBSE Class 12',
+    'Exam Eligibility AST',
+    'College Cost Calculator',
+    'Tele-MANAS',
+  ],
+};
 
-  return (
-    <div className="bg-slate-50 text-slate-900 min-h-screen">
-      <MissionControlV3 isLoggedIn={Boolean(user)} />
-    </div>
-  );
+export default function HomePage() {
+  return <EnterpriseHomePage />;
 }
-

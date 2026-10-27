@@ -53,6 +53,10 @@ export const Navbar: React.FC = () => {
       });
   }, [pathname]);
 
+  if (pathname === '/') {
+    return null;
+  }
+
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     setLiveUser(null);

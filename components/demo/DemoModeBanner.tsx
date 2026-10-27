@@ -1,14 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useDemo } from '@/lib/demo/DemoContext';
 import { DEMO_PERSONAS } from '@/lib/demo/personas';
 import { ShieldAlert, User, ChevronDown, RotateCcw, Sparkles, Check, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export const DemoModeBanner: React.FC = () => {
+  const pathname = usePathname();
   const { isDemo, activePersona, setPersonaById, toggleAppMode, resetDemoData } = useDemo();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  if (pathname === '/') {
+    return null;
+  }
 
   if (!isDemo) {
     return (

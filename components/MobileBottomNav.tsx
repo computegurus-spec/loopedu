@@ -10,8 +10,8 @@ export const MobileBottomNav: React.FC = () => {
   const pathname = usePathname();
   const { isDemo } = useDemo();
 
-  // Hide on focused study question views
-  if (pathname.startsWith('/study/')) {
+  // Hide on homepage and focused study question views
+  if (pathname === '/' || pathname.startsWith('/study/')) {
     return null;
   }
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   MessageSquare,
   Sparkles,
@@ -190,6 +191,11 @@ export const ChatWidget: React.FC = () => {
     'What is the step-marking for Pythagoras theorem?',
     'Difference between real and virtual image',
   ];
+
+  const pathname = usePathname();
+  if (pathname === '/') {
+    return null;
+  }
 
   return (
     <>
